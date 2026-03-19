@@ -2,7 +2,10 @@
 <%@ page import="com.tarecruitment.model.User" %>
 <%@ page import="com.tarecruitment.util.I18nUtil" %>
 <%
-    User user = (User) request.getAttribute("user");
+    User user = (User) session.getAttribute("user");
+    if (user == null) {
+        user = (User) request.getAttribute("user");
+    }
     if (user == null) {
         response.sendRedirect(request.getContextPath() + "/auth?action=login");
         return;

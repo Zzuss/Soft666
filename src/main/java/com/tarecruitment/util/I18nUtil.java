@@ -247,16 +247,18 @@ public class I18nUtil {
     }
 
     public static String getLanguage(HttpServletRequest request) {
+        String paramLang = request.getParameter("lang");
+        if (paramLang != null && (paramLang.equals("en") || paramLang.equals("zh"))) {
+            HttpSession session = request.getSession(true);
+            session.setAttribute("language", paramLang);
+            return paramLang;
+        }
         HttpSession session = request.getSession(false);
         if (session != null) {
             Object lang = session.getAttribute("language");
-            if (lang != null) {
+            if ("en".equals(lang) || "zh".equals(lang)) {
                 return lang.toString();
             }
-        }
-        String paramLang = request.getParameter("lang");
-        if (paramLang != null && (paramLang.equals("en") || paramLang.equals("zh"))) {
-            return paramLang;
         }
         String headerLang = request.getHeader("Accept-Language");
         if (headerLang != null && headerLang.contains("zh")) {

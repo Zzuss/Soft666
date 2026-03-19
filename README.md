@@ -1,167 +1,148 @@
 # 助教招聘系统（TA Recruitment System）
 
-基于 Jakarta Servlet/JSP 的助教招聘系统课程项目。
+这份 README 按“新手可直接照抄命令”的方式写。
 
-## 1. 项目简介
+## 0. 先看这里：最短启动流程（你当前这台机器）
 
-- 技术栈：Java + Jakarta Servlet/JSP + Maven + Tomcat
-- 打包方式：`WAR`（见 `pom.xml`）
-- 数据存储：本地 JSON 文件（`data/` 目录），无需外部数据库
-- 主要功能：
-  - 用户注册 / 登录 / 退出（TA / MO 角色）
-  - 职位发布、浏览与详情查看
-  - 申请提交与审核
-  - Dashboard 统计信息展示
-  - 中英文切换
+你要进入的项目文件夹是：
 
-## 2. 完整依赖
+```bash
+cd /Users/fanzj/Desktop/Soft666-1
+```
 
-### 2.1 运行与构建环境（需安装）
+然后按下面命令执行（假设你已经安装了 Tomcat 10.1+）：
 
-- JDK：**17**（推荐，项目编译目标为 17）
-- Maven：**3.8+**
-- Tomcat：**10.1+**（必须支持 Jakarta Servlet 6）
-- 操作系统：macOS / Linux / Windows 均可
+```bash
+# 1) 进入项目目录（必须）
+cd /Users/fanzj/Desktop/Soft666-1
 
-> 注意：本项目使用 `jakarta.*` 包，Tomcat 9（`javax.*`）不兼容。
+# 2) 设置你的 Tomcat 路径（把下面路径改成你自己的）
+export TOMCAT_HOME="/你的路径/apache-tomcat-10.1.xx"
 
-### 2.2 Maven 依赖（来自 `pom.xml`）
+# 3) 确认 WAR 包存在（你当前项目里通常已存在）
+ls target/ta-recruitment.war
+
+# 4) 复制 WAR 到 Tomcat
+cp target/ta-recruitment.war "$TOMCAT_HOME/webapps/"
+
+# 5) （推荐）固定数据目录到项目 data/
+export CATALINA_OPTS="-Dtarec.data.dir=/Users/fanzj/Desktop/Soft666-1/data"
+
+# 6) 启动 Tomcat
+"$TOMCAT_HOME/bin/startup.sh"
+```
+
+启动后访问：
+
+- 登录页：`http://localhost:8080/ta-recruitment/auth`
+
+停止服务：
+
+```bash
+"$TOMCAT_HOME/bin/shutdown.sh"
+```
+
+***
+
+## 1. 如果第 3 步找不到 WAR（需要先构建）
+
+先安装 Maven（`mvn` 命令可用），再执行：
+
+```bash
+cd /Users/fanzj/Desktop/Soft666-1
+mvn clean package
+```
+
+成功后会生成：
+
+- `target/ta-recruitment.war`
+
+然后回到“最短启动流程”的第 4 步继续。
+
+## 2. 你到底要装哪些依赖
+
+### 2.1 必装
+
+- JDK：**17**（推荐）
+- Maven：**3.8+**（用于构建）
+- Tomcat：**10.1+**（必须，Tomcat 9 不兼容）
+
+### 2.2 Maven 依赖（项目内部）
 
 - `jakarta.servlet:jakarta.servlet-api:6.0.0`（`provided`）
 - `jakarta.servlet.jsp:jakarta.servlet.jsp-api:3.1.1`（`provided`）
 - `jakarta.el:jakarta.el-api:5.0.1`（`provided`）
 - `org.json:json:20231013`
 
-### 2.3 构建插件
-
-- `maven-compiler-plugin:3.11.0`
-- `maven-war-plugin:3.4.0`
-
-## 3. 环境检查
-
-在终端执行：
-
-```bash
-java -version
-mvn -version
-```
-
-期望结果：
-
-- `java` 为 JDK 17
-- `mvn` 命令可用
-
-## 4. 构建项目
-
-在项目根目录执行：
-
-```bash
-mvn clean package
-```
-
-构建产物：
-
-- `target/ta-recruitment.war`
-
-## 5. 启动项目（Tomcat 部署）
-
-### 5.1 部署 WAR 包
-
-```bash
-cp target/ta-recruitment.war <TOMCAT_HOME>/webapps/
-```
-
-### 5.2（推荐）指定数据目录
-
-本项目会读写 JSON 数据文件。建议固定到项目 `data` 目录：
-
-macOS / Linux：
-
-```bash
-export CATALINA_OPTS="-Dtarec.data.dir=/绝对路径/Soft666-1/data"
-```
-
-Windows PowerShell：
-
-```powershell
-$env:CATALINA_OPTS="-Dtarec.data.dir=D:\绝对路径\Soft666-1\data"
-```
-
-### 5.3 启动 Tomcat
-
-macOS / Linux：
-
-```bash
-<TOMCAT_HOME>/bin/startup.sh
-```
-
-Windows：
-
-```bat
-<TOMCAT_HOME>\bin\startup.bat
-```
-
-## 6. 访问地址
-
-启动后访问：
+## 3. 访问地址（启动后）
 
 - 登录页：`http://localhost:8080/ta-recruitment/auth`
-- 应用首页：`http://localhost:8080/ta-recruitment/`
+- 首页：`http://localhost:8080/ta-recruitment/`
 - 注册页：`http://localhost:8080/ta-recruitment/auth?action=register`
 
-## 7. 数据文件说明
+## 4. 数据文件位置
 
-默认数据文件：
+默认数据文件在：
 
 - `data/users.json`
 - `data/jobs.json`
 - `data/applications.json`
 
-数据目录解析优先级：
+数据目录优先级：
 
-1. JVM 参数 `-Dtarec.data.dir=...`
-2. `<project_root>/data`
-3. `<working_dir>/data`（不存在会自动创建）
+1. `-Dtarec.data.dir=...`
+2. 项目根目录下 `data/`
+3. 当前工作目录下 `data/`（不存在会自动创建）
 
-如果登录账号不符合预期，可以：
+## 5. 常见报错（按现象处理）
 
-- 通过 `/auth?action=register` 新注册测试账号
-- 或直接修改 `data/users.json`（仅开发/测试场景）
+### 5.1 `mvn: command not found`
 
-## 8. 开发目录结构
+没装 Maven 或未加入 `PATH`。先安装 Maven，再开新终端重试。
 
-- Java 源码：`src/main/java`
-- JSP/CSS：`src/main/webapp`
-- i18n 工具类：`com.tarecruitment.util.I18nUtil`
+### 5.2 打开网址 404
+
+按顺序检查：
+
+1. `target/ta-recruitment.war` 是否存在
+2. 是否已复制到 `$TOMCAT_HOME/webapps/`
+3. 网址是否包含 `/ta-recruitment`
+4. Tomcat 是否真的启动成功（看日志）
+
+### 5.3 Servlet 相关类找不到
+
+大概率 Tomcat 版本过低。请用 **Tomcat 10.1+**。
+
+## 6. 项目结构（开发时）
+
+- Java 代码：`src/main/java`
+- 页面与样式：`src/main/webapp`
+- 国际化工具：`com.tarecruitment.util.I18nUtil`
 - 语言切换组件：`src/main/webapp/jsp/common/language-switcher.jsp`
 
-## 9. 常见问题
+## 7. Fan
 
-### 9.1 `mvn: command not found`
+export JAVA\_HOME=/Library/Java/JavaVirtualMachines/jdk-24.jdk/Contents/Home&#x20;
 
-未安装 Maven 或未加入 `PATH`。安装后重新打开终端再试。
+/tmp/apache-tomcat-10.1.24/bin/startup.sh
 
-### 9.2 部署后 404
+&#x20;  /tmp/apache-tomcat-10.1.24/bin/shutdown.sh
 
-- 确认 `<TOMCAT_HOME>/webapps/` 下已存在 `ta-recruitment.war`
-- 确认 URL 包含上下文路径 `/ta-recruitment`
-- 查看 Tomcat 日志（如 `catalina.out`）定位部署报错
+重新编译和部署：
 
-### 9.3 `ClassNotFound` 或 Servlet API 相关错误
-
-- 确认 Tomcat 版本为 **10.1+**
-- 不要使用 Tomcat 9
-
-### 9.4 数据没有写到预期位置
-
-显式设置：
-
-```bash
--Dtarec.data.dir=/绝对路径/Soft666-1/data
+```shellscript
+cd /Users/fanzj/Desktop/Soft666-1
 ```
 
-## 10. 安全说明（课程项目 / 开发环境）
+```shellscript
+/tmp/apache-maven-3.9.6/bin/mvn clean package -DskipTests
 
-当前密码哈希使用 MD5，仅适用于课程演示与本地开发，不建议用于生产环境。  
-若用于生产，请替换为更安全的密码哈希算法（如 bcrypt / Argon2）。
+cp target/ta-recruitment.war /tmp/apache-tomcat-10.1.24/webapps/
+```
 
+```shellscript
+/tmp/apache-tomcat-10.1.24/bin/shutdown.sh
+/tmp/apache-tomcat-10.1.24/bin/startup.sh
+```
+
+<http://localhost:8080/ta-recruitment/>
