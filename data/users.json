@@ -1,0 +1,24 @@
+{"users": [
+  {
+    "skills": [],
+    "password": "21218cca77804d2ba1922c33e0151105",
+    "availableTime": "",
+    "role": "TA",
+    "name": "1",
+    "userId": "u1773908421238",
+    "email": "1@1.com",
+    "enabled": true,
+    "username": "1"
+  },
+  {
+    "skills": [],
+    "password": "21218cca77804d2ba1922c33e0151105",
+    "availableTime": "",
+    "role": "MO",
+    "name": "2",
+    "userId": "u1773908497994",
+    "email": "2@2.com",
+    "enabled": true,
+    "username": "2"
+  }
+]}
