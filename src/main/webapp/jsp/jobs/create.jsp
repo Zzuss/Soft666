@@ -68,7 +68,54 @@
                 
                 <div class="form-group">
                     <label for="requirements"><%= I18nUtil.get("job.create.req", lang) %></label>
-                    <textarea id="requirements" name="requirements" rows="3"></textarea>
+                    <textarea id="requirements" name="requirements" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="workStartDate"><%= I18nUtil.get("job.create.workStartDate", lang) %></label>
+                    <input type="date" id="workStartDate" name="workStartDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="workEndDate"><%= I18nUtil.get("job.create.workEndDate", lang) %></label>
+                    <input type="date" id="workEndDate" name="workEndDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label><%= I18nUtil.get("job.create.workWeekdays", lang) %></label>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <label><input type="checkbox" name="workWeekdays" value="MON"> <%= I18nUtil.getWeekdayDisplay("MON", lang) %></label>
+                        <label><input type="checkbox" name="workWeekdays" value="TUE"> <%= I18nUtil.getWeekdayDisplay("TUE", lang) %></label>
+                        <label><input type="checkbox" name="workWeekdays" value="WED"> <%= I18nUtil.getWeekdayDisplay("WED", lang) %></label>
+                        <label><input type="checkbox" name="workWeekdays" value="THU"> <%= I18nUtil.getWeekdayDisplay("THU", lang) %></label>
+                        <label><input type="checkbox" name="workWeekdays" value="FRI"> <%= I18nUtil.getWeekdayDisplay("FRI", lang) %></label>
+                        <label><input type="checkbox" name="workWeekdays" value="SAT"> <%= I18nUtil.getWeekdayDisplay("SAT", lang) %></label>
+                        <label><input type="checkbox" name="workWeekdays" value="SUN"> <%= I18nUtil.getWeekdayDisplay("SUN", lang) %></label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="dailyStartHour"><%= I18nUtil.get("job.create.dailyStartHour", lang) %></label>
+                    <select id="dailyStartHour" name="dailyStartHour" required>
+                        <option value=""><%= "zh".equals(lang) ? "请选择整点" : "Select hour" %></option>
+                        <% for (int h = 0; h < 24; h++) {
+                            String hourValue = String.format("%02d:00", h);
+                        %>
+                            <option value="<%= hourValue %>"><%= hourValue %></option>
+                        <% } %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="dailyEndHour"><%= I18nUtil.get("job.create.dailyEndHour", lang) %></label>
+                    <select id="dailyEndHour" name="dailyEndHour" required>
+                        <option value=""><%= "zh".equals(lang) ? "请选择整点" : "Select hour" %></option>
+                        <% for (int h = 0; h < 24; h++) {
+                            String hourValue = String.format("%02d:00", h);
+                        %>
+                            <option value="<%= hourValue %>"><%= hourValue %></option>
+                        <% } %>
+                    </select>
                 </div>
                 
                 <div class="form-group">

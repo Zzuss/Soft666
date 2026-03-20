@@ -125,10 +125,18 @@ public class JobServlet extends HttpServlet {
             String type = request.getParameter("type");
             String description = request.getParameter("description");
             String requirements = request.getParameter("requirements");
+            String workStartDate = request.getParameter("workStartDate");
+            String workEndDate = request.getParameter("workEndDate");
+            String[] workWeekdays = request.getParameterValues("workWeekdays");
+            String dailyStartHour = request.getParameter("dailyStartHour");
+            String dailyEndHour = request.getParameter("dailyEndHour");
             int positions = Integer.parseInt(request.getParameter("positions"));
             String deadline = request.getParameter("deadline");
 
-            jobService.createJob(title, type, description, requirements, positions, deadline, user.getUserId());
+            jobService.createJob(
+                    title, type, description, requirements, positions, deadline, user.getUserId(),
+                    workStartDate, workEndDate, joinValues(workWeekdays), dailyStartHour, dailyEndHour
+            );
             
             response.sendRedirect(request.getContextPath() + "/jobs/myjobs?success=Job created successfully");
         } catch (Exception e) {
@@ -157,5 +165,12 @@ public class JobServlet extends HttpServlet {
         } catch (Exception e) {
             response.sendRedirect(request.getContextPath() + "/jobs/myjobs?error=" + e.getMessage());
         }
+    }
+
+    private String joinValues(String[] values) {
+        if (values == null || values.length == 0) {
+            return "";
+        }
+        return String.join(",", values);
     }
 }

@@ -12,6 +12,11 @@ public class User {
     private String role;
     private List<String> skills;
     private String availableTime;
+    private String availabilityStartDate;
+    private String availabilityEndDate;
+    private String availabilityWeekdays;
+    private String availabilityDailyStartHour;
+    private String availabilityDailyEndHour;
     private String bio;
     private String resumeFileName;
     private String resumePath;
@@ -95,6 +100,46 @@ public class User {
 
     public void setAvailableTime(String availableTime) {
         this.availableTime = availableTime;
+    }
+
+    public String getAvailabilityStartDate() {
+        return availabilityStartDate;
+    }
+
+    public void setAvailabilityStartDate(String availabilityStartDate) {
+        this.availabilityStartDate = availabilityStartDate;
+    }
+
+    public String getAvailabilityEndDate() {
+        return availabilityEndDate;
+    }
+
+    public void setAvailabilityEndDate(String availabilityEndDate) {
+        this.availabilityEndDate = availabilityEndDate;
+    }
+
+    public String getAvailabilityWeekdays() {
+        return availabilityWeekdays;
+    }
+
+    public void setAvailabilityWeekdays(String availabilityWeekdays) {
+        this.availabilityWeekdays = availabilityWeekdays;
+    }
+
+    public String getAvailabilityDailyStartHour() {
+        return availabilityDailyStartHour;
+    }
+
+    public void setAvailabilityDailyStartHour(String availabilityDailyStartHour) {
+        this.availabilityDailyStartHour = availabilityDailyStartHour;
+    }
+
+    public String getAvailabilityDailyEndHour() {
+        return availabilityDailyEndHour;
+    }
+
+    public void setAvailabilityDailyEndHour(String availabilityDailyEndHour) {
+        this.availabilityDailyEndHour = availabilityDailyEndHour;
     }
 
     public String getBio() {

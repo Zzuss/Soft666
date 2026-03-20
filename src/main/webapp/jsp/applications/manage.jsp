@@ -94,6 +94,8 @@
                             <th><%= I18nUtil.get("app.manage.email", lang) %></th>
                             <th><%= I18nUtil.get("app.manage.skills", lang) %></th>
                             <th><%= I18nUtil.get("app.manage.availableTime", lang) %></th>
+                            <th><%= I18nUtil.get("app.manage.matchScore", lang) %></th>
+                            <th><%= I18nUtil.get("app.manage.missingSkills", lang) %></th>
                             <th><%= I18nUtil.get("app.manage.appliedDate", lang) %></th>
                             <th><%= I18nUtil.get("app.manage.status", lang) %></th>
                             <th><%= I18nUtil.get("app.manage.actions", lang) %></th>
@@ -108,6 +110,8 @@
                                 <td><%= applicant != null ? applicant.getEmail() : "-" %></td>
                                 <td><%= (applicant != null && applicant.getSkills() != null && !applicant.getSkills().isEmpty()) ? String.join(", ", applicant.getSkills()) : "-" %></td>
                                 <td><%= (applicant != null && applicant.getAvailableTime() != null && !applicant.getAvailableTime().isEmpty()) ? applicant.getAvailableTime() : "-" %></td>
+                                <td><%= app.getMatchScore() != null ? (app.getMatchScore() + "%") : "-" %></td>
+                                <td><%= (app.getMissingSkills() != null && !app.getMissingSkills().isEmpty()) ? String.join(", ", app.getMissingSkills()) : "-" %></td>
                                 <td><%= app.getAppliedAt() != null ? app.getAppliedAt().toString().substring(0, 19) : "-" %></td>
                                 <td>
                                     <span class="badge <%= app.isPending() ? "badge-pending" : (app.isApproved() ? "badge-approved" : "badge-rejected") %>">
@@ -115,6 +119,7 @@
                                     </span>
                                 </td>
                                 <td>
+                                    <a href="${pageContext.request.contextPath}/profile/view?userId=<%= app.getUserId() %>&jobId=<%= job.getJobId() %>" class="btn btn-secondary"><%= I18nUtil.get("app.manage.viewProfile", lang) %></a>
                                     <% if (app.isPending()) { %>
                                         <form action="${pageContext.request.contextPath}/applications/approve" method="post" style="display:inline;">
                                             <input type="hidden" name="id" value="<%= app.getApplicationId() %>">

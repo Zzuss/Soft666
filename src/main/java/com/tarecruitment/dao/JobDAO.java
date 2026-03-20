@@ -28,12 +28,14 @@ public class JobDAO {
     }
 
     public void addJob(Job job) {
+        loadData();
         JSONArray jobs = data.getJSONArray("jobs");
         jobs.put(jobToJson(job));
         saveData();
     }
 
     public void updateJob(Job job) {
+        loadData();
         JSONArray jobs = data.getJSONArray("jobs");
         for (int i = 0; i < jobs.length(); i++) {
             JSONObject j = jobs.getJSONObject(i);
@@ -46,6 +48,7 @@ public class JobDAO {
     }
 
     public void deleteJob(String jobId) {
+        loadData();
         JSONArray jobs = data.getJSONArray("jobs");
         JSONArray newJobs = new JSONArray();
         for (int i = 0; i < jobs.length(); i++) {
@@ -59,6 +62,7 @@ public class JobDAO {
     }
 
     public Job getJobById(String jobId) {
+        loadData();
         JSONArray jobs = data.getJSONArray("jobs");
         for (int i = 0; i < jobs.length(); i++) {
             JSONObject j = jobs.getJSONObject(i);
@@ -70,6 +74,7 @@ public class JobDAO {
     }
 
     public List<Job> getAllJobs() {
+        loadData();
         List<Job> jobList = new ArrayList<>();
         JSONArray jobs = data.getJSONArray("jobs");
         for (int i = 0; i < jobs.length(); i++) {
@@ -79,6 +84,7 @@ public class JobDAO {
     }
 
     public List<Job> getOpenJobs() {
+        loadData();
         List<Job> jobList = new ArrayList<>();
         JSONArray jobs = data.getJSONArray("jobs");
         for (int i = 0; i < jobs.length(); i++) {
@@ -91,6 +97,7 @@ public class JobDAO {
     }
 
     public List<Job> getJobsByMo(String moId) {
+        loadData();
         List<Job> jobList = new ArrayList<>();
         JSONArray jobs = data.getJSONArray("jobs");
         for (int i = 0; i < jobs.length(); i++) {
@@ -103,6 +110,7 @@ public class JobDAO {
     }
 
     public List<Job> getJobsByType(String type) {
+        loadData();
         List<Job> jobList = new ArrayList<>();
         JSONArray jobs = data.getJSONArray("jobs");
         for (int i = 0; i < jobs.length(); i++) {
@@ -121,6 +129,11 @@ public class JobDAO {
         j.put("type", job.getType());
         j.put("description", job.getDescription());
         j.put("requirements", job.getRequirements());
+        j.put("workStartDate", job.getWorkStartDate() != null ? job.getWorkStartDate() : "");
+        j.put("workEndDate", job.getWorkEndDate() != null ? job.getWorkEndDate() : "");
+        j.put("workWeekdays", job.getWorkWeekdays() != null ? job.getWorkWeekdays() : "");
+        j.put("dailyStartHour", job.getDailyStartHour() != null ? job.getDailyStartHour() : "");
+        j.put("dailyEndHour", job.getDailyEndHour() != null ? job.getDailyEndHour() : "");
         j.put("positions", job.getPositions());
         j.put("postedBy", job.getPostedBy());
         j.put("deadline", job.getDeadline());
@@ -138,6 +151,11 @@ public class JobDAO {
         job.setType(j.getString("type"));
         job.setDescription(j.getString("description"));
         job.setRequirements(j.getString("requirements"));
+        job.setWorkStartDate(j.optString("workStartDate", ""));
+        job.setWorkEndDate(j.optString("workEndDate", ""));
+        job.setWorkWeekdays(j.optString("workWeekdays", ""));
+        job.setDailyStartHour(j.optString("dailyStartHour", ""));
+        job.setDailyEndHour(j.optString("dailyEndHour", ""));
         job.setPositions(j.getInt("positions"));
         job.setPostedBy(j.getString("postedBy"));
         job.setDeadline(j.getString("deadline"));

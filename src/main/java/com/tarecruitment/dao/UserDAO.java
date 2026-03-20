@@ -29,12 +29,14 @@ public class UserDAO {
     }
 
     public void addUser(User user) {
+        loadData();
         JSONArray users = data.getJSONArray("users");
         users.put(userToJson(user));
         saveData();
     }
 
     public void updateUser(User user) {
+        loadData();
         JSONArray users = data.getJSONArray("users");
         for (int i = 0; i < users.length(); i++) {
             JSONObject u = users.getJSONObject(i);
@@ -47,6 +49,7 @@ public class UserDAO {
     }
 
     public void deleteUser(String userId) {
+        loadData();
         JSONArray users = data.getJSONArray("users");
         JSONArray newUsers = new JSONArray();
         for (int i = 0; i < users.length(); i++) {
@@ -60,6 +63,7 @@ public class UserDAO {
     }
 
     public User getUserById(String userId) {
+        loadData();
         JSONArray users = data.getJSONArray("users");
         for (int i = 0; i < users.length(); i++) {
             JSONObject u = users.getJSONObject(i);
@@ -71,6 +75,7 @@ public class UserDAO {
     }
 
     public User getUserByUsername(String username) {
+        loadData();
         JSONArray users = data.getJSONArray("users");
         for (int i = 0; i < users.length(); i++) {
             JSONObject u = users.getJSONObject(i);
@@ -82,6 +87,7 @@ public class UserDAO {
     }
 
     public List<User> getAllUsers() {
+        loadData();
         List<User> userList = new ArrayList<>();
         JSONArray users = data.getJSONArray("users");
         for (int i = 0; i < users.length(); i++) {
@@ -91,6 +97,7 @@ public class UserDAO {
     }
 
     public List<User> getUsersByRole(String role) {
+        loadData();
         List<User> userList = new ArrayList<>();
         JSONArray users = data.getJSONArray("users");
         for (int i = 0; i < users.length(); i++) {
@@ -116,6 +123,11 @@ public class UserDAO {
         u.put("role", user.getRole());
         u.put("skills", JsonUtil.fromStringList(user.getSkills()));
         u.put("availableTime", user.getAvailableTime() != null ? user.getAvailableTime() : "");
+        u.put("availabilityStartDate", user.getAvailabilityStartDate() != null ? user.getAvailabilityStartDate() : "");
+        u.put("availabilityEndDate", user.getAvailabilityEndDate() != null ? user.getAvailabilityEndDate() : "");
+        u.put("availabilityWeekdays", user.getAvailabilityWeekdays() != null ? user.getAvailabilityWeekdays() : "");
+        u.put("availabilityDailyStartHour", user.getAvailabilityDailyStartHour() != null ? user.getAvailabilityDailyStartHour() : "");
+        u.put("availabilityDailyEndHour", user.getAvailabilityDailyEndHour() != null ? user.getAvailabilityDailyEndHour() : "");
         u.put("bio", user.getBio() != null ? user.getBio() : "");
         u.put("resumeFileName", user.getResumeFileName() != null ? user.getResumeFileName() : "");
         u.put("resumePath", user.getResumePath() != null ? user.getResumePath() : "");
@@ -140,6 +152,11 @@ public class UserDAO {
         JSONArray skillsArray = u.optJSONArray("skills");
         user.setSkills(JsonUtil.toStringList(skillsArray != null ? skillsArray : new JSONArray()));
         user.setAvailableTime(u.optString("availableTime", ""));
+        user.setAvailabilityStartDate(u.optString("availabilityStartDate", ""));
+        user.setAvailabilityEndDate(u.optString("availabilityEndDate", ""));
+        user.setAvailabilityWeekdays(u.optString("availabilityWeekdays", ""));
+        user.setAvailabilityDailyStartHour(u.optString("availabilityDailyStartHour", ""));
+        user.setAvailabilityDailyEndHour(u.optString("availabilityDailyEndHour", ""));
         user.setBio(u.optString("bio", ""));
         String resumeFileName = u.optString("resumeFileName", "");
         user.setResumeFileName(resumeFileName.isEmpty() ? null : resumeFileName);

@@ -14,6 +14,20 @@
         return;
     }
     String lang = I18nUtil.getLanguage(request);
+    String jobWeekdaysDisplay = "-";
+    if (job.getWorkWeekdays() != null && !job.getWorkWeekdays().isEmpty()) {
+        String[] codes = job.getWorkWeekdays().split(",");
+        java.util.List<String> labels = new java.util.ArrayList<>();
+        for (String code : codes) {
+            String c = code == null ? "" : code.trim();
+            if (!c.isEmpty()) {
+                labels.add(I18nUtil.getWeekdayDisplay(c, lang));
+            }
+        }
+        if (!labels.isEmpty()) {
+            jobWeekdaysDisplay = String.join(", ", labels);
+        }
+    }
 %>
 <!DOCTYPE html>
 <html>
@@ -54,6 +68,15 @@
                 <span><strong><%= I18nUtil.get("job.detail.type", lang) %>:</strong> <%= job.getTypeDisplayName(lang) %></span>
                 <span><strong><%= I18nUtil.get("jobs.positions", lang) %>:</strong> <%= job.getPositions() %></span>
                 <span><strong><%= I18nUtil.get("jobs.deadline", lang) %>:</strong> <%= job.getDeadline() %></span>
+            </div>
+
+            <div class="job-meta" style="margin-bottom: 20px;">
+                <span><strong><%= I18nUtil.get("job.detail.workStartDate", lang) %>:</strong> <%= (job.getWorkStartDate() != null && !job.getWorkStartDate().isEmpty()) ? job.getWorkStartDate() : "-" %></span>
+                <span><strong><%= I18nUtil.get("job.detail.workEndDate", lang) %>:</strong> <%= (job.getWorkEndDate() != null && !job.getWorkEndDate().isEmpty()) ? job.getWorkEndDate() : "-" %></span>
+                <span><strong><%= I18nUtil.get("job.detail.workWeekdays", lang) %>:</strong> <%= jobWeekdaysDisplay %></span>
+                <span><strong><%= I18nUtil.get("job.detail.dailyHours", lang) %>:</strong>
+                    <%= (job.getDailyStartHour() != null && !job.getDailyStartHour().isEmpty() && job.getDailyEndHour() != null && !job.getDailyEndHour().isEmpty()) ? (job.getDailyStartHour() + " - " + job.getDailyEndHour()) : "-" %>
+                </span>
             </div>
 
             <div class="profile-section">

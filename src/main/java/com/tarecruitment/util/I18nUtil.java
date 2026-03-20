@@ -61,6 +61,11 @@ public class I18nUtil {
         en.put("profile.email", "Email");
         en.put("profile.skills", "Skills (comma separated)");
         en.put("profile.availableTime", "Available Time");
+        en.put("profile.availabilityStartDate", "Availability Start Date");
+        en.put("profile.availabilityEndDate", "Availability End Date");
+        en.put("profile.availabilityWeekdays", "Available Weekdays");
+        en.put("profile.availabilityDailyStartHour", "Daily Available Start Hour");
+        en.put("profile.availabilityDailyEndHour", "Daily Available End Hour");
         en.put("profile.bio", "Personal Statement");
         en.put("profile.bioPlaceholder", "Briefly describe your strengths and experience");
         en.put("profile.update", "Save Profile");
@@ -71,6 +76,8 @@ public class I18nUtil {
         en.put("profile.updatedAt", "Updated At");
         en.put("profile.downloadResume", "Download Resume");
         en.put("profile.noResume", "No resume uploaded yet.");
+        en.put("profile.viewTitle", "Applicant Profile");
+        en.put("profile.backToManage", "Back to Application List");
 
         en.put("admin.workload.title", "TA Overall Workload");
         en.put("admin.workload.taName", "TA Name");
@@ -95,6 +102,10 @@ public class I18nUtil {
         en.put("job.detail.type", "Type");
         en.put("job.detail.description", "Description");
         en.put("job.detail.requirements", "Requirements");
+        en.put("job.detail.workStartDate", "Work Start Date");
+        en.put("job.detail.workEndDate", "Work End Date");
+        en.put("job.detail.workWeekdays", "Work Weekdays");
+        en.put("job.detail.dailyHours", "Daily Work Hours");
         en.put("job.detail.noDesc", "No description provided.");
         en.put("job.detail.noReq", "No requirements specified.");
         en.put("job.detail.apply", "Apply Now");
@@ -104,7 +115,12 @@ public class I18nUtil {
         en.put("job.create.jobTitle", "Job Title *");
         en.put("job.create.type", "Job Type *");
         en.put("job.create.desc", "Description *");
-        en.put("job.create.req", "Requirements");
+        en.put("job.create.req", "Requirements *");
+        en.put("job.create.workStartDate", "Work Start Date *");
+        en.put("job.create.workEndDate", "Work End Date *");
+        en.put("job.create.workWeekdays", "Work Weekdays *");
+        en.put("job.create.dailyStartHour", "Daily Start Hour *");
+        en.put("job.create.dailyEndHour", "Daily End Hour *");
         en.put("job.create.numPositions", "Number of Positions *");
         en.put("job.create.deadline", "Application Deadline *");
         en.put("job.create.submit", "Post Job");
@@ -123,6 +139,8 @@ public class I18nUtil {
         en.put("app.my.type", "Type");
         en.put("app.my.appliedDate", "Applied Date");
         en.put("app.my.status", "Status");
+        en.put("app.my.matchScore", "Match Score");
+        en.put("app.my.missingSkills", "Missing Skills");
         en.put("app.my.action", "Action");
         en.put("app.my.viewJob", "View Job");
         en.put("app.my.noApps", "You haven't applied for any jobs yet.");
@@ -139,9 +157,12 @@ public class I18nUtil {
         en.put("app.manage.filter", "Filter");
         en.put("app.manage.skills", "Skills");
         en.put("app.manage.availableTime", "Available Time");
+        en.put("app.manage.matchScore", "Match Score");
+        en.put("app.manage.missingSkills", "Missing Skills");
         en.put("app.manage.actions", "Actions");
         en.put("app.manage.approve", "Approve");
         en.put("app.manage.reject", "Reject");
+        en.put("app.manage.viewProfile", "View Profile");
         en.put("app.manage.processed", "Processed");
         en.put("app.manage.noApps", "No applications received for this job yet.");
         en.put("app.manage.back", "Back to My Jobs");
@@ -151,6 +172,13 @@ public class I18nUtil {
         en.put("status.pending", "Pending");
         en.put("status.approved", "Approved");
         en.put("status.rejected", "Rejected");
+        en.put("weekday.mon", "Monday");
+        en.put("weekday.tue", "Tuesday");
+        en.put("weekday.wed", "Wednesday");
+        en.put("weekday.thu", "Thursday");
+        en.put("weekday.fri", "Friday");
+        en.put("weekday.sat", "Saturday");
+        en.put("weekday.sun", "Sunday");
 
         translations.put("en", en);
 
@@ -206,6 +234,11 @@ public class I18nUtil {
         zh.put("profile.email", "邮箱");
         zh.put("profile.skills", "技能（逗号分隔）");
         zh.put("profile.availableTime", "可用时间");
+        zh.put("profile.availabilityStartDate", "可任职开始日期");
+        zh.put("profile.availabilityEndDate", "可任职结束日期");
+        zh.put("profile.availabilityWeekdays", "可任职周几");
+        zh.put("profile.availabilityDailyStartHour", "每日可任职开始小时");
+        zh.put("profile.availabilityDailyEndHour", "每日可任职结束小时");
         zh.put("profile.bio", "个人陈述");
         zh.put("profile.bioPlaceholder", "简要描述你的优势与经历");
         zh.put("profile.update", "保存档案");
@@ -216,6 +249,8 @@ public class I18nUtil {
         zh.put("profile.updatedAt", "更新时间");
         zh.put("profile.downloadResume", "下载简历");
         zh.put("profile.noResume", "暂未上传简历。");
+        zh.put("profile.viewTitle", "申请人档案");
+        zh.put("profile.backToManage", "返回申请列表");
 
         zh.put("admin.workload.title", "助教整体工作负荷");
         zh.put("admin.workload.taName", "助教姓名");
@@ -240,6 +275,10 @@ public class I18nUtil {
         zh.put("job.detail.type", "类型");
         zh.put("job.detail.description", "职位描述");
         zh.put("job.detail.requirements", "任职要求");
+        zh.put("job.detail.workStartDate", "任职开始日期");
+        zh.put("job.detail.workEndDate", "任职结束日期");
+        zh.put("job.detail.workWeekdays", "每周任职日");
+        zh.put("job.detail.dailyHours", "每日任职时间");
         zh.put("job.detail.noDesc", "暂无描述。");
         zh.put("job.detail.noReq", "暂无要求。");
         zh.put("job.detail.apply", "立即申请");
@@ -249,7 +288,12 @@ public class I18nUtil {
         zh.put("job.create.jobTitle", "职位标题 *");
         zh.put("job.create.type", "职位类型 *");
         zh.put("job.create.desc", "职位描述 *");
-        zh.put("job.create.req", "任职要求");
+        zh.put("job.create.req", "任职要求 *");
+        zh.put("job.create.workStartDate", "任职开始日期 *");
+        zh.put("job.create.workEndDate", "任职结束日期 *");
+        zh.put("job.create.workWeekdays", "每周任职日 *");
+        zh.put("job.create.dailyStartHour", "每日开始小时 *");
+        zh.put("job.create.dailyEndHour", "每日结束小时 *");
         zh.put("job.create.numPositions", "招聘人数 *");
         zh.put("job.create.deadline", "申请截止日期 *");
         zh.put("job.create.submit", "发布职位");
@@ -268,6 +312,8 @@ public class I18nUtil {
         zh.put("app.my.type", "类型");
         zh.put("app.my.appliedDate", "申请日期");
         zh.put("app.my.status", "状态");
+        zh.put("app.my.matchScore", "匹配度");
+        zh.put("app.my.missingSkills", "缺失技能");
         zh.put("app.my.action", "操作");
         zh.put("app.my.viewJob", "查看职位");
         zh.put("app.my.noApps", "您还没有申请任何职位。");
@@ -284,9 +330,12 @@ public class I18nUtil {
         zh.put("app.manage.filter", "筛选");
         zh.put("app.manage.skills", "技能");
         zh.put("app.manage.availableTime", "可用时间");
+        zh.put("app.manage.matchScore", "匹配度");
+        zh.put("app.manage.missingSkills", "缺失技能");
         zh.put("app.manage.actions", "操作");
         zh.put("app.manage.approve", "批准");
         zh.put("app.manage.reject", "拒绝");
+        zh.put("app.manage.viewProfile", "查看档案");
         zh.put("app.manage.processed", "已处理");
         zh.put("app.manage.noApps", "该职位还没有收到任何申请。");
         zh.put("app.manage.back", "返回我的职位");
@@ -296,6 +345,13 @@ public class I18nUtil {
         zh.put("status.pending", "待审核");
         zh.put("status.approved", "已批准");
         zh.put("status.rejected", "已拒绝");
+        zh.put("weekday.mon", "周一");
+        zh.put("weekday.tue", "周二");
+        zh.put("weekday.wed", "周三");
+        zh.put("weekday.thu", "周四");
+        zh.put("weekday.fri", "周五");
+        zh.put("weekday.sat", "周六");
+        zh.put("weekday.sun", "周日");
 
         translations.put("zh", zh);
     }
@@ -310,6 +366,14 @@ public class I18nUtil {
             langMap = translations.get("en");
         }
         return langMap != null ? langMap.getOrDefault(key, key) : key;
+    }
+
+    public static String getWeekdayDisplay(String code, String lang) {
+        if (code == null || code.trim().isEmpty()) {
+            return "";
+        }
+        String key = "weekday." + code.trim().toLowerCase();
+        return get(key, lang);
     }
 
     public static String getLanguage(HttpServletRequest request) {

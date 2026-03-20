@@ -9,19 +9,23 @@ import com.tarecruitment.model.User;
 import com.tarecruitment.util.JsonUtil;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class ApplicationService {
     private ApplicationDAO applicationDAO;
     private JobDAO jobDAO;
     private UserDAO userDAO;
+    private MatchingService matchingService;
 
     public ApplicationService() {
         this.applicationDAO = new ApplicationDAO();
         this.jobDAO = new JobDAO();
         this.userDAO = new UserDAO();
+        this.matchingService = new MatchingService();
     }
 
     public Application applyForJob(String jobId, String userId) {
@@ -42,11 +46,21 @@ public class ApplicationService {
             throw new IllegalArgumentException("You have already applied for this job");
         }
 
+        User applicant = userDAO.getUserById(userId);
+        if (applicant == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+        MatchingService.MatchResult matchResult = matchingService.evaluate(job, applicant);
+
         Application app = new Application();
         app.setApplicationId(JsonUtil.generateId("a"));
         app.setJobId(jobId);
         app.setUserId(userId);
         app.setStatus("PENDING");
+        app.setAppliedAt(new Timestamp(System.currentTimeMillis()));
+        app.setMatchScore(matchResult.getScore());
+        app.setMatchedSkills(matchResult.getMatchedSkills());
+        app.setMissingSkills(matchResult.getMissingSkills());
 
         applicationDAO.addApplication(app);
         return app;
@@ -85,15 +99,21 @@ public class ApplicationService {
     }
 
     public List<Application> getUserApplications(String userId) {
-        return applicationDAO.getApplicationsByUser(userId);
+        List<Application> apps = applicationDAO.getApplicationsByUser(userId);
+        return refreshAndReturn(apps);
     }
 
     public List<Application> getJobApplications(String jobId) {
-        return applicationDAO.getApplicationsByJob(jobId);
+        List<Application> apps = applicationDAO.getApplicationsByJob(jobId);
+        return refreshAndReturn(apps);
     }
 
     public Application getApplication(String jobId, String userId) {
-        return applicationDAO.getApplication(jobId, userId);
+        Application app = applicationDAO.getApplication(jobId, userId);
+        if (app != null) {
+            refreshMatchingResult(app);
+        }
+        return app;
     }
 
     public Map<String, Integer> getTAWorkload() {
@@ -106,5 +126,35 @@ public class ApplicationService {
         }
 
         return workload;
+    }
+
+    private List<Application> refreshAndReturn(List<Application> apps) {
+        List<Application> result = new ArrayList<>();
+        for (Application app : apps) {
+            refreshMatchingResult(app);
+            result.add(app);
+        }
+        return result;
+    }
+
+    private void refreshMatchingResult(Application app) {
+        Job job = jobDAO.getJobById(app.getJobId());
+        User applicant = userDAO.getUserById(app.getUserId());
+        if (job == null || applicant == null) {
+            return;
+        }
+        MatchingService.MatchResult matchResult = matchingService.evaluate(job, applicant);
+
+        boolean changed = !Objects.equals(app.getMatchScore(), matchResult.getScore())
+                || !Objects.equals(app.getMatchedSkills(), matchResult.getMatchedSkills())
+                || !Objects.equals(app.getMissingSkills(), matchResult.getMissingSkills());
+        if (!changed) {
+            return;
+        }
+
+        app.setMatchScore(matchResult.getScore());
+        app.setMatchedSkills(matchResult.getMatchedSkills());
+        app.setMissingSkills(matchResult.getMissingSkills());
+        applicationDAO.updateApplication(app);
     }
 }

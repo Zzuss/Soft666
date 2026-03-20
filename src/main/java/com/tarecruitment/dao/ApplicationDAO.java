@@ -5,7 +5,6 @@ import com.tarecruitment.util.JsonUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +28,14 @@ public class ApplicationDAO {
     }
 
     public void addApplication(Application app) {
+        loadData();
         JSONArray apps = data.getJSONArray("applications");
         apps.put(applicationToJson(app));
         saveData();
     }
 
     public void updateApplication(Application app) {
+        loadData();
         JSONArray apps = data.getJSONArray("applications");
         for (int i = 0; i < apps.length(); i++) {
             JSONObject a = apps.getJSONObject(i);
@@ -47,6 +48,7 @@ public class ApplicationDAO {
     }
 
     public void deleteApplication(String applicationId) {
+        loadData();
         JSONArray apps = data.getJSONArray("applications");
         JSONArray newApps = new JSONArray();
         for (int i = 0; i < apps.length(); i++) {
@@ -60,6 +62,7 @@ public class ApplicationDAO {
     }
 
     public Application getApplicationById(String applicationId) {
+        loadData();
         JSONArray apps = data.getJSONArray("applications");
         for (int i = 0; i < apps.length(); i++) {
             JSONObject a = apps.getJSONObject(i);
@@ -71,6 +74,7 @@ public class ApplicationDAO {
     }
 
     public Application getApplication(String jobId, String userId) {
+        loadData();
         JSONArray apps = data.getJSONArray("applications");
         for (int i = 0; i < apps.length(); i++) {
             JSONObject a = apps.getJSONObject(i);
@@ -82,6 +86,7 @@ public class ApplicationDAO {
     }
 
     public List<Application> getApplicationsByJob(String jobId) {
+        loadData();
         List<Application> appList = new ArrayList<>();
         JSONArray apps = data.getJSONArray("applications");
         for (int i = 0; i < apps.length(); i++) {
@@ -94,6 +99,7 @@ public class ApplicationDAO {
     }
 
     public List<Application> getApplicationsByUser(String userId) {
+        loadData();
         List<Application> appList = new ArrayList<>();
         JSONArray apps = data.getJSONArray("applications");
         for (int i = 0; i < apps.length(); i++) {
@@ -106,6 +112,7 @@ public class ApplicationDAO {
     }
 
     public List<Application> getApprovedApplicationsByUser(String userId) {
+        loadData();
         List<Application> appList = new ArrayList<>();
         JSONArray apps = data.getJSONArray("applications");
         for (int i = 0; i < apps.length(); i++) {
@@ -130,6 +137,11 @@ public class ApplicationDAO {
         if (app.getAppliedAt() != null) {
             a.put("appliedAt", app.getAppliedAt().toString());
         }
+        if (app.getMatchScore() != null) {
+            a.put("matchScore", app.getMatchScore());
+        }
+        a.put("matchedSkills", JsonUtil.fromStringList(app.getMatchedSkills()));
+        a.put("missingSkills", JsonUtil.fromStringList(app.getMissingSkills()));
         a.put("reviewedBy", app.getReviewedBy() != null ? app.getReviewedBy() : "");
         if (app.getReviewedAt() != null) {
             a.put("reviewedAt", app.getReviewedAt().toString());
@@ -144,6 +156,11 @@ public class ApplicationDAO {
         app.setUserId(a.getString("userId"));
         app.setStatus(a.optString("status", "PENDING"));
         app.setAppliedAt(JsonUtil.parseTimestamp(a.optString("appliedAt", null)));
+        if (a.has("matchScore") && !a.isNull("matchScore")) {
+            app.setMatchScore(a.getDouble("matchScore"));
+        }
+        app.setMatchedSkills(JsonUtil.toStringList(a.optJSONArray("matchedSkills")));
+        app.setMissingSkills(JsonUtil.toStringList(a.optJSONArray("missingSkills")));
         String reviewedBy = a.optString("reviewedBy", "");
         app.setReviewedBy(reviewedBy.isEmpty() ? null : reviewedBy);
         app.setReviewedAt(JsonUtil.parseTimestamp(a.optString("reviewedAt", null)));

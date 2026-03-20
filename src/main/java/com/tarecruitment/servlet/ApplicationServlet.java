@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @WebServlet("/applications/*")
@@ -136,6 +137,9 @@ public class ApplicationServlet extends HttpServlet {
             request.setAttribute("user_" + app.getUserId(), applicant);
             filteredApplications.add(app);
         }
+        filteredApplications.sort(Comparator
+                .comparing((Application app) -> app.getMatchScore() != null ? app.getMatchScore() : -1.0)
+                .reversed());
         
         request.setAttribute("job", job);
         request.setAttribute("applications", filteredApplications);

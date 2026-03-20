@@ -1,6 +1,8 @@
 package com.tarecruitment.model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Application {
     private String applicationId;
@@ -10,8 +12,13 @@ public class Application {
     private Timestamp appliedAt;
     private String reviewedBy;
     private Timestamp reviewedAt;
+    private Double matchScore;
+    private List<String> matchedSkills;
+    private List<String> missingSkills;
 
     public Application() {
+        this.matchedSkills = new ArrayList<>();
+        this.missingSkills = new ArrayList<>();
     }
 
     public Application(String applicationId, String jobId, String userId) {
@@ -20,6 +27,8 @@ public class Application {
         this.userId = userId;
         this.status = "PENDING";
         this.appliedAt = new Timestamp(System.currentTimeMillis());
+        this.matchedSkills = new ArrayList<>();
+        this.missingSkills = new ArrayList<>();
     }
 
     public String getApplicationId() {
@@ -76,6 +85,30 @@ public class Application {
 
     public void setReviewedAt(Timestamp reviewedAt) {
         this.reviewedAt = reviewedAt;
+    }
+
+    public Double getMatchScore() {
+        return matchScore;
+    }
+
+    public void setMatchScore(Double matchScore) {
+        this.matchScore = matchScore;
+    }
+
+    public List<String> getMatchedSkills() {
+        return matchedSkills;
+    }
+
+    public void setMatchedSkills(List<String> matchedSkills) {
+        this.matchedSkills = matchedSkills != null ? matchedSkills : new ArrayList<>();
+    }
+
+    public List<String> getMissingSkills() {
+        return missingSkills;
+    }
+
+    public void setMissingSkills(List<String> missingSkills) {
+        this.missingSkills = missingSkills != null ? missingSkills : new ArrayList<>();
     }
 
     public boolean isPending() {

@@ -8,6 +8,11 @@ public class Job {
     private String type;
     private String description;
     private String requirements;
+    private String workStartDate;
+    private String workEndDate;
+    private String workWeekdays;
+    private String dailyStartHour;
+    private String dailyEndHour;
     private int positions;
     private String postedBy;
     private String deadline;
@@ -69,6 +74,46 @@ public class Job {
 
     public void setRequirements(String requirements) {
         this.requirements = requirements;
+    }
+
+    public String getWorkStartDate() {
+        return workStartDate;
+    }
+
+    public void setWorkStartDate(String workStartDate) {
+        this.workStartDate = workStartDate;
+    }
+
+    public String getWorkEndDate() {
+        return workEndDate;
+    }
+
+    public void setWorkEndDate(String workEndDate) {
+        this.workEndDate = workEndDate;
+    }
+
+    public String getWorkWeekdays() {
+        return workWeekdays;
+    }
+
+    public void setWorkWeekdays(String workWeekdays) {
+        this.workWeekdays = workWeekdays;
+    }
+
+    public String getDailyStartHour() {
+        return dailyStartHour;
+    }
+
+    public void setDailyStartHour(String dailyStartHour) {
+        this.dailyStartHour = dailyStartHour;
+    }
+
+    public String getDailyEndHour() {
+        return dailyEndHour;
+    }
+
+    public void setDailyEndHour(String dailyEndHour) {
+        this.dailyEndHour = dailyEndHour;
     }
 
     public int getPositions() {

@@ -48,10 +48,12 @@
                 <h3><%= request.getAttribute("openJobsCount") %></h3>
                 <p><%= I18nUtil.get("dashboard.openPositions", lang) %></p>
             </div>
-            <div class="stat-card">
-                <h3><%= request.getAttribute("myJobsCount") %></h3>
-                <p><%= I18nUtil.get("dashboard.myPostedJobs", lang) %></p>
-            </div>
+            <% if (!user.isTA()) { %>
+                <div class="stat-card">
+                    <h3><%= request.getAttribute("myJobsCount") %></h3>
+                    <p><%= I18nUtil.get("dashboard.myPostedJobs", lang) %></p>
+                </div>
+            <% } %>
             <% if (user.isTA()) { %>
                 <div class="stat-card">
                     <h3><%= request.getAttribute("myApplicationsCount") %></h3>
