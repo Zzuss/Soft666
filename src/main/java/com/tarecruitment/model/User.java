@@ -12,6 +12,10 @@ public class User {
     private String role;
     private List<String> skills;
     private String availableTime;
+    private String bio;
+    private String resumeFileName;
+    private String resumePath;
+    private Timestamp resumeUpdatedAt;
     private boolean enabled;
     private Timestamp createdAt;
 
@@ -91,6 +95,38 @@ public class User {
 
     public void setAvailableTime(String availableTime) {
         this.availableTime = availableTime;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getResumeFileName() {
+        return resumeFileName;
+    }
+
+    public void setResumeFileName(String resumeFileName) {
+        this.resumeFileName = resumeFileName;
+    }
+
+    public String getResumePath() {
+        return resumePath;
+    }
+
+    public void setResumePath(String resumePath) {
+        this.resumePath = resumePath;
+    }
+
+    public Timestamp getResumeUpdatedAt() {
+        return resumeUpdatedAt;
+    }
+
+    public void setResumeUpdatedAt(Timestamp resumeUpdatedAt) {
+        this.resumeUpdatedAt = resumeUpdatedAt;
     }
 
     public boolean isEnabled() {

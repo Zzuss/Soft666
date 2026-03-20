@@ -13,6 +13,14 @@
     Job job = (Job) request.getAttribute("job");
     List<Application> applications = (List<Application>) request.getAttribute("applications");
     String lang = I18nUtil.getLanguage(request);
+    String statusFilter = (String) request.getAttribute("statusFilter");
+    if (statusFilter == null || statusFilter.isEmpty()) {
+        statusFilter = "ALL";
+    }
+    String keywordFilter = (String) request.getAttribute("keywordFilter");
+    if (keywordFilter == null) {
+        keywordFilter = "";
+    }
 %>
 <!DOCTYPE html>
 <html>
@@ -29,7 +37,11 @@
             <div class="navbar-menu">
                 <a href="${pageContext.request.contextPath}/dashboard"><%= I18nUtil.get("nav.dashboard", lang) %></a>
                 <a href="${pageContext.request.contextPath}/jobs/list"><%= I18nUtil.get("nav.jobs", lang) %></a>
-                <a href="${pageContext.request.contextPath}/jobs/myjobs"><%= I18nUtil.get("nav.myPostedJobs", lang) %></a>
+                <% if (user.isAdmin()) { %>
+                    <a href="${pageContext.request.contextPath}/admin/workload"><%= I18nUtil.get("nav.workload", lang) %></a>
+                <% } else { %>
+                    <a href="${pageContext.request.contextPath}/jobs/myjobs"><%= I18nUtil.get("nav.myPostedJobs", lang) %></a>
+                <% } %>
                 <span class="navbar-user"><%= user.getName() %> (<%= user.getRole() %>)</span>
                 <a href="${pageContext.request.contextPath}/auth?action=logout" class="btn btn-secondary"><%= I18nUtil.get("nav.logout", lang) %></a>
                 <jsp:include page="/jsp/common/language-switcher.jsp" />
@@ -57,6 +69,22 @@
             <div class="alert alert-success"><%= request.getParameter("success") %></div>
         <% } %>
 
+        <% if (job != null) { %>
+            <div class="card">
+                <form action="${pageContext.request.contextPath}/applications/manage" method="get" class="filter-bar">
+                    <input type="hidden" name="jobId" value="<%= job.getJobId() %>">
+                    <select name="status">
+                        <option value="ALL" <%= "ALL".equalsIgnoreCase(statusFilter) ? "selected" : "" %>><%= I18nUtil.get("app.manage.statusAll", lang) %></option>
+                        <option value="PENDING" <%= "PENDING".equalsIgnoreCase(statusFilter) ? "selected" : "" %>><%= I18nUtil.get("status.pending", lang) %></option>
+                        <option value="APPROVED" <%= "APPROVED".equalsIgnoreCase(statusFilter) ? "selected" : "" %>><%= I18nUtil.get("status.approved", lang) %></option>
+                        <option value="REJECTED" <%= "REJECTED".equalsIgnoreCase(statusFilter) ? "selected" : "" %>><%= I18nUtil.get("status.rejected", lang) %></option>
+                    </select>
+                    <input type="text" name="keyword" value="<%= keywordFilter %>" placeholder="<%= I18nUtil.get("app.manage.keyword", lang) %>">
+                    <button type="submit" class="btn btn-primary"><%= I18nUtil.get("app.manage.filter", lang) %></button>
+                </form>
+            </div>
+        <% } %>
+
         <% if (applications != null && !applications.isEmpty()) { %>
             <div class="card">
                 <table class="table">
@@ -64,6 +92,8 @@
                         <tr>
                             <th><%= I18nUtil.get("app.manage.applicantName", lang) %></th>
                             <th><%= I18nUtil.get("app.manage.email", lang) %></th>
+                            <th><%= I18nUtil.get("app.manage.skills", lang) %></th>
+                            <th><%= I18nUtil.get("app.manage.availableTime", lang) %></th>
                             <th><%= I18nUtil.get("app.manage.appliedDate", lang) %></th>
                             <th><%= I18nUtil.get("app.manage.status", lang) %></th>
                             <th><%= I18nUtil.get("app.manage.actions", lang) %></th>
@@ -76,6 +106,8 @@
                             <tr>
                                 <td><%= applicant != null ? applicant.getName() : "Unknown" %></td>
                                 <td><%= applicant != null ? applicant.getEmail() : "-" %></td>
+                                <td><%= (applicant != null && applicant.getSkills() != null && !applicant.getSkills().isEmpty()) ? String.join(", ", applicant.getSkills()) : "-" %></td>
+                                <td><%= (applicant != null && applicant.getAvailableTime() != null && !applicant.getAvailableTime().isEmpty()) ? applicant.getAvailableTime() : "-" %></td>
                                 <td><%= app.getAppliedAt() != null ? app.getAppliedAt().toString().substring(0, 19) : "-" %></td>
                                 <td>
                                     <span class="badge <%= app.isPending() ? "badge-pending" : (app.isApproved() ? "badge-approved" : "badge-rejected") %>">

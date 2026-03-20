@@ -15,6 +15,8 @@ public class I18nUtil {
         en.put("nav.jobs", "Jobs");
         en.put("nav.myApplications", "My Applications");
         en.put("nav.myPostedJobs", "My Posted Jobs");
+        en.put("nav.profile", "My Profile");
+        en.put("nav.workload", "TA Workload");
         en.put("nav.logout", "Logout");
         en.put("login.title", "Login");
         en.put("login.username", "Username");
@@ -46,10 +48,36 @@ public class I18nUtil {
         en.put("dashboard.browseJobs", "Browse Jobs");
         en.put("dashboard.postNewJob", "Post New Job");
         en.put("dashboard.manageJobs", "Manage My Jobs");
+        en.put("dashboard.myProfile", "My Profile");
+        en.put("dashboard.taWorkload", "View TA Workload");
         en.put("dashboard.roleInfo", "Role Information");
         en.put("dashboard.taRole", "As a Teaching Assistant (TA), you can browse available positions and apply for jobs that match your skills.");
         en.put("dashboard.moRole", "As a Module Organiser (MO), you can post job positions and review applications from TA candidates.");
         en.put("dashboard.adminRole", "As an Administrator, you have full access to manage the system and view all data.");
+
+        en.put("profile.title", "Applicant Profile");
+        en.put("profile.basicInfo", "Basic Information");
+        en.put("profile.name", "Full Name");
+        en.put("profile.email", "Email");
+        en.put("profile.skills", "Skills (comma separated)");
+        en.put("profile.availableTime", "Available Time");
+        en.put("profile.bio", "Personal Statement");
+        en.put("profile.bioPlaceholder", "Briefly describe your strengths and experience");
+        en.put("profile.update", "Save Profile");
+        en.put("profile.resume", "Resume");
+        en.put("profile.resumeHint", "Accepted formats: PDF, DOC, DOCX. Max size: 5MB.");
+        en.put("profile.uploadResume", "Upload Resume");
+        en.put("profile.currentResume", "Current Resume");
+        en.put("profile.updatedAt", "Updated At");
+        en.put("profile.downloadResume", "Download Resume");
+        en.put("profile.noResume", "No resume uploaded yet.");
+
+        en.put("admin.workload.title", "TA Overall Workload");
+        en.put("admin.workload.taName", "TA Name");
+        en.put("admin.workload.email", "Email");
+        en.put("admin.workload.skills", "Skills");
+        en.put("admin.workload.approved", "Approved Assignments");
+        en.put("admin.workload.noData", "No TA records found.");
 
         en.put("jobs.available", "Available Positions");
         en.put("jobs.search", "Search jobs...");
@@ -106,6 +134,11 @@ public class I18nUtil {
         en.put("app.manage.email", "Email");
         en.put("app.manage.appliedDate", "Applied Date");
         en.put("app.manage.status", "Status");
+        en.put("app.manage.statusAll", "All Statuses");
+        en.put("app.manage.keyword", "Search name, email, skills...");
+        en.put("app.manage.filter", "Filter");
+        en.put("app.manage.skills", "Skills");
+        en.put("app.manage.availableTime", "Available Time");
         en.put("app.manage.actions", "Actions");
         en.put("app.manage.approve", "Approve");
         en.put("app.manage.reject", "Reject");
@@ -127,6 +160,8 @@ public class I18nUtil {
         zh.put("nav.jobs", "职位");
         zh.put("nav.myApplications", "我的申请");
         zh.put("nav.myPostedJobs", "我发布的职位");
+        zh.put("nav.profile", "我的档案");
+        zh.put("nav.workload", "助教工作负荷");
         zh.put("nav.logout", "退出");
         zh.put("login.title", "登录");
         zh.put("login.username", "用户名");
@@ -158,10 +193,36 @@ public class I18nUtil {
         zh.put("dashboard.browseJobs", "浏览职位");
         zh.put("dashboard.postNewJob", "发布新职位");
         zh.put("dashboard.manageJobs", "管理我的职位");
+        zh.put("dashboard.myProfile", "我的档案");
+        zh.put("dashboard.taWorkload", "查看助教负荷");
         zh.put("dashboard.roleInfo", "角色信息");
         zh.put("dashboard.taRole", "作为助教 (TA)，您可以浏览可用职位并申请与您技能相匹配的职位。");
         zh.put("dashboard.moRole", "作为课程管理员 (MO)，您可以发布职位并审核来自助教候选人的申请。");
         zh.put("dashboard.adminRole", "作为管理员，您拥有系统的完全访问权限，可以管理所有数据。");
+
+        zh.put("profile.title", "申请人档案");
+        zh.put("profile.basicInfo", "基础信息");
+        zh.put("profile.name", "姓名");
+        zh.put("profile.email", "邮箱");
+        zh.put("profile.skills", "技能（逗号分隔）");
+        zh.put("profile.availableTime", "可用时间");
+        zh.put("profile.bio", "个人陈述");
+        zh.put("profile.bioPlaceholder", "简要描述你的优势与经历");
+        zh.put("profile.update", "保存档案");
+        zh.put("profile.resume", "简历");
+        zh.put("profile.resumeHint", "支持 PDF、DOC、DOCX，最大 5MB。");
+        zh.put("profile.uploadResume", "上传简历");
+        zh.put("profile.currentResume", "当前简历");
+        zh.put("profile.updatedAt", "更新时间");
+        zh.put("profile.downloadResume", "下载简历");
+        zh.put("profile.noResume", "暂未上传简历。");
+
+        zh.put("admin.workload.title", "助教整体工作负荷");
+        zh.put("admin.workload.taName", "助教姓名");
+        zh.put("admin.workload.email", "邮箱");
+        zh.put("admin.workload.skills", "技能");
+        zh.put("admin.workload.approved", "已批准分配数");
+        zh.put("admin.workload.noData", "暂无助教数据。");
 
         zh.put("jobs.available", "可用职位");
         zh.put("jobs.search", "搜索职位...");
@@ -218,6 +279,11 @@ public class I18nUtil {
         zh.put("app.manage.email", "邮箱");
         zh.put("app.manage.appliedDate", "申请日期");
         zh.put("app.manage.status", "状态");
+        zh.put("app.manage.statusAll", "全部状态");
+        zh.put("app.manage.keyword", "搜索姓名、邮箱、技能...");
+        zh.put("app.manage.filter", "筛选");
+        zh.put("app.manage.skills", "技能");
+        zh.put("app.manage.availableTime", "可用时间");
         zh.put("app.manage.actions", "操作");
         zh.put("app.manage.approve", "批准");
         zh.put("app.manage.reject", "拒绝");

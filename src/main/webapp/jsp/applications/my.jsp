@@ -12,6 +12,10 @@
     }
     List<Application> applications = (List<Application>) request.getAttribute("applications");
     String lang = I18nUtil.getLanguage(request);
+    String statusFilter = (String) request.getAttribute("statusFilter");
+    if (statusFilter == null || statusFilter.isEmpty()) {
+        statusFilter = "ALL";
+    }
 %>
 <!DOCTYPE html>
 <html>
@@ -29,6 +33,7 @@
                 <a href="${pageContext.request.contextPath}/dashboard"><%= I18nUtil.get("nav.dashboard", lang) %></a>
                 <a href="${pageContext.request.contextPath}/jobs/list"><%= I18nUtil.get("nav.jobs", lang) %></a>
                 <a href="${pageContext.request.contextPath}/applications/my"><%= I18nUtil.get("nav.myApplications", lang) %></a>
+                <a href="${pageContext.request.contextPath}/profile"><%= I18nUtil.get("nav.profile", lang) %></a>
                 <span class="navbar-user"><%= user.getName() %> (<%= user.getRole() %>)</span>
                 <a href="${pageContext.request.contextPath}/auth?action=logout" class="btn btn-secondary"><%= I18nUtil.get("nav.logout", lang) %></a>
                 <jsp:include page="/jsp/common/language-switcher.jsp" />
@@ -44,6 +49,18 @@
         <% if (request.getParameter("success") != null) { %>
             <div class="alert alert-success"><%= request.getParameter("success") %></div>
         <% } %>
+
+        <div class="card">
+            <form action="${pageContext.request.contextPath}/applications/my" method="get" class="filter-bar">
+                <select name="status">
+                    <option value="ALL" <%= "ALL".equalsIgnoreCase(statusFilter) ? "selected" : "" %>><%= I18nUtil.get("app.manage.statusAll", lang) %></option>
+                    <option value="PENDING" <%= "PENDING".equalsIgnoreCase(statusFilter) ? "selected" : "" %>><%= I18nUtil.get("status.pending", lang) %></option>
+                    <option value="APPROVED" <%= "APPROVED".equalsIgnoreCase(statusFilter) ? "selected" : "" %>><%= I18nUtil.get("status.approved", lang) %></option>
+                    <option value="REJECTED" <%= "REJECTED".equalsIgnoreCase(statusFilter) ? "selected" : "" %>><%= I18nUtil.get("status.rejected", lang) %></option>
+                </select>
+                <button type="submit" class="btn btn-primary"><%= I18nUtil.get("app.manage.filter", lang) %></button>
+            </form>
+        </div>
 
         <% if (applications != null && !applications.isEmpty()) { %>
             <div class="card">

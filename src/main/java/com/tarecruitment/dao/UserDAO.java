@@ -116,6 +116,12 @@ public class UserDAO {
         u.put("role", user.getRole());
         u.put("skills", JsonUtil.fromStringList(user.getSkills()));
         u.put("availableTime", user.getAvailableTime() != null ? user.getAvailableTime() : "");
+        u.put("bio", user.getBio() != null ? user.getBio() : "");
+        u.put("resumeFileName", user.getResumeFileName() != null ? user.getResumeFileName() : "");
+        u.put("resumePath", user.getResumePath() != null ? user.getResumePath() : "");
+        if (user.getResumeUpdatedAt() != null) {
+            u.put("resumeUpdatedAt", user.getResumeUpdatedAt().toString());
+        }
         u.put("enabled", user.isEnabled());
         if (user.getCreatedAt() != null) {
             u.put("createdAt", user.getCreatedAt().toString());
@@ -131,8 +137,15 @@ public class UserDAO {
         user.setName(u.getString("name"));
         user.setEmail(u.getString("email"));
         user.setRole(u.getString("role"));
-        user.setSkills(JsonUtil.toStringList(u.getJSONArray("skills")));
+        JSONArray skillsArray = u.optJSONArray("skills");
+        user.setSkills(JsonUtil.toStringList(skillsArray != null ? skillsArray : new JSONArray()));
         user.setAvailableTime(u.optString("availableTime", ""));
+        user.setBio(u.optString("bio", ""));
+        String resumeFileName = u.optString("resumeFileName", "");
+        user.setResumeFileName(resumeFileName.isEmpty() ? null : resumeFileName);
+        String resumePath = u.optString("resumePath", "");
+        user.setResumePath(resumePath.isEmpty() ? null : resumePath);
+        user.setResumeUpdatedAt(JsonUtil.parseTimestamp(u.optString("resumeUpdatedAt", null)));
         user.setEnabled(u.optBoolean("enabled", true));
         user.setCreatedAt(JsonUtil.parseTimestamp(u.optString("createdAt", null)));
         return user;

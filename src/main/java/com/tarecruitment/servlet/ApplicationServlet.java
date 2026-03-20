@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/applications/*")
@@ -78,52 +79,68 @@ public class ApplicationServlet extends HttpServlet {
 
     private void listApplications(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        User user = (User) request.getSession(false).getAttribute("user");
-        
-        if (user.isTA()) {
-            List<Application> applications = applicationService.getUserApplications(user.getUserId());
-            request.setAttribute("applications", applications);
-            request.getRequestDispatcher("/jsp/applications/list.jsp").forward(request, response);
-        } else {
-            List<Application> allApps = applicationService.getUserApplications(user.getUserId());
-            request.setAttribute("applications", allApps);
-            request.getRequestDispatcher("/jsp/applications/list.jsp").forward(request, response);
-        }
+        response.sendRedirect(request.getContextPath() + "/applications/my");
     }
 
     private void listMyApplications(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         User user = (User) request.getSession(false).getAttribute("user");
         List<Application> applications = applicationService.getUserApplications(user.getUserId());
+        String statusFilter = request.getParameter("status");
+        if (statusFilter != null && !statusFilter.isEmpty() && !"ALL".equalsIgnoreCase(statusFilter)) {
+            applications.removeIf(app -> !statusFilter.equalsIgnoreCase(app.getStatus()));
+        }
         
         for (Application app : applications) {
             Job job = jobService.getJobById(app.getJobId());
             request.setAttribute("job_" + app.getJobId(), job);
         }
         
+        request.setAttribute("statusFilter", statusFilter != null ? statusFilter : "ALL");
         request.setAttribute("applications", applications);
         request.getRequestDispatcher("/jsp/applications/my.jsp").forward(request, response);
     }
 
     private void manageApplications(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        User currentUser = (User) request.getSession(false).getAttribute("user");
         String jobId = request.getParameter("jobId");
         
         if (jobId == null || jobId.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/jobs/myjobs");
             return;
         }
-        
-        List<Application> applications = applicationService.getJobApplications(jobId);
-        
-        for (Application app : applications) {
-            User applicant = userService.getUserById(app.getUserId());
-            request.setAttribute("user_" + app.getUserId(), applicant);
+        Job job = jobService.getJobById(jobId);
+        if (job == null) {
+            response.sendRedirect(request.getContextPath() + "/jobs/myjobs?error=Job not found");
+            return;
+        }
+        if (!canManageJob(currentUser, job)) {
+            response.sendRedirect(request.getContextPath() + "/jobs/myjobs?error=No permission to manage this job");
+            return;
         }
         
-        Job job = jobService.getJobById(jobId);
+        String statusFilter = request.getParameter("status");
+        String keywordFilter = request.getParameter("keyword");
+
+        List<Application> applications = applicationService.getJobApplications(jobId);
+        List<Application> filteredApplications = new ArrayList<>();
+        for (Application app : applications) {
+            User applicant = userService.getUserById(app.getUserId());
+            if (!matchStatusFilter(app, statusFilter)) {
+                continue;
+            }
+            if (!matchKeywordFilter(applicant, keywordFilter)) {
+                continue;
+            }
+            request.setAttribute("user_" + app.getUserId(), applicant);
+            filteredApplications.add(app);
+        }
+        
         request.setAttribute("job", job);
-        request.setAttribute("applications", applications);
+        request.setAttribute("applications", filteredApplications);
+        request.setAttribute("statusFilter", statusFilter != null ? statusFilter : "ALL");
+        request.setAttribute("keywordFilter", keywordFilter != null ? keywordFilter : "");
         request.getRequestDispatcher("/jsp/applications/manage.jsp").forward(request, response);
     }
 
@@ -131,6 +148,10 @@ public class ApplicationServlet extends HttpServlet {
             throws ServletException, IOException {
         try {
             User user = (User) request.getSession(false).getAttribute("user");
+            if (user == null || !user.isTA()) {
+                response.sendRedirect(request.getContextPath() + "/jobs/list?error=Only TA can apply for jobs");
+                return;
+            }
             String jobId = request.getParameter("jobId");
 
             applicationService.applyForJob(jobId, user.getUserId());
@@ -147,6 +168,11 @@ public class ApplicationServlet extends HttpServlet {
             User user = (User) request.getSession(false).getAttribute("user");
             String applicationId = request.getParameter("id");
             String jobId = request.getParameter("jobId");
+            Job job = jobService.getJobById(jobId);
+            if (job == null || !canManageJob(user, job)) {
+                response.sendRedirect(request.getContextPath() + "/jobs/myjobs?error=No permission to approve this application");
+                return;
+            }
 
             applicationService.approveApplication(applicationId, user.getUserId());
             
@@ -162,6 +188,11 @@ public class ApplicationServlet extends HttpServlet {
             User user = (User) request.getSession(false).getAttribute("user");
             String applicationId = request.getParameter("id");
             String jobId = request.getParameter("jobId");
+            Job job = jobService.getJobById(jobId);
+            if (job == null || !canManageJob(user, job)) {
+                response.sendRedirect(request.getContextPath() + "/jobs/myjobs?error=No permission to reject this application");
+                return;
+            }
 
             applicationService.rejectApplication(applicationId, user.getUserId());
             
@@ -169,5 +200,45 @@ public class ApplicationServlet extends HttpServlet {
         } catch (Exception e) {
             response.sendRedirect(request.getContextPath() + "/applications/manage?error=" + e.getMessage());
         }
+    }
+
+    private boolean matchStatusFilter(Application app, String statusFilter) {
+        if (statusFilter == null || statusFilter.isEmpty() || "ALL".equalsIgnoreCase(statusFilter)) {
+            return true;
+        }
+        return statusFilter.equalsIgnoreCase(app.getStatus());
+    }
+
+    private boolean matchKeywordFilter(User applicant, String keywordFilter) {
+        if (keywordFilter == null || keywordFilter.trim().isEmpty()) {
+            return true;
+        }
+        if (applicant == null) {
+            return false;
+        }
+        String kw = keywordFilter.trim().toLowerCase();
+        String name = applicant.getName() != null ? applicant.getName().toLowerCase() : "";
+        String email = applicant.getEmail() != null ? applicant.getEmail().toLowerCase() : "";
+        String availableTime = applicant.getAvailableTime() != null ? applicant.getAvailableTime().toLowerCase() : "";
+        String bio = applicant.getBio() != null ? applicant.getBio().toLowerCase() : "";
+        String skills = "";
+        if (applicant.getSkills() != null && !applicant.getSkills().isEmpty()) {
+            skills = String.join(" ", applicant.getSkills()).toLowerCase();
+        }
+        return name.contains(kw)
+                || email.contains(kw)
+                || availableTime.contains(kw)
+                || bio.contains(kw)
+                || skills.contains(kw);
+    }
+
+    private boolean canManageJob(User user, Job job) {
+        if (user == null || job == null) {
+            return false;
+        }
+        if (user.isAdmin()) {
+            return true;
+        }
+        return user.isMO() && user.getUserId().equals(job.getPostedBy());
     }
 }

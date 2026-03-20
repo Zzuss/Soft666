@@ -12,8 +12,13 @@ public class UserService {
         this.userDAO = new UserDAO();
     }
 
-    public void updateProfile(String userId, String name, String email, 
+    public void updateProfile(String userId, String name, String email,
                              List<String> skills, String availableTime) {
+        updateProfile(userId, name, email, skills, availableTime, null);
+    }
+
+    public void updateProfile(String userId, String name, String email,
+                             List<String> skills, String availableTime, String bio) {
         User user = userDAO.getUserById(userId);
         if (user == null) {
             throw new IllegalArgumentException("User not found");
@@ -31,7 +36,21 @@ public class UserService {
         if (availableTime != null) {
             user.setAvailableTime(availableTime);
         }
+        if (bio != null) {
+            user.setBio(bio);
+        }
 
+        userDAO.updateUser(user);
+    }
+
+    public void updateResume(String userId, String originalFileName, String storedPath) {
+        User user = userDAO.getUserById(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+        user.setResumeFileName(originalFileName);
+        user.setResumePath(storedPath);
+        user.setResumeUpdatedAt(new java.sql.Timestamp(System.currentTimeMillis()));
         userDAO.updateUser(user);
     }
 

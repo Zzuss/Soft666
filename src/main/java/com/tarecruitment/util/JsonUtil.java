@@ -52,6 +52,10 @@ public class JsonUtil {
         return getDataDirectory() + File.separator + filename;
     }
 
+    public static String getDataDirectoryPath() {
+        return getDataDirectory();
+    }
+
     public static JSONObject readJsonFile(String filename) {
         String filePath = getFilePath(filename);
         File file = new File(filePath);
