@@ -12,6 +12,7 @@ public class Application {
     private Timestamp appliedAt;
     private String reviewedBy;
     private Timestamp reviewedAt;
+    private String rejectionNote;
     private Double matchScore;
     private List<String> matchedSkills;
     private List<String> missingSkills;
@@ -19,6 +20,7 @@ public class Application {
     public Application() {
         this.matchedSkills = new ArrayList<>();
         this.missingSkills = new ArrayList<>();
+        this.rejectionNote = "";
     }
 
     public Application(String applicationId, String jobId, String userId) {
@@ -27,6 +29,7 @@ public class Application {
         this.userId = userId;
         this.status = "PENDING";
         this.appliedAt = new Timestamp(System.currentTimeMillis());
+        this.rejectionNote = "";
         this.matchedSkills = new ArrayList<>();
         this.missingSkills = new ArrayList<>();
     }
@@ -85,6 +88,14 @@ public class Application {
 
     public void setReviewedAt(Timestamp reviewedAt) {
         this.reviewedAt = reviewedAt;
+    }
+
+    public String getRejectionNote() {
+        return rejectionNote;
+    }
+
+    public void setRejectionNote(String rejectionNote) {
+        this.rejectionNote = rejectionNote != null ? rejectionNote : "";
     }
 
     public Double getMatchScore() {

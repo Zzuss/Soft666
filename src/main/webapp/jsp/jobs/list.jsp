@@ -2,6 +2,7 @@
 <%@ page import="com.tarecruitment.model.User" %>
 <%@ page import="com.tarecruitment.model.Job" %>
 <%@ page import="com.tarecruitment.util.I18nUtil" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%
     User user = (User) session.getAttribute("user");
@@ -12,6 +13,17 @@
     List<Job> jobs = (List<Job>) request.getAttribute("jobs");
     String keyword = (String) request.getAttribute("keyword");
     String type = (String) request.getAttribute("type");
+    List<String> selectedSkills = (List<String>) request.getAttribute("selectedSkills");
+    if (selectedSkills == null) {
+        selectedSkills = new ArrayList<>();
+    }
+    List<String> availableSkills = (List<String>) request.getAttribute("availableSkills");
+    if (availableSkills == null) {
+        availableSkills = new ArrayList<>();
+    }
+    boolean hasActiveFilter = (keyword != null && !keyword.trim().isEmpty())
+            || (type != null && !type.trim().isEmpty() && !"ALL".equalsIgnoreCase(type))
+            || !selectedSkills.isEmpty();
     String lang = I18nUtil.getLanguage(request);
 %>
 <!DOCTYPE html>
@@ -49,13 +61,31 @@
             <form action="${pageContext.request.contextPath}/jobs/list" method="get" class="filter-bar">
                 <input type="text" name="keyword" placeholder="<%= I18nUtil.get("jobs.search", lang) %>" value="<%= keyword != null ? keyword : "" %>">
                 <select name="type">
-                    <option value="ALL"><%= I18nUtil.get("jobs.allTypes", lang) %></option>
+                    <option value="ALL" <%= type == null || type.isEmpty() || "ALL".equalsIgnoreCase(type) ? "selected" : "" %>><%= I18nUtil.get("jobs.allTypes", lang) %></option>
                     <option value="MODULE" <%= "MODULE".equals(type) ? "selected" : "" %>><%= I18nUtil.get("jobs.moduleTutor", lang) %></option>
                     <option value="INVIGILATION" <%= "INVIGILATION".equals(type) ? "selected" : "" %>><%= I18nUtil.get("jobs.invigilation", lang) %></option>
                     <option value="OTHER" <%= "OTHER".equals(type) ? "selected" : "" %>><%= I18nUtil.get("jobs.other", lang) %></option>
                 </select>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; width: 100%;">
+                    <span style="font-weight: 600;"><%= I18nUtil.get("jobs.skillsFilter", lang) %>:</span>
+                    <% for (String skill : availableSkills) { %>
+                        <label>
+                            <input type="checkbox" name="skills" value="<%= skill %>" <%= selectedSkills.contains(skill) ? "checked" : "" %>>
+                            <%= skill %>
+                        </label>
+                    <% } %>
+                </div>
                 <button type="submit" class="btn btn-primary"><%= I18nUtil.get("jobs.searchBtn", lang) %></button>
+                <a href="${pageContext.request.contextPath}/jobs/list" class="btn btn-secondary"><%= I18nUtil.get("jobs.clearFilters", lang) %></a>
             </form>
+            <% if (hasActiveFilter) { %>
+                <div class="info" style="margin-top: 8px;">
+                    <%= I18nUtil.get("jobs.activeFilters", lang) %>
+                    <%= (keyword != null && !keyword.trim().isEmpty()) ? (" | " + I18nUtil.get("jobs.search", lang) + ": " + keyword) : "" %>
+                    <%= (type != null && !type.trim().isEmpty() && !"ALL".equalsIgnoreCase(type)) ? (" | " + I18nUtil.get("job.detail.type", lang) + ": " + type) : "" %>
+                    <%= !selectedSkills.isEmpty() ? (" | " + I18nUtil.get("jobs.skillsFilter", lang) + ": " + String.join(", ", selectedSkills)) : "" %>
+                </div>
+            <% } %>
         </div>
 
         <% if (request.getParameter("error") != null) { %>
@@ -76,6 +106,14 @@
                                 <span><%= job.getTypeDisplayName(lang) %></span>
                                 <span><%= I18nUtil.get("jobs.positions", lang) %>: <%= job.getPositions() %></span>
                                 <span><%= I18nUtil.get("jobs.deadline", lang) %>: <%= job.getDeadline() %></span>
+                                <%
+                                    String postedAtText = "-";
+                                    if (job.getCreatedAt() != null) {
+                                        String raw = job.getCreatedAt().toString();
+                                        postedAtText = raw.length() >= 16 ? raw.substring(0, 16) : raw;
+                                    }
+                                %>
+                                <span><%= I18nUtil.get("jobs.postedAt", lang) %>: <%= postedAtText %></span>
                                 <span class="badge <%= job.isOpen() ? "badge-open" : "badge-closed" %>"><%= job.getStatusDisplayName(lang) %></span>
                             </div>
                         </div>

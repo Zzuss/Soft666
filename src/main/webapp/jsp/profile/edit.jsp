@@ -20,6 +20,7 @@
     if (skills != null && !skills.isEmpty()) {
         skillsText = String.join(", ", skills);
     }
+    String yearValue = profileUser.getYear() > 0 ? String.valueOf(profileUser.getYear()) : "";
     Set<String> selectedWeekdays = new HashSet<>();
     if (profileUser.getAvailabilityWeekdays() != null && !profileUser.getAvailabilityWeekdays().isEmpty()) {
         String[] values = profileUser.getAvailabilityWeekdays().split(",");
@@ -91,6 +92,29 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="studentId"><%= I18nUtil.get("profile.studentId", lang) %> *</label>
+                    <input type="text" id="studentId" name="studentId" required value="<%= profileUser.getStudentId() != null ? profileUser.getStudentId() : "" %>" maxlength="10" pattern="[0-9]{10}" inputmode="numeric" title="<%= I18nUtil.get("profile.studentIdHint", lang) %>">
+                </div>
+
+                <div class="form-group">
+                    <label for="major"><%= I18nUtil.get("profile.major", lang) %> *</label>
+                    <input type="text" id="major" name="major" required value="<%= profileUser.getMajor() != null ? profileUser.getMajor() : "" %>" maxlength="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="year"><%= I18nUtil.get("profile.year", lang) %> *</label>
+                    <input type="text" id="year" name="year" required value="<%= yearValue %>"
+                           maxlength="4" pattern="[0-9]{4}" inputmode="numeric"
+                           title="<%= I18nUtil.get("profile.yearHint", lang) %>">
+                    <p style="font-size: 12px; color: #718096; margin-top: 6px;"><%= I18nUtil.get("profile.yearHint", lang) %></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone"><%= I18nUtil.get("profile.phone", lang) %> *</label>
+                    <input type="text" id="phone" name="phone" required value="<%= profileUser.getPhone() != null ? profileUser.getPhone() : "" %>" maxlength="20">
+                </div>
+
+                <div class="form-group">
                     <label for="skills"><%= I18nUtil.get("profile.skills", lang) %></label>
                     <input type="text" id="skills" name="skills" placeholder="Java, SQL, Python" value="<%= skillsText %>">
                 </div>
@@ -98,6 +122,7 @@
                 <div class="form-group">
                     <label for="availableTime"><%= I18nUtil.get("profile.availableTime", lang) %></label>
                     <input type="text" id="availableTime" name="availableTime" readonly value="<%= profileUser.getAvailableTime() != null ? profileUser.getAvailableTime() : "" %>">
+                    <p style="font-size: 12px; color: #718096; margin-top: 6px;"><%= I18nUtil.get("profile.availableTimeAutoHint", lang) %></p>
                 </div>
 
                 <div class="form-group">

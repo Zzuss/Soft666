@@ -10,6 +10,10 @@ public class User {
     private String name;
     private String email;
     private String role;
+    private String studentId;
+    private String major;
+    private int year;
+    private String phone;
     private List<String> skills;
     private String availableTime;
     private String availabilityStartDate;
@@ -92,6 +96,38 @@ public class User {
 
     public void setSkills(List<String> skills) {
         this.skills = skills;
+    }
+
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getAvailableTime() {

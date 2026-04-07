@@ -16,6 +16,9 @@
             <% if (request.getAttribute("error") != null) { %>
                 <div class="error"><%= request.getAttribute("error") %></div>
             <% } %>
+            <% if (request.getParameter("success") != null) { %>
+                <div class="success"><%= request.getParameter("success") %></div>
+            <% } %>
             
             <form action="${pageContext.request.contextPath}/auth" method="post">
                 <input type="hidden" name="action" value="login">
@@ -29,6 +32,10 @@
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required>
                 </div>
+
+                <p style="margin-top: -8px; margin-bottom: 16px;">
+                    <a href="${pageContext.request.contextPath}/auth?action=forgotPassword" class="link">Forgot password?</a>
+                </p>
                 
                 <button type="submit" class="btn btn-primary btn-block">Login</button>
             </form>

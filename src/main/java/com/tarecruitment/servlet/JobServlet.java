@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/jobs/*")
@@ -40,6 +41,8 @@ public class JobServlet extends HttpServlet {
             listJobs(request, response);
         } else if (pathInfo.equals("/create")) {
             showCreateForm(request, response);
+        } else if (pathInfo.equals("/edit")) {
+            showEditForm(request, response);
         } else if (pathInfo.equals("/detail")) {
             showJobDetail(request, response);
         } else if (pathInfo.equals("/myjobs")) {
@@ -62,6 +65,8 @@ public class JobServlet extends HttpServlet {
 
         if ("/create".equals(pathInfo)) {
             createJob(request, response);
+        } else if ("/update".equals(pathInfo)) {
+            updateJob(request, response);
         } else if ("/close".equals(pathInfo)) {
             closeJob(request, response);
         } else if ("/delete".equals(pathInfo)) {
@@ -75,11 +80,15 @@ public class JobServlet extends HttpServlet {
             throws ServletException, IOException {
         String keyword = request.getParameter("keyword");
         String type = request.getParameter("type");
+        String[] skillParams = request.getParameterValues("skills");
+        List<String> selectedSkills = normalizeSelectedSkills(skillParams);
 
-        List<Job> jobs = jobService.searchJobs(keyword, type);
+        List<Job> jobs = jobService.searchJobs(keyword, type, selectedSkills);
         request.setAttribute("jobs", jobs);
         request.setAttribute("keyword", keyword);
         request.setAttribute("type", type);
+        request.setAttribute("selectedSkills", selectedSkills);
+        request.setAttribute("availableSkills", jobService.getSupportedSkills());
         request.getRequestDispatcher("/jsp/jobs/list.jsp").forward(request, response);
     }
 
@@ -91,6 +100,25 @@ public class JobServlet extends HttpServlet {
             request.getRequestDispatcher("/jsp/jobs/list.jsp").forward(request, response);
             return;
         }
+        request.setAttribute("editMode", false);
+        request.getRequestDispatcher("/jsp/jobs/create.jsp").forward(request, response);
+    }
+
+    private void showEditForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        User user = (User) request.getSession(false).getAttribute("user");
+        String jobId = request.getParameter("id");
+        Job job = jobService.getJobById(jobId);
+        if (job == null) {
+            response.sendRedirect(request.getContextPath() + "/jobs/myjobs?error=Job not found");
+            return;
+        }
+        if (!canManageJob(user, job)) {
+            response.sendRedirect(request.getContextPath() + "/jobs/myjobs?error=No permission to edit this job");
+            return;
+        }
+        request.setAttribute("editMode", true);
+        request.setAttribute("job", job);
         request.getRequestDispatcher("/jsp/jobs/create.jsp").forward(request, response);
     }
 
@@ -145,10 +173,75 @@ public class JobServlet extends HttpServlet {
         }
     }
 
+    private void updateJob(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String jobId = request.getParameter("id");
+        try {
+            User user = (User) request.getSession(false).getAttribute("user");
+            Job existing = jobService.getJobById(jobId);
+            if (existing == null) {
+                response.sendRedirect(request.getContextPath() + "/jobs/myjobs?error=Job not found");
+                return;
+            }
+            if (!canManageJob(user, existing)) {
+                response.sendRedirect(request.getContextPath() + "/jobs/myjobs?error=No permission to update this job");
+                return;
+            }
+
+            String title = request.getParameter("title");
+            String type = request.getParameter("type");
+            String description = request.getParameter("description");
+            String requirements = request.getParameter("requirements");
+            String workStartDate = request.getParameter("workStartDate");
+            String workEndDate = request.getParameter("workEndDate");
+            String[] workWeekdays = request.getParameterValues("workWeekdays");
+            String dailyStartHour = request.getParameter("dailyStartHour");
+            String dailyEndHour = request.getParameter("dailyEndHour");
+            int positions = Integer.parseInt(request.getParameter("positions"));
+            String deadline = request.getParameter("deadline");
+
+            Job updated = new Job();
+            updated.setJobId(jobId);
+            updated.setTitle(title);
+            updated.setType(type);
+            updated.setDescription(description);
+            updated.setRequirements(requirements);
+            updated.setWorkStartDate(workStartDate);
+            updated.setWorkEndDate(workEndDate);
+            updated.setWorkWeekdays(joinValues(workWeekdays));
+            updated.setDailyStartHour(dailyStartHour);
+            updated.setDailyEndHour(dailyEndHour);
+            updated.setPositions(positions);
+            updated.setDeadline(deadline);
+            updated.setPostedBy(existing.getPostedBy());
+            updated.setStatus(existing.getStatus());
+            updated.setCreatedAt(existing.getCreatedAt());
+
+            jobService.updateJob(updated);
+            response.sendRedirect(request.getContextPath() + "/jobs/myjobs?success=Job updated successfully");
+        } catch (Exception e) {
+            Job job = jobService.getJobById(jobId);
+            request.setAttribute("error", e.getMessage());
+            request.setAttribute("editMode", true);
+            request.setAttribute("job", job);
+            request.getRequestDispatcher("/jsp/jobs/create.jsp").forward(request, response);
+        }
+    }
+
     private void closeJob(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        User user = (User) request.getSession(false).getAttribute("user");
         try {
             String jobId = request.getParameter("id");
+            Job job = jobService.getJobById(jobId);
+            if (job == null) {
+                response.sendRedirect(request.getContextPath() + "/jobs/myjobs?error=Job not found");
+                return;
+            }
+            if (!canManageJob(user, job)) {
+                response.sendRedirect(request.getContextPath() + "/jobs/myjobs?error=No permission to close this job");
+                return;
+            }
             jobService.closeJob(jobId);
             response.sendRedirect(request.getContextPath() + "/jobs/myjobs?success=Job closed successfully");
         } catch (Exception e) {
@@ -158,8 +251,18 @@ public class JobServlet extends HttpServlet {
 
     private void deleteJob(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        User user = (User) request.getSession(false).getAttribute("user");
         try {
             String jobId = request.getParameter("id");
+            Job job = jobService.getJobById(jobId);
+            if (job == null) {
+                response.sendRedirect(request.getContextPath() + "/jobs/myjobs?error=Job not found");
+                return;
+            }
+            if (!canManageJob(user, job)) {
+                response.sendRedirect(request.getContextPath() + "/jobs/myjobs?error=No permission to delete this job");
+                return;
+            }
             jobService.deleteJob(jobId);
             response.sendRedirect(request.getContextPath() + "/jobs/myjobs?success=Job deleted successfully");
         } catch (Exception e) {
@@ -172,5 +275,32 @@ public class JobServlet extends HttpServlet {
             return "";
         }
         return String.join(",", values);
+    }
+
+    private List<String> normalizeSelectedSkills(String[] rawSkills) {
+        List<String> selected = new ArrayList<>();
+        if (rawSkills == null || rawSkills.length == 0) {
+            return selected;
+        }
+        for (String raw : rawSkills) {
+            if (raw == null) {
+                continue;
+            }
+            String trimmed = raw.trim();
+            if (!trimmed.isEmpty() && !selected.contains(trimmed)) {
+                selected.add(trimmed);
+            }
+        }
+        return selected;
+    }
+
+    private boolean canManageJob(User user, Job job) {
+        if (user == null || job == null) {
+            return false;
+        }
+        if (user.isAdmin()) {
+            return true;
+        }
+        return user.isMO() && user.getUserId().equals(job.getPostedBy());
     }
 }

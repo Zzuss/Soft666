@@ -143,6 +143,10 @@ public class ProfileServlet extends HttpServlet {
             throws IOException {
         String name = trimOrEmpty(request.getParameter("name"));
         String email = trimOrEmpty(request.getParameter("email"));
+        String studentId = trimOrEmpty(request.getParameter("studentId"));
+        String major = trimOrEmpty(request.getParameter("major"));
+        String yearRaw = trimOrEmpty(request.getParameter("year"));
+        String phone = trimOrEmpty(request.getParameter("phone"));
         String skillsRaw = request.getParameter("skills");
         String availableTime = trimOrEmpty(request.getParameter("availableTime"));
         String availabilityStartDate = trimOrEmpty(request.getParameter("availabilityStartDate"));
@@ -156,6 +160,21 @@ public class ProfileServlet extends HttpServlet {
             redirectWithMessage(request, response, "error", "Name and email are required");
             return;
         }
+        if (studentId.isEmpty() || major.isEmpty() || yearRaw.isEmpty() || phone.isEmpty()) {
+            redirectWithMessage(request, response, "error", "Student ID, major, year and phone are required");
+            return;
+        }
+        Integer year;
+        try {
+            year = Integer.valueOf(yearRaw);
+        } catch (NumberFormatException e) {
+            redirectWithMessage(request, response, "error", "Year must be exactly 4 digits");
+            return;
+        }
+        if (year < 1000 || year > 9999) {
+            redirectWithMessage(request, response, "error", "Year must be exactly 4 digits");
+            return;
+        }
         if (availabilityStartDate.isEmpty() || availabilityEndDate.isEmpty()
                 || availabilityWeekdays == null || availabilityWeekdays.length == 0
                 || availabilityDailyStartHour.isEmpty() || availabilityDailyEndHour.isEmpty()) {
@@ -164,19 +183,28 @@ public class ProfileServlet extends HttpServlet {
         }
 
         List<String> skills = parseSkills(skillsRaw);
-        userService.updateProfile(
-                currentUser.getUserId(),
-                name,
-                email,
-                skills,
-                availableTime,
-                bio,
-                availabilityStartDate,
-                availabilityEndDate,
-                joinValues(availabilityWeekdays),
-                availabilityDailyStartHour,
-                availabilityDailyEndHour
-        );
+        try {
+            userService.updateProfile(
+                    currentUser.getUserId(),
+                    name,
+                    email,
+                    skills,
+                    availableTime,
+                    bio,
+                    studentId,
+                    major,
+                    year,
+                    phone,
+                    availabilityStartDate,
+                    availabilityEndDate,
+                    joinValues(availabilityWeekdays),
+                    availabilityDailyStartHour,
+                    availabilityDailyEndHour
+            );
+        } catch (IllegalArgumentException e) {
+            redirectWithMessage(request, response, "error", e.getMessage());
+            return;
+        }
 
         User latestUser = userService.getUserById(currentUser.getUserId());
         request.getSession(false).setAttribute("user", latestUser);

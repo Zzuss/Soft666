@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Set;
 
 public class UserService {
+    private static final String STUDENT_ID_PATTERN = "^[0-9]{10}$";
+    private static final String PHONE_PATTERN = "^[0-9+()\\-\\s]{7,20}$";
+
     private UserDAO userDAO;
 
     public UserService() {
@@ -26,16 +29,32 @@ public class UserService {
     public void updateProfile(String userId, String name, String email,
                              List<String> skills, String availableTime, String bio) {
         updateProfile(userId, name, email, skills, availableTime, bio,
+                null, null, null, null,
                 null, null, null, null, null);
     }
 
     public void updateProfile(String userId, String name, String email,
                              List<String> skills, String availableTime, String bio,
+                             String studentId, String major, Integer year, String phone,
                              String availabilityStartDate, String availabilityEndDate, String availabilityWeekdays,
                              String availabilityDailyStartHour, String availabilityDailyEndHour) {
         User user = userDAO.getUserById(userId);
         if (user == null) {
             throw new IllegalArgumentException("User not found");
+        }
+        String normalizedPhone = normalizePhone(phone);
+
+        if (!isBlank(studentId) && !studentId.matches(STUDENT_ID_PATTERN)) {
+            throw new IllegalArgumentException("Student ID must be exactly 10 digits");
+        }
+        if (!isBlank(major) && major.trim().length() > 100) {
+            throw new IllegalArgumentException("Major is too long");
+        }
+        if (year != null && (year < 1000 || year > 9999)) {
+            throw new IllegalArgumentException("Year must be exactly 4 digits");
+        }
+        if (!isBlank(normalizedPhone) && !normalizedPhone.matches(PHONE_PATTERN)) {
+            throw new IllegalArgumentException("Phone format is invalid");
         }
 
         boolean hasAvailabilityInput = !isBlank(availabilityStartDate)
@@ -82,6 +101,18 @@ public class UserService {
         }
         if (skills != null) {
             user.setSkills(skills);
+        }
+        if (studentId != null) {
+            user.setStudentId(studentId.trim());
+        }
+        if (major != null) {
+            user.setMajor(major.trim());
+        }
+        if (year != null) {
+            user.setYear(year);
+        }
+        if (phone != null) {
+            user.setPhone(normalizedPhone);
         }
         if (availableTime != null) {
             user.setAvailableTime(availableTime);
@@ -181,5 +212,35 @@ public class UserService {
 
     private boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
+    }
+
+    private String normalizePhone(String rawPhone) {
+        if (rawPhone == null) {
+            return null;
+        }
+        String trimmed = rawPhone.trim();
+        if (trimmed.isEmpty()) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < trimmed.length(); i++) {
+            char ch = trimmed.charAt(i);
+            if (ch >= '０' && ch <= '９') {
+                sb.append((char) (ch - '０' + '0'));
+            } else if (ch == '＋') {
+                sb.append('+');
+            } else if (ch == '（') {
+                sb.append('(');
+            } else if (ch == '）') {
+                sb.append(')');
+            } else if (ch == '－' || ch == '–' || ch == '—' || ch == '−') {
+                sb.append('-');
+            } else if (ch == '　') {
+                sb.append(' ');
+            } else {
+                sb.append(ch);
+            }
+        }
+        return sb.toString();
     }
 }

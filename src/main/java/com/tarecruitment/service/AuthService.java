@@ -60,6 +60,30 @@ public class AuthService {
         return null;
     }
 
+    public void resetPasswordByUsernameEmail(String username, String email, String newPassword) {
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty");
+        }
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("Email cannot be empty");
+        }
+        if (newPassword == null || newPassword.length() < 6) {
+            throw new IllegalArgumentException("Password must be at least 6 characters");
+        }
+
+        User user = userDAO.getUserByUsername(username.trim());
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+        String savedEmail = user.getEmail() == null ? "" : user.getEmail().trim();
+        if (!savedEmail.equalsIgnoreCase(email.trim())) {
+            throw new IllegalArgumentException("Username and email do not match");
+        }
+
+        user.setPassword(PasswordUtil.encrypt(newPassword));
+        userDAO.updateUser(user);
+    }
+
     public void logout(HttpSession session) {
         if (session != null) {
             session.invalidate();

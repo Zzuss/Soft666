@@ -62,6 +62,10 @@
             <div class="profile-section">
                 <div class="profile-info">
                     <p><strong><%= I18nUtil.get("profile.email", lang) %>:</strong> <%= profileUser.getEmail() != null ? profileUser.getEmail() : "-" %></p>
+                    <p><strong><%= I18nUtil.get("profile.studentId", lang) %>:</strong> <%= profileUser.getStudentId() != null && !profileUser.getStudentId().isEmpty() ? profileUser.getStudentId() : "-" %></p>
+                    <p><strong><%= I18nUtil.get("profile.major", lang) %>:</strong> <%= profileUser.getMajor() != null && !profileUser.getMajor().isEmpty() ? profileUser.getMajor() : "-" %></p>
+                    <p><strong><%= I18nUtil.get("profile.year", lang) %>:</strong> <%= profileUser.getYear() > 0 ? profileUser.getYear() : "-" %></p>
+                    <p><strong><%= I18nUtil.get("profile.phone", lang) %>:</strong> <%= profileUser.getPhone() != null && !profileUser.getPhone().isEmpty() ? profileUser.getPhone() : "-" %></p>
                     <p><strong><%= I18nUtil.get("profile.availableTime", lang) %>:</strong> <%= (profileUser.getAvailableTime() != null && !profileUser.getAvailableTime().isEmpty()) ? profileUser.getAvailableTime() : "-" %></p>
                     <p><strong><%= I18nUtil.get("profile.availabilityStartDate", lang) %>:</strong> <%= (profileUser.getAvailabilityStartDate() != null && !profileUser.getAvailabilityStartDate().isEmpty()) ? profileUser.getAvailabilityStartDate() : "-" %></p>
                     <p><strong><%= I18nUtil.get("profile.availabilityEndDate", lang) %>:</strong> <%= (profileUser.getAvailabilityEndDate() != null && !profileUser.getAvailabilityEndDate().isEmpty()) ? profileUser.getAvailabilityEndDate() : "-" %></p>

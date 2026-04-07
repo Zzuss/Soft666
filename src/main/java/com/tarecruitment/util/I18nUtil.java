@@ -59,8 +59,15 @@ public class I18nUtil {
         en.put("profile.basicInfo", "Basic Information");
         en.put("profile.name", "Full Name");
         en.put("profile.email", "Email");
+        en.put("profile.studentId", "Student ID");
+        en.put("profile.studentIdHint", "Student ID must be exactly 10 digits");
+        en.put("profile.major", "Major");
+        en.put("profile.year", "Year");
+        en.put("profile.yearHint", "Year must be exactly 4 digits (e.g. 2024)");
+        en.put("profile.phone", "Phone");
         en.put("profile.skills", "Skills (comma separated)");
         en.put("profile.availableTime", "Available Time");
+        en.put("profile.availableTimeAutoHint", "This field is auto-generated from the availability schedule below.");
         en.put("profile.availabilityStartDate", "Availability Start Date");
         en.put("profile.availabilityEndDate", "Availability End Date");
         en.put("profile.availabilityWeekdays", "Available Weekdays");
@@ -84,6 +91,9 @@ public class I18nUtil {
         en.put("admin.workload.email", "Email");
         en.put("admin.workload.skills", "Skills");
         en.put("admin.workload.approved", "Approved Assignments");
+        en.put("admin.workload.overload", "Overload");
+        en.put("admin.workload.thresholdHint", "Highlight threshold: assignments greater than");
+        en.put("admin.workload.exportCsv", "Export CSV");
         en.put("admin.workload.noData", "No TA records found.");
 
         en.put("jobs.available", "Available Positions");
@@ -93,8 +103,12 @@ public class I18nUtil {
         en.put("jobs.invigilation", "Invigilation");
         en.put("jobs.other", "Other");
         en.put("jobs.searchBtn", "Search");
+        en.put("jobs.clearFilters", "Clear Filters");
+        en.put("jobs.activeFilters", "Active filters");
+        en.put("jobs.skillsFilter", "Skills");
         en.put("jobs.positions", "Positions");
         en.put("jobs.deadline", "Deadline");
+        en.put("jobs.postedAt", "Posted At");
         en.put("jobs.viewDetails", "View Details");
         en.put("jobs.noJobs", "No jobs found. Please try a different search or check back later.");
 
@@ -125,10 +139,13 @@ public class I18nUtil {
         en.put("job.create.deadline", "Application Deadline *");
         en.put("job.create.submit", "Post Job");
         en.put("job.create.cancel", "Cancel");
+        en.put("job.edit.title", "Edit Job");
+        en.put("job.edit.submit", "Save Changes");
 
         en.put("job.my.title", "My Posted Jobs");
         en.put("job.my.postNew", "Post New Job");
         en.put("job.my.viewApps", "View Applications");
+        en.put("job.my.edit", "Edit");
         en.put("job.my.close", "Close");
         en.put("job.my.confirmClose", "Close this job?");
         en.put("job.my.noJobs", "You haven't posted any jobs yet.");
@@ -141,6 +158,7 @@ public class I18nUtil {
         en.put("app.my.status", "Status");
         en.put("app.my.matchScore", "Match Score");
         en.put("app.my.missingSkills", "Missing Skills");
+        en.put("app.my.rejectionNote", "Rejection Note");
         en.put("app.my.action", "Action");
         en.put("app.my.viewJob", "View Job");
         en.put("app.my.noApps", "You haven't applied for any jobs yet.");
@@ -159,6 +177,17 @@ public class I18nUtil {
         en.put("app.manage.availableTime", "Available Time");
         en.put("app.manage.matchScore", "Match Score");
         en.put("app.manage.missingSkills", "Missing Skills");
+        en.put("app.manage.currentLoad", "Current Approved Load");
+        en.put("app.manage.approvedCount", "Approved");
+        en.put("app.manage.remainingSlots", "Remaining Slots");
+        en.put("app.manage.overloadWarningTitle", "Workload Warning");
+        en.put("app.manage.overloadWarningText", "This TA already has approved jobs:");
+        en.put("app.manage.overloadLimitHint", "Recommended limit:");
+        en.put("app.manage.overloadRiskHint", "If you continue, this TA will exceed the recommended workload.");
+        en.put("app.manage.overloadBadge", "Limit Hit");
+        en.put("app.manage.forceApprove", "Force Approve");
+        en.put("app.manage.rejectionNote", "Rejection Note");
+        en.put("app.manage.rejectionNotePlaceholder", "Optional note (visible to TA)");
         en.put("app.manage.actions", "Actions");
         en.put("app.manage.approve", "Approve");
         en.put("app.manage.reject", "Reject");
@@ -232,8 +261,15 @@ public class I18nUtil {
         zh.put("profile.basicInfo", "基础信息");
         zh.put("profile.name", "姓名");
         zh.put("profile.email", "邮箱");
+        zh.put("profile.studentId", "学号");
+        zh.put("profile.studentIdHint", "学号必须是 10 位数字");
+        zh.put("profile.major", "专业");
+        zh.put("profile.year", "年级");
+        zh.put("profile.yearHint", "年级/入学年份必须是 4 位数字（例如 2024）");
+        zh.put("profile.phone", "电话");
         zh.put("profile.skills", "技能（逗号分隔）");
         zh.put("profile.availableTime", "可用时间");
+        zh.put("profile.availableTimeAutoHint", "该字段由下方可任职时间自动生成，不能手动输入。");
         zh.put("profile.availabilityStartDate", "可任职开始日期");
         zh.put("profile.availabilityEndDate", "可任职结束日期");
         zh.put("profile.availabilityWeekdays", "可任职周几");
@@ -257,6 +293,9 @@ public class I18nUtil {
         zh.put("admin.workload.email", "邮箱");
         zh.put("admin.workload.skills", "技能");
         zh.put("admin.workload.approved", "已批准分配数");
+        zh.put("admin.workload.overload", "超载");
+        zh.put("admin.workload.thresholdHint", "高亮阈值：分配数大于");
+        zh.put("admin.workload.exportCsv", "导出 CSV");
         zh.put("admin.workload.noData", "暂无助教数据。");
 
         zh.put("jobs.available", "可用职位");
@@ -266,8 +305,12 @@ public class I18nUtil {
         zh.put("jobs.invigilation", "监考");
         zh.put("jobs.other", "其他");
         zh.put("jobs.searchBtn", "搜索");
+        zh.put("jobs.clearFilters", "清空筛选");
+        zh.put("jobs.activeFilters", "当前筛选条件");
+        zh.put("jobs.skillsFilter", "技能筛选");
         zh.put("jobs.positions", "职位数");
         zh.put("jobs.deadline", "截止日期");
+        zh.put("jobs.postedAt", "发布时间");
         zh.put("jobs.viewDetails", "查看详情");
         zh.put("jobs.noJobs", "未找到职位。请尝试其他搜索条件或稍后再来。");
 
@@ -298,10 +341,13 @@ public class I18nUtil {
         zh.put("job.create.deadline", "申请截止日期 *");
         zh.put("job.create.submit", "发布职位");
         zh.put("job.create.cancel", "取消");
+        zh.put("job.edit.title", "编辑职位");
+        zh.put("job.edit.submit", "保存修改");
 
         zh.put("job.my.title", "我发布的职位");
         zh.put("job.my.postNew", "发布新职位");
         zh.put("job.my.viewApps", "查看申请");
+        zh.put("job.my.edit", "编辑");
         zh.put("job.my.close", "关闭");
         zh.put("job.my.confirmClose", "确定关闭此职位？");
         zh.put("job.my.noJobs", "您还没有发布任何职位。");
@@ -314,6 +360,7 @@ public class I18nUtil {
         zh.put("app.my.status", "状态");
         zh.put("app.my.matchScore", "匹配度");
         zh.put("app.my.missingSkills", "缺失技能");
+        zh.put("app.my.rejectionNote", "拒绝备注");
         zh.put("app.my.action", "操作");
         zh.put("app.my.viewJob", "查看职位");
         zh.put("app.my.noApps", "您还没有申请任何职位。");
@@ -332,6 +379,17 @@ public class I18nUtil {
         zh.put("app.manage.availableTime", "可用时间");
         zh.put("app.manage.matchScore", "匹配度");
         zh.put("app.manage.missingSkills", "缺失技能");
+        zh.put("app.manage.currentLoad", "当前已录取数");
+        zh.put("app.manage.approvedCount", "已录取");
+        zh.put("app.manage.remainingSlots", "剩余名额");
+        zh.put("app.manage.overloadWarningTitle", "工作量预警");
+        zh.put("app.manage.overloadWarningText", "该助教当前已录取岗位数：");
+        zh.put("app.manage.overloadLimitHint", "建议上限：");
+        zh.put("app.manage.overloadRiskHint", "继续操作将使该助教超过建议工作量。");
+        zh.put("app.manage.overloadBadge", "达到上限");
+        zh.put("app.manage.forceApprove", "强制录取");
+        zh.put("app.manage.rejectionNote", "拒绝备注");
+        zh.put("app.manage.rejectionNotePlaceholder", "可选备注（TA 可见）");
         zh.put("app.manage.actions", "操作");
         zh.put("app.manage.approve", "批准");
         zh.put("app.manage.reject", "拒绝");

@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet("/auth")
 public class AuthServlet extends HttpServlet {
@@ -36,6 +38,10 @@ public class AuthServlet extends HttpServlet {
             request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
         } else if ("register".equals(action)) {
             request.getRequestDispatcher("/jsp/auth/register.jsp").forward(request, response);
+        } else if ("forgotPassword".equals(action)) {
+            request.getRequestDispatcher("/jsp/auth/forgot-password.jsp").forward(request, response);
+        } else {
+            response.sendRedirect(request.getContextPath() + "/auth?action=login");
         }
     }
 
@@ -48,6 +54,8 @@ public class AuthServlet extends HttpServlet {
             handleLogin(request, response);
         } else if ("register".equals(action)) {
             handleRegister(request, response);
+        } else if ("resetPassword".equals(action)) {
+            handleResetPassword(request, response);
         } else {
             response.sendRedirect(request.getContextPath() + "/auth?action=login");
         }
@@ -104,6 +112,32 @@ public class AuthServlet extends HttpServlet {
         } catch (IllegalArgumentException e) {
             request.setAttribute("error", e.getMessage());
             request.getRequestDispatcher("/jsp/auth/register.jsp").forward(request, response);
+        }
+    }
+
+    private void handleResetPassword(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String username = request.getParameter("username");
+        String email = request.getParameter("email");
+        String newPassword = request.getParameter("newPassword");
+        String confirmPassword = request.getParameter("confirmPassword");
+
+        request.setAttribute("username", username);
+        request.setAttribute("email", email);
+
+        if (newPassword == null || !newPassword.equals(confirmPassword)) {
+            request.setAttribute("error", "Passwords do not match");
+            request.getRequestDispatcher("/jsp/auth/forgot-password.jsp").forward(request, response);
+            return;
+        }
+
+        try {
+            authService.resetPasswordByUsernameEmail(username, email, newPassword);
+            response.sendRedirect(request.getContextPath() + "/auth?action=login&success="
+                    + URLEncoder.encode("Password reset successfully. Please login with your new password.", StandardCharsets.UTF_8));
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("error", e.getMessage());
+            request.getRequestDispatcher("/jsp/auth/forgot-password.jsp").forward(request, response);
         }
     }
 }

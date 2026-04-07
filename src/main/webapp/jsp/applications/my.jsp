@@ -73,6 +73,7 @@
                             <th><%= I18nUtil.get("app.my.status", lang) %></th>
                             <th><%= I18nUtil.get("app.my.matchScore", lang) %></th>
                             <th><%= I18nUtil.get("app.my.missingSkills", lang) %></th>
+                            <th><%= I18nUtil.get("app.my.rejectionNote", lang) %></th>
                             <th><%= I18nUtil.get("app.my.action", lang) %></th>
                         </tr>
                     </thead>
@@ -91,6 +92,11 @@
                                 </td>
                                 <td><%= app.getMatchScore() != null ? (app.getMatchScore() + "%") : "-" %></td>
                                 <td><%= (app.getMissingSkills() != null && !app.getMissingSkills().isEmpty()) ? String.join(", ", app.getMissingSkills()) : "-" %></td>
+                                <td>
+                                    <%= app.isRejected() && app.getRejectionNote() != null && !app.getRejectionNote().isEmpty()
+                                            ? app.getRejectionNote()
+                                            : "-" %>
+                                </td>
                                 <td>
                                     <a href="${pageContext.request.contextPath}/jobs/detail?id=<%= app.getJobId() %>" class="btn btn-secondary"><%= I18nUtil.get("app.my.viewJob", lang) %></a>
                                 </td>

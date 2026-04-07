@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -123,6 +125,8 @@ public class ApplicationServlet extends HttpServlet {
         
         String statusFilter = request.getParameter("status");
         String keywordFilter = request.getParameter("keyword");
+        int approvedCount = applicationService.getApprovedCountForJob(jobId);
+        int remainingSlots = applicationService.getRemainingSlots(jobId);
 
         List<Application> applications = applicationService.getJobApplications(jobId);
         List<Application> filteredApplications = new ArrayList<>();
@@ -135,6 +139,7 @@ public class ApplicationServlet extends HttpServlet {
                 continue;
             }
             request.setAttribute("user_" + app.getUserId(), applicant);
+            request.setAttribute("load_" + app.getUserId(), applicationService.getApprovedLoadByUser(app.getUserId()));
             filteredApplications.add(app);
         }
         filteredApplications.sort(Comparator
@@ -145,6 +150,10 @@ public class ApplicationServlet extends HttpServlet {
         request.setAttribute("applications", filteredApplications);
         request.setAttribute("statusFilter", statusFilter != null ? statusFilter : "ALL");
         request.setAttribute("keywordFilter", keywordFilter != null ? keywordFilter : "");
+        request.setAttribute("approvedCount", approvedCount);
+        request.setAttribute("remainingSlots", remainingSlots);
+        request.setAttribute("workloadLimit", ApplicationService.WORKLOAD_LIMIT);
+        bindOverloadWarning(request);
         request.getRequestDispatcher("/jsp/applications/manage.jsp").forward(request, response);
     }
 
@@ -162,48 +171,91 @@ public class ApplicationServlet extends HttpServlet {
             
             response.sendRedirect(request.getContextPath() + "/applications/my?success=Application submitted successfully");
         } catch (Exception e) {
-            response.sendRedirect(request.getContextPath() + "/jobs/list?error=" + e.getMessage());
+            String error = e.getMessage() != null ? e.getMessage() : "Failed to submit application";
+            response.sendRedirect(request.getContextPath() + "/jobs/list?error="
+                    + URLEncoder.encode(error, StandardCharsets.UTF_8));
         }
     }
 
     private void approveApplication(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String jobId = request.getParameter("jobId");
         try {
             User user = (User) request.getSession(false).getAttribute("user");
             String applicationId = request.getParameter("id");
-            String jobId = request.getParameter("jobId");
+            boolean forceOverload = "true".equalsIgnoreCase(request.getParameter("forceOverload"));
             Job job = jobService.getJobById(jobId);
             if (job == null || !canManageJob(user, job)) {
                 response.sendRedirect(request.getContextPath() + "/jobs/myjobs?error=No permission to approve this application");
                 return;
             }
 
-            applicationService.approveApplication(applicationId, user.getUserId());
+            applicationService.approveApplication(applicationId, user.getUserId(), forceOverload);
             
             response.sendRedirect(request.getContextPath() + "/applications/manage?jobId=" + jobId + "&success=Application approved");
+        } catch (IllegalStateException e) {
+            String message = e.getMessage() != null ? e.getMessage() : "";
+            if (message.startsWith(ApplicationService.OVERLOAD_WARNING_PREFIX + "|")) {
+                String[] parts = message.split("\\|");
+                String warningUserId = parts.length > 1 ? parts[1] : "";
+                String warningLoad = parts.length > 2 ? parts[2] : String.valueOf(ApplicationService.WORKLOAD_LIMIT);
+                String applicationId = request.getParameter("id");
+                response.sendRedirect(request.getContextPath()
+                        + "/applications/manage?jobId=" + jobId
+                        + "&warning=overload"
+                        + "&applicationId=" + applicationId
+                        + "&userId=" + warningUserId
+                        + "&load=" + warningLoad);
+                return;
+            }
+            response.sendRedirect(request.getContextPath() + "/applications/manage?jobId=" + jobId
+                    + "&error=" + URLEncoder.encode(message, StandardCharsets.UTF_8));
         } catch (Exception e) {
-            response.sendRedirect(request.getContextPath() + "/applications/manage?error=" + e.getMessage());
+            String error = e.getMessage() != null ? e.getMessage() : "Failed to approve application";
+            response.sendRedirect(request.getContextPath() + "/applications/manage?jobId=" + jobId
+                    + "&error=" + URLEncoder.encode(error, StandardCharsets.UTF_8));
         }
     }
 
     private void rejectApplication(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String jobId = request.getParameter("jobId");
         try {
             User user = (User) request.getSession(false).getAttribute("user");
             String applicationId = request.getParameter("id");
-            String jobId = request.getParameter("jobId");
+            String rejectionNote = request.getParameter("rejectionNote");
             Job job = jobService.getJobById(jobId);
             if (job == null || !canManageJob(user, job)) {
                 response.sendRedirect(request.getContextPath() + "/jobs/myjobs?error=No permission to reject this application");
                 return;
             }
 
-            applicationService.rejectApplication(applicationId, user.getUserId());
+            applicationService.rejectApplication(applicationId, user.getUserId(), rejectionNote);
             
             response.sendRedirect(request.getContextPath() + "/applications/manage?jobId=" + jobId + "&success=Application rejected");
         } catch (Exception e) {
-            response.sendRedirect(request.getContextPath() + "/applications/manage?error=" + e.getMessage());
+            String error = e.getMessage() != null ? e.getMessage() : "Failed to reject application";
+            response.sendRedirect(request.getContextPath() + "/applications/manage?jobId=" + jobId
+                    + "&error=" + URLEncoder.encode(error, StandardCharsets.UTF_8));
         }
+    }
+
+    private void bindOverloadWarning(HttpServletRequest request) {
+        String warning = request.getParameter("warning");
+        if (!"overload".equalsIgnoreCase(warning)) {
+            return;
+        }
+        String warningApplicationId = request.getParameter("applicationId");
+        String warningUserId = request.getParameter("userId");
+        String warningLoad = request.getParameter("load");
+        User warningUser = warningUserId != null ? userService.getUserById(warningUserId) : null;
+        String warningUserName = warningUser != null ? warningUser.getName() : "TA";
+        String loadText = warningLoad != null ? warningLoad : String.valueOf(ApplicationService.WORKLOAD_LIMIT);
+
+        request.setAttribute("warningApplicationId", warningApplicationId);
+        request.setAttribute("warningUserId", warningUserId);
+        request.setAttribute("warningUserName", warningUserName);
+        request.setAttribute("warningLoad", loadText);
     }
 
     private boolean matchStatusFilter(Application app, String statusFilter) {

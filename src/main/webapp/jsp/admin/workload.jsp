@@ -11,6 +11,10 @@
     }
     List<User> taUsers = (List<User>) request.getAttribute("taUsers");
     Map<String, Integer> workloadMap = (Map<String, Integer>) request.getAttribute("workloadMap");
+    Integer workloadThreshold = (Integer) request.getAttribute("workloadThreshold");
+    if (workloadThreshold == null) {
+        workloadThreshold = 2;
+    }
     String lang = I18nUtil.getLanguage(request);
 %>
 <!DOCTYPE html>
@@ -38,6 +42,12 @@
         <h2><%= I18nUtil.get("admin.workload.title", lang) %></h2>
 
         <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 10px; flex-wrap: wrap;">
+                <p style="color: #718096;">
+                    <%= I18nUtil.get("admin.workload.thresholdHint", lang) %> <strong><%= workloadThreshold %></strong>
+                </p>
+                <a href="${pageContext.request.contextPath}/admin/workload/export" class="btn btn-primary"><%= I18nUtil.get("admin.workload.exportCsv", lang) %></a>
+            </div>
             <% if (taUsers != null && !taUsers.isEmpty()) { %>
                 <table class="table workload-table">
                     <thead>
@@ -49,12 +59,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% for (User ta : taUsers) { %>
-                            <tr>
+                        <% for (User ta : taUsers) {
+                            int approvedAssignments = workloadMap != null ? workloadMap.getOrDefault(ta.getUserId(), 0) : 0;
+                            boolean overloaded = approvedAssignments > workloadThreshold;
+                        %>
+                            <tr class="<%= overloaded ? "workload-overload" : "" %>">
                                 <td><%= ta.getName() %></td>
                                 <td><%= ta.getEmail() %></td>
                                 <td><%= (ta.getSkills() != null && !ta.getSkills().isEmpty()) ? String.join(", ", ta.getSkills()) : "-" %></td>
-                                <td><strong><%= workloadMap != null ? workloadMap.getOrDefault(ta.getUserId(), 0) : 0 %></strong></td>
+                                <td>
+                                    <strong><%= approvedAssignments %></strong>
+                                    <% if (overloaded) { %>
+                                        <span class="badge badge-rejected"><%= I18nUtil.get("admin.workload.overload", lang) %></span>
+                                    <% } %>
+                                </td>
                             </tr>
                         <% } %>
                     </tbody>

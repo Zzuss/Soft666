@@ -121,6 +121,10 @@ public class UserDAO {
         u.put("name", user.getName());
         u.put("email", user.getEmail());
         u.put("role", user.getRole());
+        u.put("studentId", user.getStudentId() != null ? user.getStudentId() : "");
+        u.put("major", user.getMajor() != null ? user.getMajor() : "");
+        u.put("year", user.getYear());
+        u.put("phone", user.getPhone() != null ? user.getPhone() : "");
         u.put("skills", JsonUtil.fromStringList(user.getSkills()));
         u.put("availableTime", user.getAvailableTime() != null ? user.getAvailableTime() : "");
         u.put("availabilityStartDate", user.getAvailabilityStartDate() != null ? user.getAvailabilityStartDate() : "");
@@ -149,6 +153,13 @@ public class UserDAO {
         user.setName(u.getString("name"));
         user.setEmail(u.getString("email"));
         user.setRole(u.getString("role"));
+        String studentId = u.optString("studentId", "");
+        user.setStudentId(studentId.isEmpty() ? null : studentId);
+        String major = u.optString("major", "");
+        user.setMajor(major.isEmpty() ? null : major);
+        user.setYear(u.has("year") ? u.optInt("year", 0) : 0);
+        String phone = u.optString("phone", "");
+        user.setPhone(phone.isEmpty() ? null : phone);
         JSONArray skillsArray = u.optJSONArray("skills");
         user.setSkills(JsonUtil.toStringList(skillsArray != null ? skillsArray : new JSONArray()));
         user.setAvailableTime(u.optString("availableTime", ""));

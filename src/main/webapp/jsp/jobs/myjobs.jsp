@@ -66,6 +66,7 @@
                         </div>
                         <div class="table-actions">
                             <a href="${pageContext.request.contextPath}/applications/manage?jobId=<%= job.getJobId() %>" class="btn btn-primary"><%= I18nUtil.get("job.my.viewApps", lang) %></a>
+                            <a href="${pageContext.request.contextPath}/jobs/edit?id=<%= job.getJobId() %>" class="btn btn-secondary"><%= I18nUtil.get("job.my.edit", lang) %></a>
                             <% if (job.isOpen()) { %>
                                 <form action="${pageContext.request.contextPath}/jobs/close" method="post" style="display:inline;">
                                     <input type="hidden" name="id" value="<%= job.getJobId() %>">

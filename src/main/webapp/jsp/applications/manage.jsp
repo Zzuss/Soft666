@@ -21,6 +21,21 @@
     if (keywordFilter == null) {
         keywordFilter = "";
     }
+    Integer approvedCount = (Integer) request.getAttribute("approvedCount");
+    if (approvedCount == null) {
+        approvedCount = 0;
+    }
+    Integer remainingSlots = (Integer) request.getAttribute("remainingSlots");
+    if (remainingSlots == null) {
+        remainingSlots = 0;
+    }
+    Integer workloadLimit = (Integer) request.getAttribute("workloadLimit");
+    if (workloadLimit == null) {
+        workloadLimit = 2;
+    }
+    String warningApplicationId = (String) request.getAttribute("warningApplicationId");
+    String warningUserName = (String) request.getAttribute("warningUserName");
+    String warningLoad = (String) request.getAttribute("warningLoad");
 %>
 <!DOCTYPE html>
 <html>
@@ -56,6 +71,8 @@
                 <div class="job-meta">
                     <span><%= I18nUtil.get("job.detail.type", lang) %>: <%= job.getTypeDisplayName(lang) %></span>
                     <span><%= I18nUtil.get("jobs.positions", lang) %>: <%= job.getPositions() %></span>
+                    <span><%= I18nUtil.get("app.manage.approvedCount", lang) %>: <%= approvedCount %></span>
+                    <span><%= I18nUtil.get("app.manage.remainingSlots", lang) %>: <%= remainingSlots %></span>
                     <span><%= I18nUtil.get("jobs.deadline", lang) %>: <%= job.getDeadline() %></span>
                 </div>
             </div>
@@ -67,6 +84,25 @@
 
         <% if (request.getParameter("success") != null) { %>
             <div class="alert alert-success"><%= request.getParameter("success") %></div>
+        <% } %>
+
+        <% if (warningApplicationId != null && job != null) { %>
+            <div class="alert alert-error">
+                <p><strong><%= I18nUtil.get("app.manage.overloadWarningTitle", lang) %></strong></p>
+                <p>
+                    <%= I18nUtil.get("app.manage.overloadWarningText", lang) %>
+                    <strong><%= warningUserName != null ? warningUserName : "TA" %></strong>
+                    (<%= warningLoad != null ? warningLoad : String.valueOf(workloadLimit) %>).
+                </p>
+                <p><%= I18nUtil.get("app.manage.overloadLimitHint", lang) %> <%= workloadLimit %></p>
+                <p><%= I18nUtil.get("app.manage.overloadRiskHint", lang) %></p>
+                <form action="${pageContext.request.contextPath}/applications/approve" method="post" style="margin-top: 10px;">
+                    <input type="hidden" name="id" value="<%= warningApplicationId %>">
+                    <input type="hidden" name="jobId" value="<%= job.getJobId() %>">
+                    <input type="hidden" name="forceOverload" value="true">
+                    <button type="submit" class="btn btn-danger"><%= I18nUtil.get("app.manage.forceApprove", lang) %><%= warningUserName != null ? (" (" + warningUserName + ")") : "" %></button>
+                </form>
+            </div>
         <% } %>
 
         <% if (job != null) { %>
@@ -96,14 +132,20 @@
                             <th><%= I18nUtil.get("app.manage.availableTime", lang) %></th>
                             <th><%= I18nUtil.get("app.manage.matchScore", lang) %></th>
                             <th><%= I18nUtil.get("app.manage.missingSkills", lang) %></th>
+                            <th><%= I18nUtil.get("app.manage.currentLoad", lang) %></th>
                             <th><%= I18nUtil.get("app.manage.appliedDate", lang) %></th>
                             <th><%= I18nUtil.get("app.manage.status", lang) %></th>
+                            <th><%= I18nUtil.get("app.manage.rejectionNote", lang) %></th>
                             <th><%= I18nUtil.get("app.manage.actions", lang) %></th>
                         </tr>
                     </thead>
                     <tbody>
                         <% for (Application app : applications) { 
                             User applicant = (User) request.getAttribute("user_" + app.getUserId());
+                            Integer applicantLoad = (Integer) request.getAttribute("load_" + app.getUserId());
+                            if (applicantLoad == null) {
+                                applicantLoad = 0;
+                            }
                         %>
                             <tr>
                                 <td><%= applicant != null ? applicant.getName() : "Unknown" %></td>
@@ -112,12 +154,19 @@
                                 <td><%= (applicant != null && applicant.getAvailableTime() != null && !applicant.getAvailableTime().isEmpty()) ? applicant.getAvailableTime() : "-" %></td>
                                 <td><%= app.getMatchScore() != null ? (app.getMatchScore() + "%") : "-" %></td>
                                 <td><%= (app.getMissingSkills() != null && !app.getMissingSkills().isEmpty()) ? String.join(", ", app.getMissingSkills()) : "-" %></td>
+                                <td>
+                                    <%= applicantLoad %>
+                                    <% if (applicantLoad >= workloadLimit) { %>
+                                        <span class="badge badge-rejected"><%= I18nUtil.get("app.manage.overloadBadge", lang) %></span>
+                                    <% } %>
+                                </td>
                                 <td><%= app.getAppliedAt() != null ? app.getAppliedAt().toString().substring(0, 19) : "-" %></td>
                                 <td>
                                     <span class="badge <%= app.isPending() ? "badge-pending" : (app.isApproved() ? "badge-approved" : "badge-rejected") %>">
                                         <%= app.getStatusDisplayName(lang) %>
                                     </span>
                                 </td>
+                                <td><%= (app.getRejectionNote() != null && !app.getRejectionNote().isEmpty()) ? app.getRejectionNote() : "-" %></td>
                                 <td>
                                     <a href="${pageContext.request.contextPath}/profile/view?userId=<%= app.getUserId() %>&jobId=<%= job.getJobId() %>" class="btn btn-secondary"><%= I18nUtil.get("app.manage.viewProfile", lang) %></a>
                                     <% if (app.isPending()) { %>
@@ -126,9 +175,12 @@
                                             <input type="hidden" name="jobId" value="<%= job.getJobId() %>">
                                             <button type="submit" class="btn btn-success"><%= I18nUtil.get("app.manage.approve", lang) %></button>
                                         </form>
-                                        <form action="${pageContext.request.contextPath}/applications/reject" method="post" style="display:inline;">
+                                        <form action="${pageContext.request.contextPath}/applications/reject" method="post" style="display:inline-flex; gap:6px; align-items:center;">
                                             <input type="hidden" name="id" value="<%= app.getApplicationId() %>">
                                             <input type="hidden" name="jobId" value="<%= job.getJobId() %>">
+                                            <input type="text" name="rejectionNote" maxlength="300"
+                                                   placeholder="<%= I18nUtil.get("app.manage.rejectionNotePlaceholder", lang) %>"
+                                                   style="width: 180px; padding: 6px 8px;">
                                             <button type="submit" class="btn btn-danger"><%= I18nUtil.get("app.manage.reject", lang) %></button>
                                         </form>
                                     <% } else { %>
