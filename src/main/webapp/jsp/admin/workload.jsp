@@ -40,6 +40,7 @@
         </nav>
 
         <h2><%= I18nUtil.get("admin.workload.title", lang) %></h2>
+        <jsp:include page="/jsp/common/system-warning.jsp" />
 
         <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 10px; flex-wrap: wrap;">

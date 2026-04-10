@@ -111,15 +111,21 @@ public class I18nUtil {
         en.put("jobs.postedAt", "Posted At");
         en.put("jobs.viewDetails", "View Details");
         en.put("jobs.noJobs", "No jobs found. Please try a different search or check back later.");
+        en.put("jobs.recommendedTitle", "Recommended for You");
+        en.put("jobs.aiSuggestion", "AI Suggestion");
 
         en.put("job.detail.title", "Job Details");
+        en.put("job.detail.courseCode", "Course Code");
         en.put("job.detail.type", "Type");
         en.put("job.detail.description", "Description");
         en.put("job.detail.requirements", "Requirements");
+        en.put("job.detail.requiredSkills", "Required Skills");
         en.put("job.detail.workStartDate", "Work Start Date");
         en.put("job.detail.workEndDate", "Work End Date");
         en.put("job.detail.workWeekdays", "Work Weekdays");
         en.put("job.detail.dailyHours", "Daily Work Hours");
+        en.put("job.detail.missingSkillsHint", "You may be missing these skills");
+        en.put("job.detail.missingSkillsNone", "Your current profile matches the listed skills.");
         en.put("job.detail.noDesc", "No description provided.");
         en.put("job.detail.noReq", "No requirements specified.");
         en.put("job.detail.apply", "Apply Now");
@@ -127,9 +133,12 @@ public class I18nUtil {
 
         en.put("job.create.title", "Post New Job");
         en.put("job.create.jobTitle", "Job Title *");
+        en.put("job.create.courseCode", "Course Code *");
         en.put("job.create.type", "Job Type *");
         en.put("job.create.desc", "Description *");
         en.put("job.create.req", "Requirements *");
+        en.put("job.create.requiredSkills", "Structured Required Skills (comma separated)");
+        en.put("job.create.requiredSkillsPlaceholder", "e.g. Java, SQL, Teaching");
         en.put("job.create.workStartDate", "Work Start Date *");
         en.put("job.create.workEndDate", "Work End Date *");
         en.put("job.create.workWeekdays", "Work Weekdays *");
@@ -188,6 +197,13 @@ public class I18nUtil {
         en.put("app.manage.forceApprove", "Force Approve");
         en.put("app.manage.rejectionNote", "Rejection Note");
         en.put("app.manage.rejectionNotePlaceholder", "Optional note (visible to TA)");
+        en.put("app.manage.select", "Select");
+        en.put("app.manage.batchAction", "Batch Action");
+        en.put("app.manage.batchApply", "Apply To Selected");
+        en.put("app.manage.batchApprove", "Approve Selected");
+        en.put("app.manage.batchReject", "Reject Selected");
+        en.put("app.manage.batchRejectionNotePlaceholder", "Optional note for batch reject");
+        en.put("app.manage.batchForceOverload", "Force when overload warning occurs");
         en.put("app.manage.actions", "Actions");
         en.put("app.manage.approve", "Approve");
         en.put("app.manage.reject", "Reject");
@@ -195,6 +211,18 @@ public class I18nUtil {
         en.put("app.manage.processed", "Processed");
         en.put("app.manage.noApps", "No applications received for this job yet.");
         en.put("app.manage.back", "Back to My Jobs");
+
+        en.put("notif.title", "Notifications");
+        en.put("notif.unreadTitle", "Unread Notifications");
+        en.put("notif.viewAll", "View in My Applications");
+        en.put("notif.unread", "Unread");
+        en.put("notif.read", "Read");
+        en.put("notif.markRead", "Mark Read");
+        en.put("notif.markAllRead", "Mark All Read");
+        en.put("notif.status", "Status");
+        en.put("notif.message", "Message");
+        en.put("notif.time", "Time");
+        en.put("notif.empty", "No notifications yet.");
 
         en.put("status.open", "Open");
         en.put("status.closed", "Closed");
@@ -313,15 +341,21 @@ public class I18nUtil {
         zh.put("jobs.postedAt", "发布时间");
         zh.put("jobs.viewDetails", "查看详情");
         zh.put("jobs.noJobs", "未找到职位。请尝试其他搜索条件或稍后再来。");
+        zh.put("jobs.recommendedTitle", "为你推荐");
+        zh.put("jobs.aiSuggestion", "AI 推荐");
 
         zh.put("job.detail.title", "职位详情");
+        zh.put("job.detail.courseCode", "课程代码");
         zh.put("job.detail.type", "类型");
         zh.put("job.detail.description", "职位描述");
         zh.put("job.detail.requirements", "任职要求");
+        zh.put("job.detail.requiredSkills", "结构化技能要求");
         zh.put("job.detail.workStartDate", "任职开始日期");
         zh.put("job.detail.workEndDate", "任职结束日期");
         zh.put("job.detail.workWeekdays", "每周任职日");
         zh.put("job.detail.dailyHours", "每日任职时间");
+        zh.put("job.detail.missingSkillsHint", "你可能缺少以下技能");
+        zh.put("job.detail.missingSkillsNone", "你的当前档案与该岗位技能要求匹配良好。");
         zh.put("job.detail.noDesc", "暂无描述。");
         zh.put("job.detail.noReq", "暂无要求。");
         zh.put("job.detail.apply", "立即申请");
@@ -329,9 +363,12 @@ public class I18nUtil {
 
         zh.put("job.create.title", "发布新职位");
         zh.put("job.create.jobTitle", "职位标题 *");
+        zh.put("job.create.courseCode", "课程代码 *");
         zh.put("job.create.type", "职位类型 *");
         zh.put("job.create.desc", "职位描述 *");
         zh.put("job.create.req", "任职要求 *");
+        zh.put("job.create.requiredSkills", "结构化技能要求（逗号分隔）");
+        zh.put("job.create.requiredSkillsPlaceholder", "例如：Java, SQL, Teaching");
         zh.put("job.create.workStartDate", "任职开始日期 *");
         zh.put("job.create.workEndDate", "任职结束日期 *");
         zh.put("job.create.workWeekdays", "每周任职日 *");
@@ -390,6 +427,13 @@ public class I18nUtil {
         zh.put("app.manage.forceApprove", "强制录取");
         zh.put("app.manage.rejectionNote", "拒绝备注");
         zh.put("app.manage.rejectionNotePlaceholder", "可选备注（TA 可见）");
+        zh.put("app.manage.select", "选择");
+        zh.put("app.manage.batchAction", "批量操作");
+        zh.put("app.manage.batchApply", "应用到已选");
+        zh.put("app.manage.batchApprove", "批量批准");
+        zh.put("app.manage.batchReject", "批量拒绝");
+        zh.put("app.manage.batchRejectionNotePlaceholder", "批量拒绝备注（可选）");
+        zh.put("app.manage.batchForceOverload", "过载预警时仍强制录取");
         zh.put("app.manage.actions", "操作");
         zh.put("app.manage.approve", "批准");
         zh.put("app.manage.reject", "拒绝");
@@ -397,6 +441,18 @@ public class I18nUtil {
         zh.put("app.manage.processed", "已处理");
         zh.put("app.manage.noApps", "该职位还没有收到任何申请。");
         zh.put("app.manage.back", "返回我的职位");
+
+        zh.put("notif.title", "站内通知");
+        zh.put("notif.unreadTitle", "未读通知");
+        zh.put("notif.viewAll", "前往“我的申请”查看");
+        zh.put("notif.unread", "未读");
+        zh.put("notif.read", "已读");
+        zh.put("notif.markRead", "标为已读");
+        zh.put("notif.markAllRead", "全部已读");
+        zh.put("notif.status", "状态");
+        zh.put("notif.message", "消息");
+        zh.put("notif.time", "时间");
+        zh.put("notif.empty", "暂无通知。");
 
         zh.put("status.open", "开放");
         zh.put("status.closed", "已关闭");

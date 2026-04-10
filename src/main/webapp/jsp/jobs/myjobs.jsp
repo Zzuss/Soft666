@@ -42,6 +42,7 @@
             <h2><%= I18nUtil.get("job.my.title", lang) %></h2>
             <a href="${pageContext.request.contextPath}/jobs/create" class="btn btn-primary"><%= I18nUtil.get("job.my.postNew", lang) %></a>
         </div>
+        <jsp:include page="/jsp/common/system-warning.jsp" />
 
         <% if (request.getParameter("error") != null) { %>
             <div class="alert alert-error"><%= request.getParameter("error") %></div>
@@ -58,6 +59,7 @@
                         <div>
                             <h3><%= job.getTitle() %></h3>
                             <div class="job-meta">
+                                <span><%= I18nUtil.get("job.detail.courseCode", lang) %>: <%= job.getCourseCode() != null && !job.getCourseCode().isEmpty() ? job.getCourseCode() : "-" %></span>
                                 <span><%= job.getTypeDisplayName(lang) %></span>
                                 <span><%= I18nUtil.get("jobs.positions", lang) %>: <%= job.getPositions() %></span>
                                 <span><%= I18nUtil.get("jobs.deadline", lang) %>: <%= job.getDeadline() %></span>

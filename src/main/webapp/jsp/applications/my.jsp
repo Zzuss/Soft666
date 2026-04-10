@@ -2,6 +2,7 @@
 <%@ page import="com.tarecruitment.model.User" %>
 <%@ page import="com.tarecruitment.model.Application" %>
 <%@ page import="com.tarecruitment.model.Job" %>
+<%@ page import="com.tarecruitment.model.Notification" %>
 <%@ page import="com.tarecruitment.util.I18nUtil" %>
 <%@ page import="java.util.List" %>
 <%
@@ -11,11 +12,15 @@
         return;
     }
     List<Application> applications = (List<Application>) request.getAttribute("applications");
+    List<Notification> notifications = (List<Notification>) request.getAttribute("notifications");
     String lang = I18nUtil.getLanguage(request);
+    Integer unreadNotificationCountObj = (Integer) request.getAttribute("unreadNotificationCount");
+    int unreadNotificationCount = unreadNotificationCountObj != null ? unreadNotificationCountObj : 0;
     String statusFilter = (String) request.getAttribute("statusFilter");
     if (statusFilter == null || statusFilter.isEmpty()) {
         statusFilter = "ALL";
     }
+    String notificationRedirectTo = "/applications/my?status=" + statusFilter;
 %>
 <!DOCTYPE html>
 <html>
@@ -41,6 +46,7 @@
         </nav>
 
         <h2><%= I18nUtil.get("app.my.title", lang) %></h2>
+        <jsp:include page="/jsp/common/system-warning.jsp" />
 
         <% if (request.getParameter("error") != null) { %>
             <div class="alert alert-error"><%= request.getParameter("error") %></div>
@@ -49,6 +55,62 @@
         <% if (request.getParameter("success") != null) { %>
             <div class="alert alert-success"><%= request.getParameter("success") %></div>
         <% } %>
+
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                <h3 style="margin-bottom: 0;"><%= I18nUtil.get("notif.title", lang) %></h3>
+                <div>
+                    <span class="badge badge-pending"><%= unreadNotificationCount %> <%= I18nUtil.get("notif.unread", lang) %></span>
+                    <% if (unreadNotificationCount > 0) { %>
+                        <form action="${pageContext.request.contextPath}/notifications/read-all" method="post" style="display: inline;">
+                            <input type="hidden" name="redirectTo" value="<%= notificationRedirectTo %>">
+                            <button type="submit" class="btn btn-secondary"><%= I18nUtil.get("notif.markAllRead", lang) %></button>
+                        </form>
+                    <% } %>
+                </div>
+            </div>
+            <% if (notifications != null && !notifications.isEmpty()) { %>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th><%= I18nUtil.get("notif.status", lang) %></th>
+                        <th><%= I18nUtil.get("notif.message", lang) %></th>
+                        <th><%= I18nUtil.get("notif.time", lang) %></th>
+                        <th><%= I18nUtil.get("app.my.action", lang) %></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% for (Notification notification : notifications) { %>
+                        <tr>
+                            <td>
+                                <span class="badge <%= notification.isRead() ? "badge-open" : "badge-pending" %>">
+                                    <%= notification.isRead() ? I18nUtil.get("notif.read", lang) : I18nUtil.get("notif.unread", lang) %>
+                                </span>
+                            </td>
+                            <td>
+                                <strong><%= notification.getTitle() %></strong><br>
+                                <%= notification.getMessage() %>
+                            </td>
+                            <td><%= notification.getCreatedAt() != null ? notification.getCreatedAt().toString().substring(0, 19) : "-" %></td>
+                            <td>
+                                <% if (!notification.isRead()) { %>
+                                    <form action="${pageContext.request.contextPath}/notifications/read" method="post">
+                                        <input type="hidden" name="notificationId" value="<%= notification.getNotificationId() %>">
+                                        <input type="hidden" name="redirectTo" value="<%= notificationRedirectTo %>">
+                                        <button type="submit" class="btn btn-primary"><%= I18nUtil.get("notif.markRead", lang) %></button>
+                                    </form>
+                                <% } else { %>
+                                    -
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% } %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <p style="color: #718096;"><%= I18nUtil.get("notif.empty", lang) %></p>
+            <% } %>
+        </div>
 
         <div class="card">
             <form action="${pageContext.request.contextPath}/applications/my" method="get" class="filter-bar">

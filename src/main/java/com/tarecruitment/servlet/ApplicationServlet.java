@@ -2,10 +2,12 @@ package com.tarecruitment.servlet;
 
 import com.tarecruitment.model.Application;
 import com.tarecruitment.model.Job;
+import com.tarecruitment.model.Notification;
 import com.tarecruitment.model.User;
 import com.tarecruitment.service.ApplicationService;
 import com.tarecruitment.service.AuthService;
 import com.tarecruitment.service.JobService;
+import com.tarecruitment.service.NotificationService;
 import com.tarecruitment.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,7 +21,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @WebServlet("/applications/*")
 public class ApplicationServlet extends HttpServlet {
@@ -27,6 +31,7 @@ public class ApplicationServlet extends HttpServlet {
     private JobService jobService;
     private UserService userService;
     private AuthService authService;
+    private NotificationService notificationService;
 
     @Override
     public void init() throws ServletException {
@@ -34,6 +39,7 @@ public class ApplicationServlet extends HttpServlet {
         this.jobService = new JobService();
         this.userService = new UserService();
         this.authService = new AuthService();
+        this.notificationService = new NotificationService();
     }
 
     @Override
@@ -75,6 +81,8 @@ public class ApplicationServlet extends HttpServlet {
             approveApplication(request, response);
         } else if ("/reject".equals(pathInfo)) {
             rejectApplication(request, response);
+        } else if ("/bulk-review".equals(pathInfo)) {
+            bulkReviewApplications(request, response);
         } else {
             response.sendRedirect(request.getContextPath() + "/applications/my");
         }
@@ -98,7 +106,10 @@ public class ApplicationServlet extends HttpServlet {
             Job job = jobService.getJobById(app.getJobId());
             request.setAttribute("job_" + app.getJobId(), job);
         }
-        
+
+        List<Notification> notifications = notificationService.getUserNotifications(user.getUserId(), true);
+        request.setAttribute("notifications", notifications);
+        request.setAttribute("unreadNotificationCount", notificationService.countUnread(user.getUserId()));
         request.setAttribute("statusFilter", statusFilter != null ? statusFilter : "ALL");
         request.setAttribute("applications", applications);
         request.getRequestDispatcher("/jsp/applications/my.jsp").forward(request, response);
@@ -240,6 +251,84 @@ public class ApplicationServlet extends HttpServlet {
         }
     }
 
+    private void bulkReviewApplications(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        String jobId = request.getParameter("jobId");
+        User user = (User) request.getSession(false).getAttribute("user");
+        Job job = jobService.getJobById(jobId);
+        if (job == null || !canManageJob(user, job)) {
+            response.sendRedirect(request.getContextPath() + "/jobs/myjobs?error=No permission to review this batch");
+            return;
+        }
+
+        String[] selectedIdsRaw = request.getParameterValues("selectedIds");
+        if (selectedIdsRaw == null || selectedIdsRaw.length == 0) {
+            response.sendRedirect(request.getContextPath() + "/applications/manage?jobId=" + jobId
+                    + "&error=" + encode("Please select at least one pending application"));
+            return;
+        }
+
+        String batchAction = request.getParameter("batchAction");
+        boolean approveAction = "APPROVE".equalsIgnoreCase(batchAction);
+        boolean rejectAction = "REJECT".equalsIgnoreCase(batchAction);
+        if (!approveAction && !rejectAction) {
+            response.sendRedirect(request.getContextPath() + "/applications/manage?jobId=" + jobId
+                    + "&error=" + encode("Invalid batch action"));
+            return;
+        }
+
+        boolean forceOverload = "true".equalsIgnoreCase(request.getParameter("forceOverload"));
+        String rejectionNote = request.getParameter("rejectionNote");
+        Set<String> selectedIds = new LinkedHashSet<>();
+        for (String id : selectedIdsRaw) {
+            if (id != null && !id.trim().isEmpty()) {
+                selectedIds.add(id.trim());
+            }
+        }
+
+        int successCount = 0;
+        List<String> failedItems = new ArrayList<>();
+        for (String applicationId : selectedIds) {
+            Application app = applicationService.getApplicationById(applicationId);
+            if (app == null) {
+                failedItems.add(applicationId + ": not found");
+                continue;
+            }
+            if (!jobId.equals(app.getJobId())) {
+                failedItems.add(applicationId + ": belongs to another job");
+                continue;
+            }
+            try {
+                if (approveAction) {
+                    applicationService.approveApplication(applicationId, user.getUserId(), forceOverload);
+                } else {
+                    applicationService.rejectApplication(applicationId, user.getUserId(), rejectionNote);
+                }
+                successCount++;
+            } catch (Exception e) {
+                String reason = e.getMessage() == null ? "failed" : e.getMessage();
+                failedItems.add(applicationId + ": " + reason);
+            }
+        }
+
+        int failedCount = failedItems.size();
+        String successMsg = (approveAction ? "Batch approve completed. " : "Batch reject completed. ")
+                + "Success: " + successCount + ", Failed: " + failedCount;
+
+        StringBuilder redirect = new StringBuilder(request.getContextPath())
+                .append("/applications/manage?jobId=").append(jobId)
+                .append("&success=").append(encode(successMsg));
+        if (failedCount > 0) {
+            int previewSize = Math.min(failedItems.size(), 3);
+            String detail = String.join(" | ", failedItems.subList(0, previewSize));
+            if (failedItems.size() > previewSize) {
+                detail = detail + " | ...";
+            }
+            redirect.append("&error=").append(encode(detail));
+        }
+        response.sendRedirect(redirect.toString());
+    }
+
     private void bindOverloadWarning(HttpServletRequest request) {
         String warning = request.getParameter("warning");
         if (!"overload".equalsIgnoreCase(warning)) {
@@ -296,5 +385,9 @@ public class ApplicationServlet extends HttpServlet {
             return true;
         }
         return user.isMO() && user.getUserId().equals(job.getPostedBy());
+    }
+
+    private String encode(String value) {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
 }

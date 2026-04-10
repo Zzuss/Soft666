@@ -60,9 +60,14 @@ public class MatchingService {
         if (job == null) {
             return skills;
         }
-        // Requirement list has highest priority; unknown items (e.g. "pytorch") should also count.
-        skills.addAll(extractExplicitSkills(job.getRequirements()));
-        skills.addAll(extractSkillsFromText(job.getRequirements()));
+        String preferredRequiredSkills = job.getRequiredSkills();
+        String fallbackRequirements = job.getRequirements();
+        String sourceText = preferredRequiredSkills != null && !preferredRequiredSkills.trim().isEmpty()
+                ? preferredRequiredSkills
+                : fallbackRequirements;
+
+        skills.addAll(extractExplicitSkills(sourceText));
+        skills.addAll(extractSkillsFromText(sourceText));
         if (skills.isEmpty()) {
             skills.addAll(extractSkillsFromText(job.getDescription()));
             skills.addAll(extractSkillsFromText(job.getTitle()));

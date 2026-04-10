@@ -5,9 +5,11 @@ import java.sql.Timestamp;
 public class Job {
     private String jobId;
     private String title;
+    private String courseCode;
     private String type;
     private String description;
     private String requirements;
+    private String requiredSkills;
     private String workStartDate;
     private String workEndDate;
     private String workWeekdays;
@@ -22,13 +24,15 @@ public class Job {
     public Job() {
     }
 
-    public Job(String jobId, String title, String type, String description, 
+    public Job(String jobId, String title, String type, String description,
                String requirements, int positions, String postedBy, String deadline) {
         this.jobId = jobId;
         this.title = title;
+        this.courseCode = "";
         this.type = type;
         this.description = description;
         this.requirements = requirements;
+        this.requiredSkills = "";
         this.positions = positions;
         this.postedBy = postedBy;
         this.deadline = deadline;
@@ -50,6 +54,14 @@ public class Job {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
     }
 
     public String getType() {
@@ -74,6 +86,14 @@ public class Job {
 
     public void setRequirements(String requirements) {
         this.requirements = requirements;
+    }
+
+    public String getRequiredSkills() {
+        return requiredSkills;
+    }
+
+    public void setRequiredSkills(String requiredSkills) {
+        this.requiredSkills = requiredSkills;
     }
 
     public String getWorkStartDate() {

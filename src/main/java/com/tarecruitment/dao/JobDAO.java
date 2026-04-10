@@ -126,9 +126,11 @@ public class JobDAO {
         JSONObject j = new JSONObject();
         j.put("jobId", job.getJobId());
         j.put("title", job.getTitle());
+        j.put("courseCode", job.getCourseCode() != null ? job.getCourseCode() : "");
         j.put("type", job.getType());
         j.put("description", job.getDescription());
         j.put("requirements", job.getRequirements());
+        j.put("requiredSkills", job.getRequiredSkills() != null ? job.getRequiredSkills() : "");
         j.put("workStartDate", job.getWorkStartDate() != null ? job.getWorkStartDate() : "");
         j.put("workEndDate", job.getWorkEndDate() != null ? job.getWorkEndDate() : "");
         j.put("workWeekdays", job.getWorkWeekdays() != null ? job.getWorkWeekdays() : "");
@@ -148,9 +150,11 @@ public class JobDAO {
         Job job = new Job();
         job.setJobId(j.getString("jobId"));
         job.setTitle(j.getString("title"));
+        job.setCourseCode(j.optString("courseCode", ""));
         job.setType(j.getString("type"));
         job.setDescription(j.getString("description"));
         job.setRequirements(j.getString("requirements"));
+        job.setRequiredSkills(j.optString("requiredSkills", ""));
         job.setWorkStartDate(j.optString("workStartDate", ""));
         job.setWorkEndDate(j.optString("workEndDate", ""));
         job.setWorkWeekdays(j.optString("workWeekdays", ""));

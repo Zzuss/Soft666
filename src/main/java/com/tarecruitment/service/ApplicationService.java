@@ -25,12 +25,14 @@ public class ApplicationService {
     private JobDAO jobDAO;
     private UserDAO userDAO;
     private MatchingService matchingService;
+    private NotificationService notificationService;
 
     public ApplicationService() {
         this.applicationDAO = new ApplicationDAO();
         this.jobDAO = new JobDAO();
         this.userDAO = new UserDAO();
         this.matchingService = new MatchingService();
+        this.notificationService = new NotificationService();
     }
 
     public Application applyForJob(String jobId, String userId) {
@@ -105,6 +107,7 @@ public class ApplicationService {
         app.setReviewedBy(moId);
         app.setReviewedAt(new Timestamp(System.currentTimeMillis()));
         applicationDAO.updateApplication(app);
+        notificationService.createApplicationStatusNotification(app, job.getTitle());
     }
 
     public void rejectApplication(String applicationId, String moId) {
@@ -130,6 +133,10 @@ public class ApplicationService {
         app.setReviewedBy(moId);
         app.setReviewedAt(new Timestamp(System.currentTimeMillis()));
         applicationDAO.updateApplication(app);
+
+        Job job = jobDAO.getJobById(app.getJobId());
+        String jobTitle = job != null ? job.getTitle() : null;
+        notificationService.createApplicationStatusNotification(app, jobTitle);
     }
 
     public List<Application> getUserApplications(String userId) {
@@ -144,6 +151,14 @@ public class ApplicationService {
 
     public Application getApplication(String jobId, String userId) {
         Application app = applicationDAO.getApplication(jobId, userId);
+        if (app != null) {
+            refreshMatchingResult(app);
+        }
+        return app;
+    }
+
+    public Application getApplicationById(String applicationId) {
+        Application app = applicationDAO.getApplicationById(applicationId);
         if (app != null) {
             refreshMatchingResult(app);
         }

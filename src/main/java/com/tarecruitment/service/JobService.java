@@ -2,6 +2,7 @@ package com.tarecruitment.service;
 
 import com.tarecruitment.dao.JobDAO;
 import com.tarecruitment.model.Job;
+import com.tarecruitment.model.User;
 import com.tarecruitment.util.JsonUtil;
 
 import java.sql.Timestamp;
@@ -22,24 +23,28 @@ public class JobService {
             "Teaching", "Communication", "Teamwork", "Invigilation"
     );
 
-    private JobDAO jobDAO;
+    private final JobDAO jobDAO;
+    private final MatchingService matchingService;
 
     public JobService() {
         this.jobDAO = new JobDAO();
+        this.matchingService = new MatchingService();
     }
 
-    public Job createJob(String title, String type, String description, 
+    public Job createJob(String title, String type, String description,
                         String requirements, int positions, String deadline, String moId) {
         return createJob(title, type, description, requirements, positions, deadline, moId,
-                null, null, null, null, null);
+                null, null, null, null, null, null, null);
     }
 
     public Job createJob(String title, String type, String description,
                          String requirements, int positions, String deadline, String moId,
+                         String courseCode, String requiredSkills,
                          String workStartDate, String workEndDate, String workWeekdays,
                          String dailyStartHour, String dailyEndHour) {
         JobValidatedData validated = validateJobFields(
                 title, type, description, requirements, positions, deadline,
+                courseCode, requiredSkills,
                 workStartDate, workEndDate, workWeekdays, dailyStartHour, dailyEndHour
         );
 
@@ -104,7 +109,8 @@ public class JobService {
         }
         JobValidatedData validated = validateJobFields(
                 job.getTitle(), job.getType(), job.getDescription(), job.getRequirements(),
-                job.getPositions(), job.getDeadline(), job.getWorkStartDate(), job.getWorkEndDate(),
+                job.getPositions(), job.getDeadline(), job.getCourseCode(), job.getRequiredSkills(),
+                job.getWorkStartDate(), job.getWorkEndDate(),
                 job.getWorkWeekdays(), job.getDailyStartHour(), job.getDailyEndHour()
         );
         applyValidatedFields(job, validated);
@@ -149,6 +155,33 @@ public class JobService {
         return jobDAO.getJobsByMo(moId);
     }
 
+    public MatchingService.MatchResult evaluateMatchForUser(Job job, User user) {
+        return matchingService.evaluate(job, user);
+    }
+
+    public List<JobRecommendation> getRecommendedJobsForUser(User user, int limit) {
+        List<JobRecommendation> recommendations = new ArrayList<>();
+        if (user == null || limit <= 0) {
+            return recommendations;
+        }
+        List<Job> openJobs = jobDAO.getOpenJobs();
+        for (Job job : openJobs) {
+            MatchingService.MatchResult result = matchingService.evaluate(job, user);
+            if (result.getScore() <= 0) {
+                continue;
+            }
+            recommendations.add(new JobRecommendation(job, result.getScore(), result.getMissingSkills()));
+        }
+        recommendations.sort(
+                Comparator.comparingDouble(JobRecommendation::getScore).reversed()
+                        .thenComparing(r -> toSortableDeadline(r.getJob()))
+        );
+        if (recommendations.size() > limit) {
+            return new ArrayList<>(recommendations.subList(0, limit));
+        }
+        return recommendations;
+    }
+
     public List<Job> searchJobs(String keyword, String type) {
         return searchJobs(keyword, type, null);
     }
@@ -183,10 +216,14 @@ public class JobService {
 
     private JobValidatedData validateJobFields(String title, String type, String description,
                                                String requirements, int positions, String deadline,
+                                               String courseCode, String requiredSkills,
                                                String workStartDate, String workEndDate, String workWeekdays,
                                                String dailyStartHour, String dailyEndHour) {
         if (title == null || title.trim().isEmpty()) {
             throw new IllegalArgumentException("Job title cannot be empty");
+        }
+        if (courseCode == null || courseCode.trim().isEmpty()) {
+            throw new IllegalArgumentException("Course code is required");
         }
         if (requirements == null || requirements.trim().isEmpty()) {
             throw new IllegalArgumentException("Requirements cannot be empty");
@@ -222,9 +259,11 @@ public class JobService {
 
         JobValidatedData validated = new JobValidatedData();
         validated.title = title.trim();
+        validated.courseCode = courseCode.trim();
         validated.type = type != null ? type.toUpperCase(Locale.ROOT) : "OTHER";
         validated.description = description != null ? description : "";
         validated.requirements = requirements.trim();
+        validated.requiredSkills = requiredSkills != null ? requiredSkills.trim() : "";
         validated.positions = positions;
         validated.deadline = deadline;
         validated.startDate = startDate.toString();
@@ -237,9 +276,11 @@ public class JobService {
 
     private void applyValidatedFields(Job job, JobValidatedData validated) {
         job.setTitle(validated.title);
+        job.setCourseCode(validated.courseCode);
         job.setType(validated.type);
         job.setDescription(validated.description);
         job.setRequirements(validated.requirements);
+        job.setRequiredSkills(validated.requiredSkills);
         job.setPositions(validated.positions);
         job.setDeadline(validated.deadline);
         job.setWorkStartDate(validated.startDate);
@@ -294,8 +335,10 @@ public class JobService {
     private String combinedJobText(Job job) {
         StringBuilder sb = new StringBuilder();
         appendLower(sb, job.getTitle());
+        appendLower(sb, job.getCourseCode());
         appendLower(sb, job.getDescription());
         appendLower(sb, job.getRequirements());
+        appendLower(sb, job.getRequiredSkills());
         appendLower(sb, job.getType());
         return sb.toString();
     }
@@ -355,9 +398,11 @@ public class JobService {
 
     private static class JobValidatedData {
         private String title;
+        private String courseCode;
         private String type;
         private String description;
         private String requirements;
+        private String requiredSkills;
         private int positions;
         private String deadline;
         private String startDate;
@@ -365,5 +410,29 @@ public class JobService {
         private String weekdays;
         private String startHour;
         private String endHour;
+    }
+
+    public static class JobRecommendation {
+        private final Job job;
+        private final double score;
+        private final List<String> missingSkills;
+
+        public JobRecommendation(Job job, double score, List<String> missingSkills) {
+            this.job = job;
+            this.score = score;
+            this.missingSkills = missingSkills;
+        }
+
+        public Job getJob() {
+            return job;
+        }
+
+        public double getScore() {
+            return score;
+        }
+
+        public List<String> getMissingSkills() {
+            return missingSkills;
+        }
     }
 }

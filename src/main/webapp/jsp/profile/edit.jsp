@@ -70,6 +70,7 @@
         </nav>
 
         <h2><%= I18nUtil.get("profile.title", lang) %></h2>
+        <jsp:include page="/jsp/common/system-warning.jsp" />
 
         <% if (request.getParameter("error") != null) { %>
             <div class="alert alert-error"><%= request.getParameter("error") %></div>

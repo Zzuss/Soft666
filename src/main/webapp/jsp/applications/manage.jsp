@@ -64,6 +64,7 @@
         </nav>
 
         <h2><%= I18nUtil.get("app.manage.title", lang) %></h2>
+        <jsp:include page="/jsp/common/system-warning.jsp" />
 
         <% if (job != null) { %>
             <div class="card">
@@ -123,9 +124,26 @@
 
         <% if (applications != null && !applications.isEmpty()) { %>
             <div class="card">
+                <form id="batchReviewForm" action="${pageContext.request.contextPath}/applications/bulk-review" method="post" class="filter-bar" style="margin-bottom: 12px;">
+                    <input type="hidden" name="jobId" value="<%= job != null ? job.getJobId() : "" %>">
+                    <label for="batchAction"><%= I18nUtil.get("app.manage.batchAction", lang) %></label>
+                    <select id="batchAction" name="batchAction">
+                        <option value="APPROVE"><%= I18nUtil.get("app.manage.batchApprove", lang) %></option>
+                        <option value="REJECT"><%= I18nUtil.get("app.manage.batchReject", lang) %></option>
+                    </select>
+                    <input type="text" name="rejectionNote" maxlength="300"
+                           placeholder="<%= I18nUtil.get("app.manage.batchRejectionNotePlaceholder", lang) %>"
+                           style="min-width: 220px;">
+                    <label style="display: inline-flex; align-items: center; gap: 6px;">
+                        <input type="checkbox" name="forceOverload" value="true">
+                        <%= I18nUtil.get("app.manage.batchForceOverload", lang) %>
+                    </label>
+                    <button type="submit" class="btn btn-primary"><%= I18nUtil.get("app.manage.batchApply", lang) %></button>
+                </form>
                 <table class="table">
                     <thead>
                         <tr>
+                            <th><%= I18nUtil.get("app.manage.select", lang) %></th>
                             <th><%= I18nUtil.get("app.manage.applicantName", lang) %></th>
                             <th><%= I18nUtil.get("app.manage.email", lang) %></th>
                             <th><%= I18nUtil.get("app.manage.skills", lang) %></th>
@@ -148,6 +166,13 @@
                             }
                         %>
                             <tr>
+                                <td>
+                                    <% if (app.isPending()) { %>
+                                        <input type="checkbox" name="selectedIds" value="<%= app.getApplicationId() %>" form="batchReviewForm">
+                                    <% } else { %>
+                                        -
+                                    <% } %>
+                                </td>
                                 <td><%= applicant != null ? applicant.getName() : "Unknown" %></td>
                                 <td><%= applicant != null ? applicant.getEmail() : "-" %></td>
                                 <td><%= (applicant != null && applicant.getSkills() != null && !applicant.getSkills().isEmpty()) ? String.join(", ", applicant.getSkills()) : "-" %></td>

@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.tarecruitment.model.User" %>
 <%@ page import="com.tarecruitment.model.Job" %>
+<%@ page import="com.tarecruitment.service.JobService" %>
 <%@ page import="com.tarecruitment.util.I18nUtil" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
@@ -11,6 +12,8 @@
         return;
     }
     List<Job> jobs = (List<Job>) request.getAttribute("jobs");
+    List<JobService.JobRecommendation> recommendedJobs =
+            (List<JobService.JobRecommendation>) request.getAttribute("recommendedJobs");
     String keyword = (String) request.getAttribute("keyword");
     String type = (String) request.getAttribute("type");
     List<String> selectedSkills = (List<String>) request.getAttribute("selectedSkills");
@@ -56,6 +59,7 @@
         </nav>
 
         <h2><%= I18nUtil.get("jobs.available", lang) %></h2>
+        <jsp:include page="/jsp/common/system-warning.jsp" />
 
         <div class="card">
             <form action="${pageContext.request.contextPath}/jobs/list" method="get" class="filter-bar">
@@ -96,6 +100,42 @@
             <div class="alert alert-success"><%= request.getParameter("success") %></div>
         <% } %>
 
+        <% if (user.isTA() && recommendedJobs != null && !recommendedJobs.isEmpty()) { %>
+            <div class="card">
+                <h3><%= I18nUtil.get("jobs.recommendedTitle", lang) %></h3>
+                <% for (JobService.JobRecommendation recommendation : recommendedJobs) {
+                    Job recJob = recommendation.getJob();
+                %>
+                    <div class="job-card" style="margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px;">
+                            <div>
+                                <h3 style="margin-bottom: 8px;">
+                                    <%= recJob.getTitle() %>
+                                    <span class="badge badge-approved"><%= I18nUtil.get("jobs.aiSuggestion", lang) %></span>
+                                </h3>
+                                <div class="job-meta" style="margin-bottom: 8px;">
+                                    <span><%= I18nUtil.get("job.detail.courseCode", lang) %>: <%= recJob.getCourseCode() != null && !recJob.getCourseCode().isEmpty() ? recJob.getCourseCode() : "-" %></span>
+                                    <span><%= I18nUtil.get("jobs.deadline", lang) %>: <%= recJob.getDeadline() %></span>
+                                    <span><%= I18nUtil.get("app.my.matchScore", lang) %>: <%= recommendation.getScore() %>%</span>
+                                </div>
+                                <% if (recommendation.getMissingSkills() != null && !recommendation.getMissingSkills().isEmpty()) { %>
+                                    <p style="color: #975a16; margin: 0;">
+                                        <%= I18nUtil.get("job.detail.missingSkillsHint", lang) %>:
+                                        <%= String.join(", ", recommendation.getMissingSkills()) %>
+                                    </p>
+                                <% } %>
+                            </div>
+                            <div>
+                                <a href="${pageContext.request.contextPath}/jobs/detail?id=<%= recJob.getJobId() %>" class="btn btn-primary">
+                                    <%= I18nUtil.get("jobs.viewDetails", lang) %>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        <% } %>
+
         <% if (jobs != null && !jobs.isEmpty()) { %>
             <% for (Job job : jobs) { %>
                 <div class="job-card">
@@ -103,6 +143,7 @@
                         <div>
                             <h3><%= job.getTitle() %></h3>
                             <div class="job-meta">
+                                <span><%= I18nUtil.get("job.detail.courseCode", lang) %>: <%= job.getCourseCode() != null && !job.getCourseCode().isEmpty() ? job.getCourseCode() : "-" %></span>
                                 <span><%= job.getTypeDisplayName(lang) %></span>
                                 <span><%= I18nUtil.get("jobs.positions", lang) %>: <%= job.getPositions() %></span>
                                 <span><%= I18nUtil.get("jobs.deadline", lang) %>: <%= job.getDeadline() %></span>

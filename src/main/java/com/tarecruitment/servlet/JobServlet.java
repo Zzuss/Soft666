@@ -4,6 +4,7 @@ import com.tarecruitment.model.Job;
 import com.tarecruitment.model.User;
 import com.tarecruitment.service.AuthService;
 import com.tarecruitment.service.JobService;
+import com.tarecruitment.service.MatchingService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -78,12 +79,17 @@ public class JobServlet extends HttpServlet {
 
     private void listJobs(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        User user = (User) request.getSession(false).getAttribute("user");
         String keyword = request.getParameter("keyword");
         String type = request.getParameter("type");
         String[] skillParams = request.getParameterValues("skills");
         List<String> selectedSkills = normalizeSelectedSkills(skillParams);
 
         List<Job> jobs = jobService.searchJobs(keyword, type, selectedSkills);
+        if (user != null && user.isTA()) {
+            List<JobService.JobRecommendation> recommendations = jobService.getRecommendedJobsForUser(user, 5);
+            request.setAttribute("recommendedJobs", recommendations);
+        }
         request.setAttribute("jobs", jobs);
         request.setAttribute("keyword", keyword);
         request.setAttribute("type", type);
@@ -124,6 +130,7 @@ public class JobServlet extends HttpServlet {
 
     private void showJobDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        User user = (User) request.getSession(false).getAttribute("user");
         String jobId = request.getParameter("id");
         Job job = jobService.getJobById(jobId);
         
@@ -131,7 +138,13 @@ public class JobServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/jobs/list");
             return;
         }
-        
+
+        if (user != null && user.isTA()) {
+            MatchingService.MatchResult matchResult = jobService.evaluateMatchForUser(job, user);
+            request.setAttribute("currentUserMatchScore", matchResult.getScore());
+            request.setAttribute("currentUserMissingSkills", matchResult.getMissingSkills());
+        }
+
         request.setAttribute("job", job);
         request.getRequestDispatcher("/jsp/jobs/detail.jsp").forward(request, response);
     }
@@ -153,6 +166,8 @@ public class JobServlet extends HttpServlet {
             String type = request.getParameter("type");
             String description = request.getParameter("description");
             String requirements = request.getParameter("requirements");
+            String courseCode = request.getParameter("courseCode");
+            String requiredSkills = request.getParameter("requiredSkills");
             String workStartDate = request.getParameter("workStartDate");
             String workEndDate = request.getParameter("workEndDate");
             String[] workWeekdays = request.getParameterValues("workWeekdays");
@@ -163,6 +178,7 @@ public class JobServlet extends HttpServlet {
 
             jobService.createJob(
                     title, type, description, requirements, positions, deadline, user.getUserId(),
+                    courseCode, requiredSkills,
                     workStartDate, workEndDate, joinValues(workWeekdays), dailyStartHour, dailyEndHour
             );
             
@@ -192,6 +208,8 @@ public class JobServlet extends HttpServlet {
             String type = request.getParameter("type");
             String description = request.getParameter("description");
             String requirements = request.getParameter("requirements");
+            String courseCode = request.getParameter("courseCode");
+            String requiredSkills = request.getParameter("requiredSkills");
             String workStartDate = request.getParameter("workStartDate");
             String workEndDate = request.getParameter("workEndDate");
             String[] workWeekdays = request.getParameterValues("workWeekdays");
@@ -203,9 +221,11 @@ public class JobServlet extends HttpServlet {
             Job updated = new Job();
             updated.setJobId(jobId);
             updated.setTitle(title);
+            updated.setCourseCode(courseCode);
             updated.setType(type);
             updated.setDescription(description);
             updated.setRequirements(requirements);
+            updated.setRequiredSkills(requiredSkills);
             updated.setWorkStartDate(workStartDate);
             updated.setWorkEndDate(workEndDate);
             updated.setWorkWeekdays(joinValues(workWeekdays));

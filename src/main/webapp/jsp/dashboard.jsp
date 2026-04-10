@@ -11,6 +11,8 @@
         return;
     }
     String lang = I18nUtil.getLanguage(request);
+    Integer unreadNotificationCountObj = (Integer) request.getAttribute("unreadNotificationCount");
+    int unreadNotificationCount = unreadNotificationCountObj != null ? unreadNotificationCountObj : 0;
 %>
 <!DOCTYPE html>
 <html>
@@ -42,6 +44,19 @@
         </nav>
 
         <h2><%= I18nUtil.get("dashboard.welcome", lang) %>, <%= user.getName() %>!</h2>
+        <jsp:include page="/jsp/common/system-warning.jsp" />
+
+        <% if (user.isTA()) { %>
+            <div class="card" style="padding: 16px 20px;">
+                <p style="margin: 0;">
+                    <strong><%= I18nUtil.get("notif.unreadTitle", lang) %>:</strong>
+                    <span class="badge badge-pending"><%= unreadNotificationCount %></span>
+                    <a href="${pageContext.request.contextPath}/applications/my" class="link" style="margin-left: 8px;">
+                        <%= I18nUtil.get("notif.viewAll", lang) %>
+                    </a>
+                </p>
+            </div>
+        <% } %>
 
         <div class="stats-grid">
             <div class="stat-card">

@@ -63,6 +63,7 @@
                 <jsp:include page="/jsp/common/language-switcher.jsp" />
             </div>
         </nav>
+        <jsp:include page="/jsp/common/system-warning.jsp" />
 
         <div class="card" style="max-width: 600px; margin: 0 auto;">
             <h2><%= editMode ? I18nUtil.get("job.edit.title", lang) : I18nUtil.get("job.create.title", lang) %></h2>
@@ -82,6 +83,12 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="courseCode"><%= I18nUtil.get("job.create.courseCode", lang) %></label>
+                    <input type="text" id="courseCode" name="courseCode" required
+                           value="<%= editingJob != null && editingJob.getCourseCode() != null ? editingJob.getCourseCode() : "" %>">
+                </div>
+
+                <div class="form-group">
                     <label for="type"><%= I18nUtil.get("job.create.type", lang) %></label>
                     <select id="type" name="type" required>
                         <option value="MODULE" <%= "MODULE".equalsIgnoreCase(selectedType) ? "selected" : "" %>><%= I18nUtil.get("jobs.moduleTutor", lang) %></option>
@@ -98,6 +105,12 @@
                 <div class="form-group">
                     <label for="requirements"><%= I18nUtil.get("job.create.req", lang) %></label>
                     <textarea id="requirements" name="requirements" rows="3" required><%= editingJob != null && editingJob.getRequirements() != null ? editingJob.getRequirements() : "" %></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="requiredSkills"><%= I18nUtil.get("job.create.requiredSkills", lang) %></label>
+                    <textarea id="requiredSkills" name="requiredSkills" rows="2"
+                              placeholder="<%= I18nUtil.get("job.create.requiredSkillsPlaceholder", lang) %>"><%= editingJob != null && editingJob.getRequiredSkills() != null ? editingJob.getRequiredSkills() : "" %></textarea>
                 </div>
 
                 <div class="form-group">

@@ -12,6 +12,7 @@
         <div class="card login-container">
             <h1 class="text-center">TA Recruitment System</h1>
             <p class="text-center" style="color: #718096; margin-bottom: 30px;">BUPT International School</p>
+            <jsp:include page="/jsp/common/system-warning.jsp" />
             
             <% if (request.getAttribute("error") != null) { %>
                 <div class="error"><%= request.getAttribute("error") %></div>

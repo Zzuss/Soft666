@@ -6,7 +6,6 @@ import com.tarecruitment.util.JsonUtil;
 import com.tarecruitment.util.PasswordUtil;
 
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
 
 public class AuthService {
     private UserDAO userDAO;
@@ -29,7 +28,7 @@ public class AuthService {
         User user = new User();
         user.setUserId(JsonUtil.generateId("u"));
         user.setUsername(username.trim());
-        user.setPassword(PasswordUtil.encrypt(password));
+        user.setPassword(PasswordUtil.hashPassword(password));
         user.setName(name);
         user.setEmail(email);
         user.setRole(role != null ? role.toUpperCase() : "TA");
@@ -53,7 +52,12 @@ public class AuthService {
             return null;
         }
 
-        if (PasswordUtil.verify(password, user.getPassword())) {
+        PasswordUtil.VerificationResult verificationResult = PasswordUtil.verifyResult(password, user.getPassword());
+        if (verificationResult.isVerified()) {
+            if (verificationResult.needsMigration()) {
+                user.setPassword(PasswordUtil.hashPassword(password));
+                userDAO.updateUser(user);
+            }
             return user;
         }
 
@@ -80,7 +84,7 @@ public class AuthService {
             throw new IllegalArgumentException("Username and email do not match");
         }
 
-        user.setPassword(PasswordUtil.encrypt(newPassword));
+        user.setPassword(PasswordUtil.hashPassword(newPassword));
         userDAO.updateUser(user);
     }
 
