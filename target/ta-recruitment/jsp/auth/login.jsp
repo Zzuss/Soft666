@@ -12,9 +12,13 @@
         <div class="card login-container">
             <h1 class="text-center">TA Recruitment System</h1>
             <p class="text-center" style="color: #718096; margin-bottom: 30px;">BUPT International School</p>
+            <jsp:include page="/jsp/common/system-warning.jsp" />
             
             <% if (request.getAttribute("error") != null) { %>
                 <div class="error"><%= request.getAttribute("error") %></div>
+            <% } %>
+            <% if (request.getParameter("success") != null) { %>
+                <div class="success"><%= request.getParameter("success") %></div>
             <% } %>
             
             <form action="${pageContext.request.contextPath}/auth" method="post">
@@ -29,6 +33,10 @@
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required>
                 </div>
+
+                <p style="margin-top: -8px; margin-bottom: 16px;">
+                    <a href="${pageContext.request.contextPath}/auth?action=forgotPassword" class="link">Forgot password?</a>
+                </p>
                 
                 <button type="submit" class="btn btn-primary btn-block">Login</button>
             </form>

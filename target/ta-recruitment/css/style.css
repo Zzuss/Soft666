@@ -409,3 +409,11 @@ textarea:focus {
 .workload-table td {
     vertical-align: middle;
 }
+
+.workload-overload {
+    background: #fff5f5;
+}
+
+.workload-overload:hover {
+    background: #ffecec !important;
+}

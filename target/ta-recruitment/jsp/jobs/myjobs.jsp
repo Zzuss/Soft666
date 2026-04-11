@@ -27,7 +27,11 @@
             <div class="navbar-menu">
                 <a href="${pageContext.request.contextPath}/dashboard"><%= I18nUtil.get("nav.dashboard", lang) %></a>
                 <a href="${pageContext.request.contextPath}/jobs/list"><%= I18nUtil.get("nav.jobs", lang) %></a>
-                <a href="${pageContext.request.contextPath}/jobs/myjobs"><%= I18nUtil.get("nav.myPostedJobs", lang) %></a>
+                <% if (user.isAdmin()) { %>
+                    <a href="${pageContext.request.contextPath}/admin/workload"><%= I18nUtil.get("nav.workload", lang) %></a>
+                <% } else { %>
+                    <a href="${pageContext.request.contextPath}/jobs/myjobs"><%= I18nUtil.get("nav.myPostedJobs", lang) %></a>
+                <% } %>
                 <span class="navbar-user"><%= user.getName() %> (<%= user.getRole() %>)</span>
                 <a href="${pageContext.request.contextPath}/auth?action=logout" class="btn btn-secondary"><%= I18nUtil.get("nav.logout", lang) %></a>
                 <jsp:include page="/jsp/common/language-switcher.jsp" />
@@ -38,6 +42,7 @@
             <h2><%= I18nUtil.get("job.my.title", lang) %></h2>
             <a href="${pageContext.request.contextPath}/jobs/create" class="btn btn-primary"><%= I18nUtil.get("job.my.postNew", lang) %></a>
         </div>
+        <jsp:include page="/jsp/common/system-warning.jsp" />
 
         <% if (request.getParameter("error") != null) { %>
             <div class="alert alert-error"><%= request.getParameter("error") %></div>
@@ -54,6 +59,7 @@
                         <div>
                             <h3><%= job.getTitle() %></h3>
                             <div class="job-meta">
+                                <span><%= I18nUtil.get("job.detail.courseCode", lang) %>: <%= job.getCourseCode() != null && !job.getCourseCode().isEmpty() ? job.getCourseCode() : "-" %></span>
                                 <span><%= job.getTypeDisplayName(lang) %></span>
                                 <span><%= I18nUtil.get("jobs.positions", lang) %>: <%= job.getPositions() %></span>
                                 <span><%= I18nUtil.get("jobs.deadline", lang) %>: <%= job.getDeadline() %></span>
@@ -62,6 +68,7 @@
                         </div>
                         <div class="table-actions">
                             <a href="${pageContext.request.contextPath}/applications/manage?jobId=<%= job.getJobId() %>" class="btn btn-primary"><%= I18nUtil.get("job.my.viewApps", lang) %></a>
+                            <a href="${pageContext.request.contextPath}/jobs/edit?id=<%= job.getJobId() %>" class="btn btn-secondary"><%= I18nUtil.get("job.my.edit", lang) %></a>
                             <% if (job.isOpen()) { %>
                                 <form action="${pageContext.request.contextPath}/jobs/close" method="post" style="display:inline;">
                                     <input type="hidden" name="id" value="<%= job.getJobId() %>">
