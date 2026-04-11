@@ -1,0 +1,12 @@
+{"applications": [{
+  "jobId": "j1773908571588",
+  "matchScore": 0,
+  "missingSkills": ["1"],
+  "reviewedAt": "2026-03-19 20:01:39.557",
+  "applicationId": "a1773921645358",
+  "reviewedBy": "u1773908497994",
+  "userId": "u1773908421238",
+  "matchedSkills": [],
+  "rejectionNote": "",
+  "status": "APPROVED"
+}]}

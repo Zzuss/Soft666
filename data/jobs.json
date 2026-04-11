@@ -1,0 +1,32 @@
+{"jobs": [
+  {
+    "postedBy": "u1773908497994",
+    "jobId": "j1773908571588",
+    "requirements": "1",
+    "description": "1",
+    "positions": 3,
+    "title": "1",
+    "type": "MODULE",
+    "deadline": "2026-03-31",
+    "status": "OPEN"
+  },
+  {
+    "requirements": "hhh",
+    "courseCode": "hhh",
+    "workStartDate": "2026-04-19",
+    "workWeekdays": "TUE,THU,SAT,SUN",
+    "description": "hhh",
+    "positions": 1,
+    "title": "hhh",
+    "type": "INVIGILATION",
+    "postedBy": "u1773908497994",
+    "jobId": "j17758990170195400",
+    "createdAt": "2026-04-11 17:16:57.021",
+    "dailyStartHour": "17:00",
+    "dailyEndHour": "21:00",
+    "requiredSkills": "hghh",
+    "workEndDate": "2026-04-20",
+    "deadline": "2026-04-11",
+    "status": "OPEN"
+  }
+]}
