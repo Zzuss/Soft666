@@ -17,6 +17,7 @@ public class I18nUtil {
         en.put("nav.myPostedJobs", "My Posted Jobs");
         en.put("nav.profile", "My Profile");
         en.put("nav.workload", "TA Workload");
+        en.put("nav.askAI", "Ask AI");
         en.put("nav.logout", "Logout");
         en.put("login.title", "Login");
         en.put("login.username", "Username");
@@ -50,10 +51,24 @@ public class I18nUtil {
         en.put("dashboard.manageJobs", "Manage My Jobs");
         en.put("dashboard.myProfile", "My Profile");
         en.put("dashboard.taWorkload", "View TA Workload");
+        en.put("dashboard.askAI", "Ask AI");
         en.put("dashboard.roleInfo", "Role Information");
         en.put("dashboard.taRole", "As a Teaching Assistant (TA), you can browse available positions and apply for jobs that match your skills.");
         en.put("dashboard.moRole", "As a Module Organiser (MO), you can post job positions and review applications from TA candidates.");
         en.put("dashboard.adminRole", "As an Administrator, you have full access to manage the system and view all data.");
+
+        en.put("ai.chat.title", "Ask AI");
+        en.put("ai.chat.conversation", "Conversation");
+        en.put("ai.chat.hint", "Ask about TA applications, job descriptions, interview questions, profile improvement, or recruitment workflow.");
+        en.put("ai.chat.empty", "No messages yet. Start by asking a question.");
+        en.put("ai.chat.model", "DeepSeek Model");
+        en.put("ai.chat.message", "Message");
+        en.put("ai.chat.placeholder", "Type your question here...");
+        en.put("ai.chat.send", "Send");
+        en.put("ai.chat.clear", "Clear Chat");
+        en.put("ai.chat.you", "You");
+        en.put("ai.chat.assistant", "AI Assistant");
+        en.put("ai.chat.notConfigured", "AI is not configured. Please check the local API key settings.");
 
         en.put("profile.title", "Applicant Profile");
         en.put("profile.basicInfo", "Basic Information");
@@ -112,7 +127,8 @@ public class I18nUtil {
         en.put("jobs.viewDetails", "View Details");
         en.put("jobs.noJobs", "No jobs found. Please try a different search or check back later.");
         en.put("jobs.recommendedTitle", "Recommended for You");
-        en.put("jobs.aiSuggestion", "AI Suggestion");
+        en.put("jobs.aiSuggestion", "AI Match");
+        en.put("jobs.aiDetailHint", "Open details to generate AI match analysis.");
 
         en.put("job.detail.title", "Job Details");
         en.put("job.detail.courseCode", "Course Code");
@@ -157,6 +173,8 @@ public class I18nUtil {
         en.put("job.my.edit", "Edit");
         en.put("job.my.close", "Close");
         en.put("job.my.confirmClose", "Close this job?");
+        en.put("job.my.delete", "Delete");
+        en.put("job.my.confirmDelete", "Delete this job? This will also remove all applications for it.");
         en.put("job.my.noJobs", "You haven't posted any jobs yet.");
         en.put("job.my.firstJob", "Post Your First Job");
 
@@ -165,8 +183,9 @@ public class I18nUtil {
         en.put("app.my.type", "Type");
         en.put("app.my.appliedDate", "Applied Date");
         en.put("app.my.status", "Status");
-        en.put("app.my.matchScore", "Match Score");
+        en.put("app.my.matchScore", "AI Match Score");
         en.put("app.my.missingSkills", "Missing Skills");
+        en.put("app.match.aiAnalysis", "AI Match Analysis");
         en.put("app.my.rejectionNote", "Rejection Note");
         en.put("app.my.action", "Action");
         en.put("app.my.viewJob", "View Job");
@@ -184,7 +203,7 @@ public class I18nUtil {
         en.put("app.manage.filter", "Filter");
         en.put("app.manage.skills", "Skills");
         en.put("app.manage.availableTime", "Available Time");
-        en.put("app.manage.matchScore", "Match Score");
+        en.put("app.manage.matchScore", "AI Match Score");
         en.put("app.manage.missingSkills", "Missing Skills");
         en.put("app.manage.currentLoad", "Current Approved Load");
         en.put("app.manage.approvedCount", "Approved");
@@ -247,6 +266,7 @@ public class I18nUtil {
         zh.put("nav.myPostedJobs", "我发布的职位");
         zh.put("nav.profile", "我的档案");
         zh.put("nav.workload", "助教工作负荷");
+        zh.put("nav.askAI", "问 AI");
         zh.put("nav.logout", "退出");
         zh.put("login.title", "登录");
         zh.put("login.username", "用户名");
@@ -280,10 +300,24 @@ public class I18nUtil {
         zh.put("dashboard.manageJobs", "管理我的职位");
         zh.put("dashboard.myProfile", "我的档案");
         zh.put("dashboard.taWorkload", "查看助教负荷");
+        zh.put("dashboard.askAI", "问 AI");
         zh.put("dashboard.roleInfo", "角色信息");
         zh.put("dashboard.taRole", "作为助教 (TA)，您可以浏览可用职位并申请与您技能相匹配的职位。");
         zh.put("dashboard.moRole", "作为课程管理员 (MO)，您可以发布职位并审核来自助教候选人的申请。");
         zh.put("dashboard.adminRole", "作为管理员，您拥有系统的完全访问权限，可以管理所有数据。");
+
+        zh.put("ai.chat.title", "问 AI");
+        zh.put("ai.chat.conversation", "对话");
+        zh.put("ai.chat.hint", "可以询问助教申请、职位描述、面试问题、档案优化或招聘流程建议。");
+        zh.put("ai.chat.empty", "暂无消息。先问一个问题吧。");
+        zh.put("ai.chat.model", "DeepSeek 模型");
+        zh.put("ai.chat.message", "消息");
+        zh.put("ai.chat.placeholder", "在这里输入你的问题...");
+        zh.put("ai.chat.send", "发送");
+        zh.put("ai.chat.clear", "清空对话");
+        zh.put("ai.chat.you", "你");
+        zh.put("ai.chat.assistant", "AI 助手");
+        zh.put("ai.chat.notConfigured", "AI 尚未配置。请检查本地 API Key 设置。");
 
         zh.put("profile.title", "申请人档案");
         zh.put("profile.basicInfo", "基础信息");
@@ -342,7 +376,8 @@ public class I18nUtil {
         zh.put("jobs.viewDetails", "查看详情");
         zh.put("jobs.noJobs", "未找到职位。请尝试其他搜索条件或稍后再来。");
         zh.put("jobs.recommendedTitle", "为你推荐");
-        zh.put("jobs.aiSuggestion", "AI 推荐");
+        zh.put("jobs.aiSuggestion", "AI 匹配");
+        zh.put("jobs.aiDetailHint", "进入详情后生成 AI 匹配分析。");
 
         zh.put("job.detail.title", "职位详情");
         zh.put("job.detail.courseCode", "课程代码");
@@ -387,6 +422,8 @@ public class I18nUtil {
         zh.put("job.my.edit", "编辑");
         zh.put("job.my.close", "关闭");
         zh.put("job.my.confirmClose", "确定关闭此职位？");
+        zh.put("job.my.delete", "删除");
+        zh.put("job.my.confirmDelete", "确定删除此职位吗？该职位下的所有申请也会一并删除。");
         zh.put("job.my.noJobs", "您还没有发布任何职位。");
         zh.put("job.my.firstJob", "发布第一个职位");
 
@@ -395,8 +432,9 @@ public class I18nUtil {
         zh.put("app.my.type", "类型");
         zh.put("app.my.appliedDate", "申请日期");
         zh.put("app.my.status", "状态");
-        zh.put("app.my.matchScore", "匹配度");
+        zh.put("app.my.matchScore", "AI 匹配度");
         zh.put("app.my.missingSkills", "缺失技能");
+        zh.put("app.match.aiAnalysis", "AI 匹配分析");
         zh.put("app.my.rejectionNote", "拒绝备注");
         zh.put("app.my.action", "操作");
         zh.put("app.my.viewJob", "查看职位");
@@ -414,7 +452,7 @@ public class I18nUtil {
         zh.put("app.manage.filter", "筛选");
         zh.put("app.manage.skills", "技能");
         zh.put("app.manage.availableTime", "可用时间");
-        zh.put("app.manage.matchScore", "匹配度");
+        zh.put("app.manage.matchScore", "AI 匹配度");
         zh.put("app.manage.missingSkills", "缺失技能");
         zh.put("app.manage.currentLoad", "当前已录取数");
         zh.put("app.manage.approvedCount", "已录取");

@@ -55,6 +55,9 @@
             <div class="navbar-menu">
                 <a href="${pageContext.request.contextPath}/dashboard"><%= I18nUtil.get("nav.dashboard", lang) %></a>
                 <a href="${pageContext.request.contextPath}/jobs/list"><%= I18nUtil.get("nav.jobs", lang) %></a>
+                <% if (user.isTA() || user.isMO()) { %>
+                    <a href="${pageContext.request.contextPath}/ai/chat"><%= I18nUtil.get("nav.askAI", lang) %></a>
+                <% } %>
                 <% if (user.isTA()) { %>
                     <a href="${pageContext.request.contextPath}/applications/my"><%= I18nUtil.get("nav.myApplications", lang) %></a>
                     <a href="${pageContext.request.contextPath}/profile"><%= I18nUtil.get("nav.profile", lang) %></a>

@@ -58,7 +58,7 @@ public class ApplicationService {
             throw new IllegalArgumentException("User not found");
         }
         validateApplicantEligibility(applicant);
-        MatchingService.MatchResult matchResult = matchingService.evaluate(job, applicant);
+        MatchingService.MatchResult matchResult = matchingService.evaluateWithLlm(job, applicant);
 
         Application app = new Application();
         app.setApplicationId(JsonUtil.generateId("a"));
@@ -69,6 +69,8 @@ public class ApplicationService {
         app.setMatchScore(matchResult.getScore());
         app.setMatchedSkills(matchResult.getMatchedSkills());
         app.setMissingSkills(matchResult.getMissingSkills());
+        app.setMatchSource(matchResult.getSource());
+        app.setMatchExplanation(matchResult.getExplanation());
 
         applicationDAO.addApplication(app);
         return app;
@@ -215,11 +217,18 @@ public class ApplicationService {
         if (job == null || applicant == null) {
             return;
         }
-        MatchingService.MatchResult matchResult = matchingService.evaluate(job, applicant);
+        if ("LLM".equalsIgnoreCase(app.getMatchSource())
+                && app.getMatchExplanation() != null
+                && !app.getMatchExplanation().trim().isEmpty()) {
+            return;
+        }
+        MatchingService.MatchResult matchResult = matchingService.evaluateWithLlm(job, applicant);
 
         boolean changed = !Objects.equals(app.getMatchScore(), matchResult.getScore())
                 || !Objects.equals(app.getMatchedSkills(), matchResult.getMatchedSkills())
-                || !Objects.equals(app.getMissingSkills(), matchResult.getMissingSkills());
+                || !Objects.equals(app.getMissingSkills(), matchResult.getMissingSkills())
+                || !Objects.equals(app.getMatchSource(), matchResult.getSource())
+                || !Objects.equals(app.getMatchExplanation(), matchResult.getExplanation());
         if (!changed) {
             return;
         }
@@ -227,6 +236,8 @@ public class ApplicationService {
         app.setMatchScore(matchResult.getScore());
         app.setMatchedSkills(matchResult.getMatchedSkills());
         app.setMissingSkills(matchResult.getMissingSkills());
+        app.setMatchSource(matchResult.getSource());
+        app.setMatchExplanation(matchResult.getExplanation());
         applicationDAO.updateApplication(app);
     }
 

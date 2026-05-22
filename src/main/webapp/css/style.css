@@ -164,6 +164,129 @@ textarea:focus {
     margin-bottom: 20px;
 }
 
+.muted {
+    color: #718096;
+    font-size: 14px;
+}
+
+.ai-chat-card {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.ai-chat-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.ai-chat-messages {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+    background: #f8fafc;
+    min-height: 260px;
+    max-height: 560px;
+    overflow-y: auto;
+    margin-bottom: 18px;
+}
+
+.ai-empty-state {
+    color: #718096;
+    text-align: center;
+    padding: 70px 12px;
+}
+
+.ai-message {
+    max-width: 82%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.ai-message-user {
+    margin-left: auto;
+    background: #667eea;
+    color: white;
+}
+
+.ai-message-assistant {
+    margin-right: auto;
+    background: white;
+    color: #2d3748;
+    border: 1px solid #e2e8f0;
+}
+
+.ai-message-meta {
+    font-size: 12px;
+    opacity: 0.75;
+    margin-bottom: 6px;
+}
+
+.ai-message-content {
+    white-space: normal;
+    word-break: break-word;
+}
+
+.ai-message-content p {
+    margin: 0 0 10px;
+}
+
+.ai-message-content p:last-child {
+    margin-bottom: 0;
+}
+
+.ai-message-content ul,
+.ai-message-content ol {
+    margin: 8px 0 12px 22px;
+}
+
+.ai-message-content li {
+    margin-bottom: 6px;
+}
+
+.ai-message-content h1,
+.ai-message-content h2,
+.ai-message-content h3,
+.ai-message-content h4 {
+    color: inherit;
+    margin: 12px 0 8px;
+}
+
+.ai-message-content code {
+    background: #edf2f7;
+    border-radius: 4px;
+    padding: 2px 5px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.92em;
+}
+
+.ai-message-content pre {
+    background: #1a202c;
+    color: #f7fafc;
+    border-radius: 6px;
+    padding: 12px;
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+.ai-message-content pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+}
+
+.ai-chat-form {
+    display: grid;
+    grid-template-columns: minmax(180px, 240px) 1fr auto;
+    gap: 14px;
+    align-items: end;
+}
+
 .navbar {
     background: white;
     padding: 15px 30px;

@@ -44,6 +44,9 @@
             <div class="navbar-menu">
                 <a href="${pageContext.request.contextPath}/dashboard"><%= I18nUtil.get("nav.dashboard", lang) %></a>
                 <a href="${pageContext.request.contextPath}/jobs/list"><%= I18nUtil.get("nav.jobs", lang) %></a>
+                <% if (user.isTA() || user.isMO()) { %>
+                    <a href="${pageContext.request.contextPath}/ai/chat"><%= I18nUtil.get("nav.askAI", lang) %></a>
+                <% } %>
                 <% if (user.isTA()) { %>
                     <a href="${pageContext.request.contextPath}/applications/my"><%= I18nUtil.get("nav.myApplications", lang) %></a>
                     <a href="${pageContext.request.contextPath}/profile"><%= I18nUtil.get("nav.profile", lang) %></a>
@@ -111,19 +114,14 @@
                             <div>
                                 <h3 style="margin-bottom: 8px;">
                                     <%= recJob.getTitle() %>
-                                    <span class="badge badge-approved"><%= I18nUtil.get("jobs.aiSuggestion", lang) %></span>
                                 </h3>
                                 <div class="job-meta" style="margin-bottom: 8px;">
                                     <span><%= I18nUtil.get("job.detail.courseCode", lang) %>: <%= recJob.getCourseCode() != null && !recJob.getCourseCode().isEmpty() ? recJob.getCourseCode() : "-" %></span>
                                     <span><%= I18nUtil.get("jobs.deadline", lang) %>: <%= recJob.getDeadline() %></span>
-                                    <span><%= I18nUtil.get("app.my.matchScore", lang) %>: <%= recommendation.getScore() %>%</span>
                                 </div>
-                                <% if (recommendation.getMissingSkills() != null && !recommendation.getMissingSkills().isEmpty()) { %>
-                                    <p style="color: #975a16; margin: 0;">
-                                        <%= I18nUtil.get("job.detail.missingSkillsHint", lang) %>:
-                                        <%= String.join(", ", recommendation.getMissingSkills()) %>
-                                    </p>
-                                <% } %>
+                                <p style="color: #718096; margin: 0;">
+                                    <%= I18nUtil.get("jobs.aiDetailHint", lang) %>
+                                </p>
                             </div>
                             <div>
                                 <a href="${pageContext.request.contextPath}/jobs/detail?id=<%= recJob.getJobId() %>" class="btn btn-primary">

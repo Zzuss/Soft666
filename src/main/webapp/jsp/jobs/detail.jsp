@@ -31,6 +31,8 @@
     }
     List<String> currentUserMissingSkills = (List<String>) request.getAttribute("currentUserMissingSkills");
     Double currentUserMatchScore = (Double) request.getAttribute("currentUserMatchScore");
+    String currentUserMatchSource = (String) request.getAttribute("currentUserMatchSource");
+    String currentUserMatchExplanation = (String) request.getAttribute("currentUserMatchExplanation");
 %>
 <!DOCTYPE html>
 <html>
@@ -47,6 +49,9 @@
             <div class="navbar-menu">
                 <a href="${pageContext.request.contextPath}/dashboard"><%= I18nUtil.get("nav.dashboard", lang) %></a>
                 <a href="${pageContext.request.contextPath}/jobs/list"><%= I18nUtil.get("nav.jobs", lang) %></a>
+                <% if (user.isTA() || user.isMO()) { %>
+                    <a href="${pageContext.request.contextPath}/ai/chat"><%= I18nUtil.get("nav.askAI", lang) %></a>
+                <% } %>
                 <% if (user.isTA()) { %>
                     <a href="${pageContext.request.contextPath}/applications/my"><%= I18nUtil.get("nav.myApplications", lang) %></a>
                     <a href="${pageContext.request.contextPath}/profile"><%= I18nUtil.get("nav.profile", lang) %></a>
@@ -104,6 +109,10 @@
                     <% if (currentUserMatchScore != null) { %>
                         <div class="info" style="margin: 0; flex: 1;">
                             <strong><%= I18nUtil.get("app.my.matchScore", lang) %>:</strong> <%= currentUserMatchScore %>%<br>
+                            <% if ("LLM".equalsIgnoreCase(currentUserMatchSource) && currentUserMatchExplanation != null && !currentUserMatchExplanation.isEmpty()) { %>
+                                <strong><%= I18nUtil.get("app.match.aiAnalysis", lang) %>:</strong>
+                                <%= currentUserMatchExplanation %><br>
+                            <% } %>
                             <% if (currentUserMissingSkills != null && !currentUserMissingSkills.isEmpty()) { %>
                                 <%= I18nUtil.get("job.detail.missingSkillsHint", lang) %>:
                                 <%= String.join(", ", currentUserMissingSkills) %>

@@ -1,0 +1,10 @@
+{"notifications": [{
+  "createdAt": "2026-04-09 21:36:02.794",
+  "read": false,
+  "notificationId": "n17757417627904637",
+  "type": "APPLICATION_STATUS",
+  "title": "Application Approved",
+  "message": "Your application for \"7\" has been approved.",
+  "userId": "u1773908421238",
+  "relatedId": "a1773990219003"
+}]}

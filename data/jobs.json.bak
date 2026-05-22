@@ -145,24 +145,5 @@
     "workEndDate": "2026-04-24",
     "deadline": "2026-04-13",
     "status": "CLOSED"
-  },
-  {
-    "requirements": "check",
-    "courseCode": "88888",
-    "workStartDate": "2026-04-02",
-    "workWeekdays": "FRI,SAT",
-    "description": "show",
-    "positions": 1,
-    "title": "111",
-    "type": "MODULE",
-    "postedBy": "u1773908497994",
-    "jobId": "j17759869047156923",
-    "createdAt": "2026-04-12 17:41:44.715",
-    "dailyStartHour": "03:00",
-    "dailyEndHour": "11:00",
-    "requiredSkills": "java",
-    "workEndDate": "2026-04-24",
-    "deadline": "2026-04-25",
-    "status": "OPEN"
   }
 ]}

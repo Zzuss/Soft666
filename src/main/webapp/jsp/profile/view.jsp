@@ -44,6 +44,9 @@
             <div class="navbar-menu">
                 <a href="${pageContext.request.contextPath}/dashboard"><%= I18nUtil.get("nav.dashboard", lang) %></a>
                 <a href="${pageContext.request.contextPath}/jobs/list"><%= I18nUtil.get("nav.jobs", lang) %></a>
+                <% if (currentUser.isTA() || currentUser.isMO()) { %>
+                    <a href="${pageContext.request.contextPath}/ai/chat"><%= I18nUtil.get("nav.askAI", lang) %></a>
+                <% } %>
                 <% if (currentUser.isAdmin()) { %>
                     <a href="${pageContext.request.contextPath}/admin/workload"><%= I18nUtil.get("nav.workload", lang) %></a>
                 <% } else { %>

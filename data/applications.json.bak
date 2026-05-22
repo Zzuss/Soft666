@@ -167,15 +167,9 @@
     "status": "PENDING"
   },
   {
-    "matchExplanation": "Candidate has Java skill but schedule conflicts (availability WED,THU vs job FRI,SAT) and bio lacks relevant evidence; major and other skills are not clearly relevant to the job.",
     "jobId": "j17759869047156923",
-    "matchScore": 35,
-    "missingSkills": [
-      "c",
-      "sql",
-      "schedule compatibility"
-    ],
-    "matchSource": "LLM",
+    "matchScore": 100,
+    "missingSkills": [],
     "applicationId": "a17759869405306231",
     "reviewedBy": "",
     "userId": "u1773908421238",

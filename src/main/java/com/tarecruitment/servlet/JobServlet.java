@@ -140,9 +140,11 @@ public class JobServlet extends HttpServlet {
         }
 
         if (user != null && user.isTA()) {
-            MatchingService.MatchResult matchResult = jobService.evaluateMatchForUser(job, user);
+            MatchingService.MatchResult matchResult = jobService.evaluateEnhancedMatchForUser(job, user);
             request.setAttribute("currentUserMatchScore", matchResult.getScore());
             request.setAttribute("currentUserMissingSkills", matchResult.getMissingSkills());
+            request.setAttribute("currentUserMatchSource", matchResult.getSource());
+            request.setAttribute("currentUserMatchExplanation", matchResult.getExplanation());
         }
 
         request.setAttribute("job", job);

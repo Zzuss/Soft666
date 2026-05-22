@@ -16,6 +16,7 @@ public class MatchingService {
     private static final Map<String, List<String>> SKILL_DICT = new LinkedHashMap<>();
     private static final Map<String, String> ALIAS_TO_CANONICAL = new LinkedHashMap<>();
     private static final String EXPLICIT_SKILL_SPLIT_REGEX = "[,，;；、/／\\\\|\\n\\r]+";
+    private final LlmMatchingService llmMatchingService;
 
     static {
         addSkill("java", "java", "spring", "spring boot");
@@ -29,6 +30,10 @@ public class MatchingService {
         addSkill("communication", "communication", "presentation");
         addSkill("teamwork", "teamwork", "collaboration");
         addSkill("invigilation", "invigilation", "exam supervision", "exam");
+    }
+
+    public MatchingService() {
+        this.llmMatchingService = new LlmMatchingService();
     }
 
     public MatchResult evaluate(Job job, User applicant) {
@@ -52,7 +57,12 @@ public class MatchingService {
             score = (matched.size() * 100.0) / requiredSkills.size();
         }
         score = Math.round(score * 10.0) / 10.0;
-        return new MatchResult(score, matched, missing);
+        return new MatchResult(score, matched, missing, "RULE", "");
+    }
+
+    public MatchResult evaluateWithLlm(Job job, User applicant) {
+        MatchResult fallback = evaluate(job, applicant);
+        return llmMatchingService.evaluate(job, applicant, fallback);
     }
 
     private Set<String> extractJobSkills(Job job) {
@@ -206,11 +216,20 @@ public class MatchingService {
         private final double score;
         private final List<String> matchedSkills;
         private final List<String> missingSkills;
+        private final String source;
+        private final String explanation;
 
         public MatchResult(double score, List<String> matchedSkills, List<String> missingSkills) {
+            this(score, matchedSkills, missingSkills, "RULE", "");
+        }
+
+        public MatchResult(double score, List<String> matchedSkills, List<String> missingSkills,
+                           String source, String explanation) {
             this.score = score;
             this.matchedSkills = matchedSkills;
             this.missingSkills = missingSkills;
+            this.source = source != null ? source : "";
+            this.explanation = explanation != null ? explanation : "";
         }
 
         public double getScore() {
@@ -223,6 +242,18 @@ public class MatchingService {
 
         public List<String> getMissingSkills() {
             return missingSkills;
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        public String getExplanation() {
+            return explanation;
+        }
+
+        public boolean isLlmEnhanced() {
+            return "LLM".equalsIgnoreCase(source);
         }
     }
 }

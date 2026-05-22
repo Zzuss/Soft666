@@ -1,5 +1,6 @@
 package com.tarecruitment.service;
 
+import com.tarecruitment.dao.ApplicationDAO;
 import com.tarecruitment.dao.JobDAO;
 import com.tarecruitment.model.Job;
 import com.tarecruitment.model.User;
@@ -24,10 +25,12 @@ public class JobService {
     );
 
     private final JobDAO jobDAO;
+    private final ApplicationDAO applicationDAO;
     private final MatchingService matchingService;
 
     public JobService() {
         this.jobDAO = new JobDAO();
+        this.applicationDAO = new ApplicationDAO();
         this.matchingService = new MatchingService();
     }
 
@@ -136,6 +139,11 @@ public class JobService {
     }
 
     public void deleteJob(String jobId) {
+        Job job = jobDAO.getJobById(jobId);
+        if (job == null) {
+            throw new IllegalArgumentException("Job not found");
+        }
+        applicationDAO.deleteApplicationsByJob(jobId);
         jobDAO.deleteJob(jobId);
     }
 
@@ -156,7 +164,11 @@ public class JobService {
     }
 
     public MatchingService.MatchResult evaluateMatchForUser(Job job, User user) {
-        return matchingService.evaluate(job, user);
+        return matchingService.evaluateWithLlm(job, user);
+    }
+
+    public MatchingService.MatchResult evaluateEnhancedMatchForUser(Job job, User user) {
+        return matchingService.evaluateWithLlm(job, user);
     }
 
     public List<JobRecommendation> getRecommendedJobsForUser(User user, int limit) {
@@ -170,7 +182,13 @@ public class JobService {
             if (result.getScore() <= 0) {
                 continue;
             }
-            recommendations.add(new JobRecommendation(job, result.getScore(), result.getMissingSkills()));
+            recommendations.add(new JobRecommendation(
+                    job,
+                    result.getScore(),
+                    result.getMissingSkills(),
+                    result.getSource(),
+                    result.getExplanation()
+            ));
         }
         recommendations.sort(
                 Comparator.comparingDouble(JobRecommendation::getScore).reversed()
@@ -416,11 +434,20 @@ public class JobService {
         private final Job job;
         private final double score;
         private final List<String> missingSkills;
+        private final String source;
+        private final String explanation;
 
         public JobRecommendation(Job job, double score, List<String> missingSkills) {
+            this(job, score, missingSkills, "RULE", "");
+        }
+
+        public JobRecommendation(Job job, double score, List<String> missingSkills,
+                                 String source, String explanation) {
             this.job = job;
             this.score = score;
             this.missingSkills = missingSkills;
+            this.source = source != null ? source : "";
+            this.explanation = explanation != null ? explanation : "";
         }
 
         public Job getJob() {
@@ -433,6 +460,18 @@ public class JobService {
 
         public List<String> getMissingSkills() {
             return missingSkills;
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        public String getExplanation() {
+            return explanation;
+        }
+
+        public boolean isLlmEnhanced() {
+            return "LLM".equalsIgnoreCase(source);
         }
     }
 }

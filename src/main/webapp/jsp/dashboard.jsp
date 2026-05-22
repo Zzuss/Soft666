@@ -29,6 +29,7 @@
             <div class="navbar-menu">
                 <a href="${pageContext.request.contextPath}/dashboard"><%= I18nUtil.get("nav.dashboard", lang) %></a>
                 <a href="${pageContext.request.contextPath}/jobs/list"><%= I18nUtil.get("nav.jobs", lang) %></a>
+                <a href="${pageContext.request.contextPath}/ai/chat"><%= I18nUtil.get("nav.askAI", lang) %></a>
                 <% if (user.isTA()) { %>
                     <a href="${pageContext.request.contextPath}/applications/my"><%= I18nUtil.get("nav.myApplications", lang) %></a>
                     <a href="${pageContext.request.contextPath}/profile"><%= I18nUtil.get("nav.profile", lang) %></a>
@@ -81,13 +82,16 @@
             <h3><%= I18nUtil.get("dashboard.quickActions", lang) %></h3>
             <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                 <% if (user.isTA()) { %>
+                    <a href="${pageContext.request.contextPath}/ai/chat" class="btn btn-primary"><%= I18nUtil.get("dashboard.askAI", lang) %></a>
                     <a href="${pageContext.request.contextPath}/jobs/list" class="btn btn-primary"><%= I18nUtil.get("dashboard.browseJobs", lang) %></a>
                     <a href="${pageContext.request.contextPath}/applications/my" class="btn btn-primary"><%= I18nUtil.get("dashboard.myApplications", lang) %></a>
                     <a href="${pageContext.request.contextPath}/profile" class="btn btn-primary"><%= I18nUtil.get("dashboard.myProfile", lang) %></a>
                 <% } else if (user.isAdmin()) { %>
+                    <a href="${pageContext.request.contextPath}/ai/chat" class="btn btn-primary"><%= I18nUtil.get("dashboard.askAI", lang) %></a>
                     <a href="${pageContext.request.contextPath}/admin/workload" class="btn btn-primary"><%= I18nUtil.get("dashboard.taWorkload", lang) %></a>
                     <a href="${pageContext.request.contextPath}/jobs/list" class="btn btn-primary"><%= I18nUtil.get("dashboard.browseJobs", lang) %></a>
                 <% } else { %>
+                    <a href="${pageContext.request.contextPath}/ai/chat" class="btn btn-primary"><%= I18nUtil.get("dashboard.askAI", lang) %></a>
                     <a href="${pageContext.request.contextPath}/jobs/create" class="btn btn-primary"><%= I18nUtil.get("dashboard.postNewJob", lang) %></a>
                     <a href="${pageContext.request.contextPath}/jobs/myjobs" class="btn btn-primary"><%= I18nUtil.get("dashboard.manageJobs", lang) %></a>
                 <% } %>

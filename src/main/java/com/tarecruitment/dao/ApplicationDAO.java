@@ -61,6 +61,20 @@ public class ApplicationDAO {
         saveData();
     }
 
+    public void deleteApplicationsByJob(String jobId) {
+        loadData();
+        JSONArray apps = data.getJSONArray("applications");
+        JSONArray newApps = new JSONArray();
+        for (int i = 0; i < apps.length(); i++) {
+            JSONObject a = apps.getJSONObject(i);
+            if (!jobId.equals(a.optString("jobId"))) {
+                newApps.put(a);
+            }
+        }
+        data.put("applications", newApps);
+        saveData();
+    }
+
     public Application getApplicationById(String applicationId) {
         loadData();
         JSONArray apps = data.getJSONArray("applications");
@@ -142,6 +156,8 @@ public class ApplicationDAO {
         }
         a.put("matchedSkills", JsonUtil.fromStringList(app.getMatchedSkills()));
         a.put("missingSkills", JsonUtil.fromStringList(app.getMissingSkills()));
+        a.put("matchSource", app.getMatchSource() != null ? app.getMatchSource() : "");
+        a.put("matchExplanation", app.getMatchExplanation() != null ? app.getMatchExplanation() : "");
         a.put("rejectionNote", app.getRejectionNote() != null ? app.getRejectionNote() : "");
         a.put("reviewedBy", app.getReviewedBy() != null ? app.getReviewedBy() : "");
         if (app.getReviewedAt() != null) {
@@ -162,6 +178,8 @@ public class ApplicationDAO {
         }
         app.setMatchedSkills(JsonUtil.toStringList(a.optJSONArray("matchedSkills")));
         app.setMissingSkills(JsonUtil.toStringList(a.optJSONArray("missingSkills")));
+        app.setMatchSource(a.optString("matchSource", ""));
+        app.setMatchExplanation(a.optString("matchExplanation", ""));
         app.setRejectionNote(a.optString("rejectionNote", ""));
         String reviewedBy = a.optString("reviewedBy", "");
         app.setReviewedBy(reviewedBy.isEmpty() ? null : reviewedBy);

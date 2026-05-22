@@ -27,6 +27,9 @@
             <div class="navbar-menu">
                 <a href="${pageContext.request.contextPath}/dashboard"><%= I18nUtil.get("nav.dashboard", lang) %></a>
                 <a href="${pageContext.request.contextPath}/jobs/list"><%= I18nUtil.get("nav.jobs", lang) %></a>
+                <% if (user.isTA() || user.isMO()) { %>
+                    <a href="${pageContext.request.contextPath}/ai/chat"><%= I18nUtil.get("nav.askAI", lang) %></a>
+                <% } %>
                 <% if (user.isAdmin()) { %>
                     <a href="${pageContext.request.contextPath}/admin/workload"><%= I18nUtil.get("nav.workload", lang) %></a>
                 <% } else { %>
@@ -75,6 +78,10 @@
                                     <button type="submit" class="btn btn-secondary" onclick="return confirm('<%= I18nUtil.get("job.my.confirmClose", lang) %>')"><%= I18nUtil.get("job.my.close", lang) %></button>
                                 </form>
                             <% } %>
+                            <form action="${pageContext.request.contextPath}/jobs/delete" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="<%= job.getJobId() %>">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('<%= I18nUtil.get("job.my.confirmDelete", lang) %>')"><%= I18nUtil.get("job.my.delete", lang) %></button>
+                            </form>
                         </div>
                     </div>
                 </div>

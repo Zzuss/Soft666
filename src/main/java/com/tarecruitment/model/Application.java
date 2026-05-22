@@ -16,11 +16,15 @@ public class Application {
     private Double matchScore;
     private List<String> matchedSkills;
     private List<String> missingSkills;
+    private String matchSource;
+    private String matchExplanation;
 
     public Application() {
         this.matchedSkills = new ArrayList<>();
         this.missingSkills = new ArrayList<>();
         this.rejectionNote = "";
+        this.matchSource = "";
+        this.matchExplanation = "";
     }
 
     public Application(String applicationId, String jobId, String userId) {
@@ -32,6 +36,8 @@ public class Application {
         this.rejectionNote = "";
         this.matchedSkills = new ArrayList<>();
         this.missingSkills = new ArrayList<>();
+        this.matchSource = "";
+        this.matchExplanation = "";
     }
 
     public String getApplicationId() {
@@ -120,6 +126,22 @@ public class Application {
 
     public void setMissingSkills(List<String> missingSkills) {
         this.missingSkills = missingSkills != null ? missingSkills : new ArrayList<>();
+    }
+
+    public String getMatchSource() {
+        return matchSource;
+    }
+
+    public void setMatchSource(String matchSource) {
+        this.matchSource = matchSource != null ? matchSource : "";
+    }
+
+    public String getMatchExplanation() {
+        return matchExplanation;
+    }
+
+    public void setMatchExplanation(String matchExplanation) {
+        this.matchExplanation = matchExplanation != null ? matchExplanation : "";
     }
 
     public boolean isPending() {
