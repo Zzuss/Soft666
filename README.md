@@ -46,6 +46,7 @@ export CATALINA_OPTS="-Dtarec.data.dir=/Users/fanzj/Desktop/Soft666-1/data"
 
 - `run.command`：重新编译、部署并启动项目
 - `stop.command`：停止 Tomcat
+- `run.bat`：Windows 上重新编译、部署并启动项目
 
 脚本内部默认使用：
 
@@ -54,6 +55,7 @@ export CATALINA_OPTS="-Dtarec.data.dir=/Users/fanzj/Desktop/Soft666-1/data"
 - Tomcat：`/tmp/apache-tomcat-10.1.24`
 
 如果你的本机路径不同，修改 `scripts/ta-recruitment.sh` 顶部的默认路径即可。
+Windows 上可设置 `JAVA_HOME`、`MAVEN_BIN`、`TOMCAT_HOME`，或修改 `scripts/ta-recruitment.bat` 顶部的默认路径。
 
 ***
 
