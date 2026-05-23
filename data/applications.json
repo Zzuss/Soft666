@@ -1,0 +1,187 @@
+{"applications": [
+  {
+    "matchExplanation": "Job requirements are minimal and unclear; candidate skills (Java, C, SQL) and major (Telecom Engineering) do not match the unspecified job context, and schedule compatibility cannot be assessed due to missing job schedule.",
+    "jobId": "j1773908571588",
+    "matchScore": 0,
+    "missingSkills": ["1"],
+    "matchSource": "LLM",
+    "reviewedAt": "2026-03-19 20:01:39.557",
+    "applicationId": "a1773921645358",
+    "reviewedBy": "u1773908497994",
+    "userId": "u1773908421238",
+    "matchedSkills": [],
+    "rejectionNote": "",
+    "status": "APPROVED"
+  },
+  {
+    "matchExplanation": "The job requirements and description are minimal ('2'), and the candidate's skills (Java, C, SQL) and major (Telecom Engineering) do not match the invigilation role; availability is limited and schedule is unclear.",
+    "jobId": "j1773926202966",
+    "matchScore": 0,
+    "missingSkills": ["2"],
+    "matchSource": "LLM",
+    "reviewedAt": "2026-03-19 21:17:24.843",
+    "applicationId": "a1773926232083",
+    "reviewedBy": "u1773908497994",
+    "userId": "u1773908421238",
+    "matchedSkills": [],
+    "rejectionNote": "",
+    "status": "APPROVED"
+  },
+  {
+    "matchExplanation": "Candidate has some technical skills (Java, C, SQL) but job requirements are empty, no teaching or course relevance evidence, and availability is limited and unclear relative to job schedule.",
+    "jobId": "j1773985902216",
+    "matchScore": 30,
+    "missingSkills": [
+      "required skills not specified",
+      "teaching experience",
+      "course relevance",
+      "schedule compatibility"
+    ],
+    "matchSource": "LLM",
+    "reviewedAt": "2026-03-20 14:02:49.029",
+    "applicationId": "a1773986545932",
+    "reviewedBy": "u1773908497994",
+    "userId": "u1773908421238",
+    "matchedSkills": [],
+    "rejectionNote": "",
+    "status": "REJECTED"
+  },
+  {
+    "matchExplanation": "Candidate matches Java and C but lacks Python; availability is limited to specific dates and times, and bio provides no relevant evidence.",
+    "missingSkills": ["python"],
+    "matchSource": "LLM",
+    "reviewedAt": "2026-03-20 14:58:21.451",
+    "reviewedBy": "u1773908497994",
+    "userId": "u1773908421238",
+    "matchedSkills": [
+      "java",
+      "c"
+    ],
+    "jobId": "j1773988832956",
+    "matchScore": 40,
+    "applicationId": "a1773988851999",
+    "appliedAt": "2026-03-20 14:40:51.999",
+    "rejectionNote": "",
+    "status": "REJECTED"
+  },
+  {
+    "matchExplanation": "Candidate matches Java and C but lacks Python; bio is vague with no teaching or course relevance; availability is limited and does not align with unspecified job schedule.",
+    "jobId": "j1773989932250",
+    "matchScore": 40,
+    "missingSkills": ["python"],
+    "matchSource": "LLM",
+    "applicationId": "a1773989945357",
+    "reviewedBy": "",
+    "userId": "u1773908421238",
+    "matchedSkills": [
+      "java",
+      "c"
+    ],
+    "appliedAt": "2026-03-20 14:59:05.357",
+    "rejectionNote": "",
+    "status": "PENDING"
+  },
+  {
+    "matchExplanation": "The job requirements are unclear (listed as '666') and the candidate's skills (java, c, sql) do not match the job's description requiring python; schedule and teaching relevance are missing or unclear.",
+    "jobId": "j1773990063615",
+    "matchScore": 0,
+    "missingSkills": ["666"],
+    "matchSource": "LLM",
+    "applicationId": "a1773990085705",
+    "reviewedBy": "",
+    "userId": "u1773908421238",
+    "matchedSkills": [],
+    "appliedAt": "2026-03-20 15:01:25.705",
+    "rejectionNote": "",
+    "status": "PENDING"
+  },
+  {
+    "matchExplanation": "Candidate lacks required skills (python, pytorch, sql) and has no teaching or course relevance; availability is limited and does not match job schedule.",
+    "missingSkills": [
+      "python",
+      "pytorch",
+      "sql"
+    ],
+    "matchSource": "LLM",
+    "reviewedAt": "2026-04-09 21:36:02.787",
+    "reviewedBy": "u1773908497994",
+    "userId": "u1773908421238",
+    "matchedSkills": [],
+    "jobId": "j1773990185969",
+    "matchScore": 20,
+    "applicationId": "a1773990219003",
+    "appliedAt": "2026-03-20 15:03:39.003",
+    "rejectionNote": "",
+    "status": "APPROVED"
+  },
+  {
+    "matchExplanation": "Candidate has Java and SQL but lacks Next.js; schedule shows partial overlap but major conflict on TUE and FRI; bio and description are vague, providing no evidence of teaching or course relevance.",
+    "jobId": "j1773996089783",
+    "matchScore": 35,
+    "missingSkills": ["nextjs"],
+    "matchSource": "LLM",
+    "applicationId": "a1773996111080",
+    "reviewedBy": "",
+    "userId": "u1773908421238",
+    "matchedSkills": [
+      "java",
+      "sql"
+    ],
+    "appliedAt": "2026-03-20 16:41:51.08",
+    "rejectionNote": "",
+    "status": "PENDING"
+  },
+  {
+    "matchExplanation": "Candidate lacks required skills python and vllm, availability does not overlap with job schedule, and bio provides no relevant evidence.",
+    "missingSkills": [
+      "python",
+      "vllm"
+    ],
+    "matchSource": "LLM",
+    "reviewedAt": "2026-04-07 14:33:03.82",
+    "reviewedBy": "u1773908497994",
+    "userId": "u1773908421238",
+    "matchedSkills": [
+      "java",
+      "c"
+    ],
+    "jobId": "j1775542381321",
+    "matchScore": 35,
+    "applicationId": "a1775543534379",
+    "appliedAt": "2026-04-07 14:32:14.379",
+    "rejectionNote": "",
+    "status": "APPROVED"
+  },
+  {
+    "matchExplanation": "Candidate skills (Java, C, SQL) and major (电信工程及管理) do not match the job requirement '审核'; availability conflicts with job schedule; bio and resume provide no relevant evidence.",
+    "jobId": "j17759804479981749",
+    "matchScore": 15,
+    "missingSkills": ["审核"],
+    "matchSource": "LLM",
+    "applicationId": "a17759804618029232",
+    "reviewedBy": "",
+    "userId": "u1773908421238",
+    "matchedSkills": [],
+    "appliedAt": "2026-04-12 15:54:21.802",
+    "rejectionNote": "",
+    "status": "PENDING"
+  },
+  {
+    "matchExplanation": "Candidate has Java skill but schedule conflicts (availability WED,THU vs job FRI,SAT) and bio lacks relevant evidence; major and other skills are not clearly relevant to the job.",
+    "jobId": "j17759869047156923",
+    "matchScore": 35,
+    "missingSkills": [
+      "c",
+      "sql",
+      "schedule compatibility"
+    ],
+    "matchSource": "LLM",
+    "applicationId": "a17759869405306231",
+    "reviewedBy": "",
+    "userId": "u1773908421238",
+    "matchedSkills": ["java"],
+    "appliedAt": "2026-04-12 17:42:20.53",
+    "rejectionNote": "",
+    "status": "PENDING"
+  }
+]}
