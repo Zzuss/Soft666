@@ -19,6 +19,7 @@
         <jakarta.servlet.api.version>6.0.0</jakarta.servlet.api.version>
         <jakarta.jsp.api.version>3.1.1</jakarta.jsp.api.version>
         <org.json.version>20231013</org.json.version>
+        <junit.jupiter.version>5.10.2</junit.jupiter.version>
     </properties>
 
     <dependencies>
@@ -52,6 +53,14 @@
             <artifactId>json</artifactId>
             <version>${org.json.version}</version>
         </dependency>
+
+        <!-- Unit testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -74,6 +83,12 @@
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
             </plugin>
         </plugins>
     </build>

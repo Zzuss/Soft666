@@ -1,177 +1,145 @@
-# 助教招聘系统（TA Recruitment System）
+# TA Recruitment System
 
-这份 README 按“新手可直接照抄命令”的方式写。
+A Java web application for managing Teaching Assistant recruitment. The system supports student TA applications, module organiser job posting, profile and resume management, application review, notifications, and optional AI-assisted job matching.
 
-## 0. 先看这里：最短启动流程（你当前这台机器）
+## Features
 
-你要进入的项目文件夹是：
+- User registration and login for TA, MO, and Admin roles
+- TA profile editing, availability management, skills, and resume upload
+- MO job creation, editing, closing, and application management
+- Job search and filtering by keyword, type, and required skills
+- Rule-based TA/job matching with optional LLM-enhanced analysis
+- Application submission, status review, and notification display
+- English/Chinese language switching
 
-```bash
-cd /Users/fanzj/Desktop/Soft666-1
+## Tech Stack
+
+- Java 17
+- Maven
+- Jakarta Servlet 6 / JSP 3
+- Tomcat 10.1+
+- JSON file storage under `data/`
+- JUnit 5 for test programs
+
+## Project Structure
+
+```text
+src/main/java/com/tarecruitment/
+  dao/       JSON data access classes
+  model/     User, Job, Application, Notification models
+  service/   Business logic and matching services
+  servlet/   Web controllers
+  util/      Password, JSON, and i18n helpers
+
+src/main/webapp/
+  css/       Application styles
+  images/    Static images
+  jsp/       JSP pages
+  WEB-INF/   Web configuration
+
+src/test/java/com/tarecruitment/
+  model/     Model tests
+  service/   Service tests
+  util/      Utility tests
+
+data/        Local JSON data files
+scripts/     macOS/Linux and Windows helper scripts
 ```
 
-然后按下面命令执行（假设你已经安装了 Tomcat 10.1+）：
+## Requirements
+
+- JDK 17 or newer
+- Maven 3.8+
+- Apache Tomcat 10.1+
+
+Tomcat 9 is not compatible because this project uses Jakarta Servlet APIs.
+
+## Build
 
 ```bash
-# 1) 进入项目目录（必须）
-cd /Users/fanzj/Desktop/Soft666-1
+mvn clean package
+```
 
-# 2) 设置你的 Tomcat 路径（把下面路径改成你自己的）
-export TOMCAT_HOME="/你的路径/apache-tomcat-10.1.xx"
+The WAR file will be generated at:
 
-# 3) 确认 WAR 包存在（你当前项目里通常已存在）
-ls target/ta-recruitment.war
+```text
+target/ta-recruitment.war
+```
 
-# 4) 复制 WAR 到 Tomcat
+## Run
+
+Deploy the WAR file to Tomcat:
+
+```bash
 cp target/ta-recruitment.war "$TOMCAT_HOME/webapps/"
-
-# 5) （推荐）固定数据目录到项目 data/
-export CATALINA_OPTS="-Dtarec.data.dir=/Users/fanzj/Desktop/Soft666-1/data"
-
-# 6) 启动 Tomcat
 "$TOMCAT_HOME/bin/startup.sh"
 ```
 
-启动后访问：
+Then open:
 
-- 登录页：`http://localhost:8080/ta-recruitment/auth`
+```text
+http://localhost:8080/ta-recruitment/
+```
 
-停止服务：
+To stop Tomcat:
 
 ```bash
 "$TOMCAT_HOME/bin/shutdown.sh"
 ```
 
-也可以直接双击项目根目录下的脚本：
+The project also includes helper scripts:
 
-- `run.command`：重新编译、部署并启动项目
-- `stop.command`：停止 Tomcat
-- `run.bat`：Windows 上重新编译、部署并启动项目
+- `run.command` for macOS
+- `run.bat` for Windows
+- `stop.command` for macOS
+- `scripts/ta-recruitment.sh`
+- `scripts/ta-recruitment.bat`
 
-脚本内部默认使用：
+Adjust the JDK, Maven, and Tomcat paths inside the scripts if your local installation paths are different.
 
-- JDK：`/Library/Java/JavaVirtualMachines/jdk-24.jdk/Contents/Home`
-- Maven：`/tmp/apache-maven-3.9.6/bin/mvn`
-- Tomcat：`/tmp/apache-tomcat-10.1.24`
+## Tests
 
-如果你的本机路径不同，修改 `scripts/ta-recruitment.sh` 顶部的默认路径即可。
-Windows 上可设置 `JAVA_HOME`、`MAVEN_BIN`、`TOMCAT_HOME`，或修改 `scripts/ta-recruitment.bat` 顶部的默认路径。
-
-***
-
-## 1. 如果第 3 步找不到 WAR（需要先构建）
-
-先安装 Maven（`mvn` 命令可用），再执行：
+Run the test programs with:
 
 ```bash
-cd /Users/fanzj/Desktop/Soft666-1
-mvn clean package
+mvn test
 ```
 
-成功后会生成：
+Current tests cover:
 
-- `target/ta-recruitment.war`
+- Password hashing and verification
+- Legacy password hash compatibility
+- Job and TA skill matching
+- Job creation and schedule validation
+- User role helpers and job display labels
 
-然后回到“最短启动流程”的第 4 步继续。
+## Data Storage
 
-## 2. 你到底要装哪些依赖
+The application stores local data in JSON files:
 
-### 2.1 必装
+```text
+data/users.json
+data/jobs.json
+data/applications.json
+data/notifications.json
+```
 
-- JDK：**17**（推荐）
-- Maven：**3.8+**（用于构建）
-- Tomcat：**10.1+**（必须，Tomcat 9 不兼容）
-
-### 2.2 Maven 依赖（项目内部）
-
-- `jakarta.servlet:jakarta.servlet-api:6.0.0`（`provided`）
-- `jakarta.servlet.jsp:jakarta.servlet.jsp-api:3.1.1`（`provided`）
-- `jakarta.el:jakarta.el-api:5.0.1`（`provided`）
-- `org.json:json:20231013`
-
-## 3. 访问地址（启动后）
-
-- 登录页：`http://localhost:8080/ta-recruitment/auth`
-- 首页：`http://localhost:8080/ta-recruitment/`
-- 注册页：`http://localhost:8080/ta-recruitment/auth?action=register`
-
-## 4. 数据文件位置
-
-默认数据文件在：
-
-- `data/users.json`
-- `data/jobs.json`
-- `data/applications.json`
-
-数据目录优先级：
-
-1. `-Dtarec.data.dir=...`
-2. 项目根目录下 `data/`
-3. 当前工作目录下 `data/`（不存在会自动创建）
-
-## 4.1 大模型匹配配置（可选）
-
-系统默认仍可使用本地规则匹配。若要启用大模型增强匹配，可在项目根目录创建 `.env.local`：
+You can override the data directory with:
 
 ```bash
-TAREC_LLM_API_KEY="你的 DeepSeek API Key"
+-Dtarec.data.dir=/path/to/data
+```
+
+## Optional AI Matching
+
+The system works without an AI API key. If configured, AI matching enhances the normal rule-based score.
+
+Create a local `.env.local` file or set environment variables:
+
+```bash
+TAREC_LLM_API_KEY="your-api-key"
 TAREC_LLM_MODEL="deepseek-v4-flash"
 TAREC_LLM_ENDPOINT="https://api.deepseek.com/chat/completions"
 ```
 
-也可以用环境变量或 JVM 参数配置。优先级为：环境变量 > JVM 参数 > `.env.local` > 系统默认值。`.env.local` 已加入 `.gitignore`，不要提交真实 API Key。
-
-启用后，TA 申请岗位和查看岗位详情时，系统会基于岗位描述、要求、TA 技能、个人陈述和可用时间生成更细的匹配度与简短 AI 匹配分析。未配置 API Key 或调用失败时，会自动回退到原有技能规则匹配。
-
-## 5. 常见报错（按现象处理）
-
-### 5.1 `mvn: command not found`
-
-没装 Maven 或未加入 `PATH`。先安装 Maven，再开新终端重试。
-
-### 5.2 打开网址 404
-
-按顺序检查：
-
-1. `target/ta-recruitment.war` 是否存在
-2. 是否已复制到 `$TOMCAT_HOME/webapps/`
-3. 网址是否包含 `/ta-recruitment`
-4. Tomcat 是否真的启动成功（看日志）
-
-### 5.3 Servlet 相关类找不到
-
-大概率 Tomcat 版本过低。请用 **Tomcat 10.1+**。
-
-## 6. 项目结构（开发时）
-
-- Java 代码：`src/main/java`
-- 页面与样式：`src/main/webapp`
-- 国际化工具：`com.tarecruitment.util.I18nUtil`
-- 语言切换组件：`src/main/webapp/jsp/common/language-switcher.jsp`
-
-## 7. Fan
-
-export JAVA\_HOME=/Library/Java/JavaVirtualMachines/jdk-24.jdk/Contents/Home
-
-/tmp/apache-tomcat-10.1.24/bin/startup.sh
-
-/tmp/apache-tomcat-10.1.24/bin/shutdown.sh
-
-重新编译和部署：
-
-```shellscript
-cd /Users/fanzj/Desktop/Soft666-1
-```
-
-```shellscript
-/tmp/apache-maven-3.9.6/bin/mvn clean package -DskipTests
-
-cp target/ta-recruitment.war /tmp/apache-tomcat-10.1.24/webapps/
-```
-
-```shellscript
-/tmp/apache-tomcat-10.1.24/bin/shutdown.sh
-/tmp/apache-tomcat-10.1.24/bin/startup.sh
-```
-
-<http://localhost:8080/ta-recruitment/>
+Do not commit real API keys.
