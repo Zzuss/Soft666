@@ -88,7 +88,7 @@
             <% } %>
         <% } else { %>
             <div class="card text-center">
-                <p style="color: #718096;"><%= I18nUtil.get("job.my.noJobs", lang) %></p>
+                <p style="color: var(--color-muted);"><%= I18nUtil.get("job.my.noJobs", lang) %></p>
                 <a href="${pageContext.request.contextPath}/jobs/create" class="btn btn-primary" style="margin-top: 15px;"><%= I18nUtil.get("job.my.firstJob", lang) %></a>
             </div>
         <% } %>

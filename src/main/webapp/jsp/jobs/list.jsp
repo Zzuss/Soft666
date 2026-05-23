@@ -119,7 +119,7 @@
                                     <span><%= I18nUtil.get("job.detail.courseCode", lang) %>: <%= recJob.getCourseCode() != null && !recJob.getCourseCode().isEmpty() ? recJob.getCourseCode() : "-" %></span>
                                     <span><%= I18nUtil.get("jobs.deadline", lang) %>: <%= recJob.getDeadline() %></span>
                                 </div>
-                                <p style="color: #718096; margin: 0;">
+                                <p style="color: var(--color-muted); margin: 0;">
                                     <%= I18nUtil.get("jobs.aiDetailHint", lang) %>
                                 </p>
                             </div>
@@ -164,7 +164,7 @@
             <% } %>
         <% } else { %>
             <div class="card text-center">
-                <p style="color: #718096;"><%= I18nUtil.get("jobs.noJobs", lang) %></p>
+                <p style="color: var(--color-muted);"><%= I18nUtil.get("jobs.noJobs", lang) %></p>
             </div>
         <% } %>
     </div>

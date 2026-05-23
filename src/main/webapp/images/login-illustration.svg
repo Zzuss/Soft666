@@ -1,0 +1,66 @@
+<svg width="760" height="620" viewBox="0 0 760 620" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Secure login illustration</title>
+  <desc id="desc">A friendly person stands beside a large tablet showing a sign-in form, with a lock icon and soft security shapes in the background.</desc>
+  <rect width="760" height="620" rx="34" fill="#FFE4C7"/>
+  <circle cx="152" cy="106" r="88" fill="#FF6F8F"/>
+  <circle cx="152" cy="106" r="68" stroke="#FFD7DF" stroke-width="9"/>
+  <path d="M130 111c0-15 10-27 25-27s25 12 25 27v10h-12v-10c0-8-5-15-13-15s-13 7-13 15v10h-12v-10Z" fill="#FFF9F3"/>
+  <rect x="120" y="120" width="70" height="58" rx="10" fill="#FFF9F3"/>
+  <circle cx="155" cy="144" r="8" fill="#FF7897"/>
+  <path d="M150 163l5-22 5 22h-10Z" fill="#FF7897"/>
+
+  <ellipse cx="405" cy="332" rx="235" ry="236" fill="#F0F6FF" opacity=".68"/>
+  <path d="M548 118c44 13 71 46 82 99 10 49 59 54 76 103 19 54-21 110-78 123-31 7-49 26-72 47-42 39-114 34-143-14-29-49 4-98-35-137-45-46-131-21-157-84-26-62 37-124 102-116 40 5 52-27 85-43 42-21 88 7 140 22Z" fill="#9A6BFF"/>
+  <path d="M614 192c41 9 66 37 76 83 9 42 49 48 65 89 17 47-15 95-65 106-27 6-41 23-61 42-36 33-98 30-123-12-25-42 3-84-30-118-39-39-113-18-135-72-23-54 31-107 87-100 35 4 45-23 74-37 36-18 67 8 112 19Z" fill="#FF6FA5"/>
+  <path d="M616 250c24 39 27 83 4 132M674 335l-71 30M646 287l-51 44" stroke="#FFC6DA" stroke-width="4" stroke-linecap="round"/>
+
+  <g opacity=".48">
+    <path d="M321 75h31v31h-31V75Z" fill="#D7DFEE"/>
+    <path d="M306 87l21-21 22 22-22 21-21-22Z" fill="#D7DFEE"/>
+    <path d="M292 113V82h31v31h-31Z" fill="#D7DFEE"/>
+    <circle cx="322" cy="91" r="35" stroke="#D7DFEE" stroke-width="16"/>
+    <circle cx="322" cy="91" r="18" fill="#FFE4C7"/>
+  </g>
+  <g opacity=".48">
+    <path d="M441 66h27v27h-27V66Z" fill="#D7DFEE"/>
+    <path d="M428 77l19-19 19 19-19 19-19-19Z" fill="#D7DFEE"/>
+    <path d="M416 100V73h27v27h-27Z" fill="#D7DFEE"/>
+    <circle cx="443" cy="81" r="31" stroke="#D7DFEE" stroke-width="14"/>
+    <circle cx="443" cy="81" r="16" fill="#FFE4C7"/>
+  </g>
+
+  <rect x="310" y="92" width="286" height="454" rx="30" fill="#29325F" transform="rotate(3 310 92)"/>
+  <rect x="339" y="113" width="230" height="402" rx="20" fill="#FCFCFF" transform="rotate(3 339 113)"/>
+  <circle cx="454" cy="120" r="7" fill="#FFC447"/>
+
+  <rect x="274" y="177" width="288" height="322" rx="22" fill="url(#formGradient)" transform="rotate(3 274 177)"/>
+  <path d="M294 178l247 13c-49 105-132 163-265 172l18-185Z" fill="#F7AD23" opacity=".52"/>
+  <circle cx="414" cy="237" r="35" fill="#FF9B37"/>
+  <circle cx="414" cy="226" r="17" fill="#FFFDF9"/>
+  <path d="M383 266c9-21 51-19 62 4 4 9-2 19-13 19h-38c-11 0-16-11-11-23Z" fill="#FFFDF9"/>
+  <rect x="330" y="319" width="190" height="34" rx="8" fill="#FFFDF9" transform="rotate(3 330 319)"/>
+  <rect x="323" y="379" width="190" height="34" rx="8" fill="#FFFDF9" transform="rotate(3 323 379)"/>
+  <rect x="360" y="448" width="124" height="48" rx="11" fill="#FF948A" opacity=".65" transform="rotate(3 360 448)"/>
+
+  <path d="M170 304c-23 10-45 40-41 80 4 45 28 65 27 106h69c6-31 10-93-7-140-10-28-26-55-48-46Z" fill="#8B6EFF"/>
+  <circle cx="188" cy="279" r="21" fill="#FFA64E"/>
+  <path d="M173 278c3-21 17-28 35-28 8 22-12 31-35 28Z" fill="#29325F"/>
+  <path d="M135 369c-35 37-38 78-9 107M210 352c20 25 43 31 71 20" stroke="#8B6EFF" stroke-width="30" stroke-linecap="round"/>
+  <path d="M213 349c15 24 39 32 65 25" stroke="#FFA64E" stroke-width="11" stroke-linecap="round"/>
+  <path d="M129 490h45l-13 83h-42l10-83Z" fill="#55205F"/>
+  <path d="M184 490h43l8 83h-42l-9-83Z" fill="#6D2670"/>
+  <path d="M116 574h50" stroke="#FFD75D" stroke-width="8" stroke-linecap="round"/>
+  <path d="M190 574h48" stroke="#FFD75D" stroke-width="8" stroke-linecap="round"/>
+
+  <circle cx="647" cy="130" r="50" fill="#8B5CF6"/>
+  <path d="M640 93c27 8 44 28 47 54" stroke="#BCA3FF" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="661" cy="474" r="19" fill="#F15F9A"/>
+  <circle cx="98" cy="526" r="12" fill="#DF8CB4"/>
+
+  <defs>
+    <linearGradient id="formGradient" x1="383" y1="165" x2="466" y2="513" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFD13F"/>
+      <stop offset="1" stop-color="#FFD1A7"/>
+    </linearGradient>
+  </defs>
+</svg>

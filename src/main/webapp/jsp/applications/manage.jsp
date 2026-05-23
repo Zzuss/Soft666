@@ -212,7 +212,7 @@
                                             <button type="submit" class="btn btn-danger"><%= I18nUtil.get("app.manage.reject", lang) %></button>
                                         </form>
                                     <% } else { %>
-                                        <span style="color: #718096;"><%= I18nUtil.get("app.manage.processed", lang) %></span>
+                                        <span style="color: var(--color-muted);"><%= I18nUtil.get("app.manage.processed", lang) %></span>
                                     <% } %>
                                 </td>
                             </tr>
@@ -222,7 +222,7 @@
             </div>
         <% } else { %>
             <div class="card text-center">
-                <p style="color: #718096;"><%= I18nUtil.get("app.manage.noApps", lang) %></p>
+                <p style="color: var(--color-muted);"><%= I18nUtil.get("app.manage.noApps", lang) %></p>
             </div>
         <% } %>
 

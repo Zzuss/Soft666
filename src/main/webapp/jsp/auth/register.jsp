@@ -11,7 +11,7 @@
     <div class="container">
         <div class="card register-container">
             <h1 class="text-center">Create Account</h1>
-            <p class="text-center" style="color: #718096; margin-bottom: 30px;">Join TA Recruitment System</p>
+            <p class="text-center" style="color: var(--color-muted); margin-bottom: 30px;">Join TA Recruitment System</p>
             
             <% if (request.getAttribute("error") != null) { %>
                 <div class="error"><%= request.getAttribute("error") %></div>

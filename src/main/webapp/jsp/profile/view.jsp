@@ -92,7 +92,7 @@
                 <p><strong><%= I18nUtil.get("profile.currentResume", lang) %>:</strong> <%= profileUser.getResumeFileName() %></p>
                 <a href="${pageContext.request.contextPath}/profile/resume/download?userId=<%= profileUser.getUserId() %>&jobId=<%= jobId != null ? jobId : "" %>" class="btn btn-primary"><%= I18nUtil.get("profile.downloadResume", lang) %></a>
             <% } else { %>
-                <p style="color: #718096;"><%= I18nUtil.get("profile.noResume", lang) %></p>
+                <p style="color: var(--color-muted);"><%= I18nUtil.get("profile.noResume", lang) %></p>
             <% } %>
         </div>
 

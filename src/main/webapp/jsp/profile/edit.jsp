@@ -110,7 +110,7 @@
                     <input type="text" id="year" name="year" required value="<%= yearValue %>"
                            maxlength="4" pattern="[0-9]{4}" inputmode="numeric"
                            title="<%= I18nUtil.get("profile.yearHint", lang) %>">
-                    <p style="font-size: 12px; color: #718096; margin-top: 6px;"><%= I18nUtil.get("profile.yearHint", lang) %></p>
+                    <p style="font-size: 12px; color: var(--color-muted); margin-top: 6px;"><%= I18nUtil.get("profile.yearHint", lang) %></p>
                 </div>
 
                 <div class="form-group">
@@ -126,7 +126,7 @@
                 <div class="form-group">
                     <label for="availableTime"><%= I18nUtil.get("profile.availableTime", lang) %></label>
                     <input type="text" id="availableTime" name="availableTime" readonly value="<%= profileUser.getAvailableTime() != null ? profileUser.getAvailableTime() : "" %>">
-                    <p style="font-size: 12px; color: #718096; margin-top: 6px;"><%= I18nUtil.get("profile.availableTimeAutoHint", lang) %></p>
+                    <p style="font-size: 12px; color: var(--color-muted); margin-top: 6px;"><%= I18nUtil.get("profile.availableTimeAutoHint", lang) %></p>
                 </div>
 
                 <div class="form-group">
@@ -187,7 +187,7 @@
 
         <div class="card">
             <h3><%= I18nUtil.get("profile.resume", lang) %></h3>
-            <p style="color: #718096; margin-bottom: 12px;"><%= I18nUtil.get("profile.resumeHint", lang) %></p>
+            <p style="color: var(--color-muted); margin-bottom: 12px;"><%= I18nUtil.get("profile.resumeHint", lang) %></p>
             <form action="${pageContext.request.contextPath}/profile/resume/upload" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <input type="file" name="resume" accept=".pdf,.doc,.docx" required>
@@ -198,13 +198,13 @@
             <div style="margin-top: 16px;">
                 <% if (profileUser.getResumePath() != null && !profileUser.getResumePath().isEmpty()) { %>
                     <p><strong><%= I18nUtil.get("profile.currentResume", lang) %>:</strong> <%= profileUser.getResumeFileName() %></p>
-                    <p style="color: #718096; font-size: 13px;">
+                    <p style="color: var(--color-muted); font-size: 13px;">
                         <%= I18nUtil.get("profile.updatedAt", lang) %>:
                         <%= profileUser.getResumeUpdatedAt() != null ? profileUser.getResumeUpdatedAt().toString().substring(0, 19) : "-" %>
                     </p>
                     <a href="${pageContext.request.contextPath}/profile/resume/download" class="btn btn-secondary"><%= I18nUtil.get("profile.downloadResume", lang) %></a>
                 <% } else { %>
-                    <p style="color: #718096;"><%= I18nUtil.get("profile.noResume", lang) %></p>
+                    <p style="color: var(--color-muted);"><%= I18nUtil.get("profile.noResume", lang) %></p>
                 <% } %>
             </div>
         </div>

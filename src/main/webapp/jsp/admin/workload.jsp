@@ -44,7 +44,7 @@
 
         <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 10px; flex-wrap: wrap;">
-                <p style="color: #718096;">
+                <p style="color: var(--color-muted);">
                     <%= I18nUtil.get("admin.workload.thresholdHint", lang) %> <strong><%= workloadThreshold %></strong>
                 </p>
                 <a href="${pageContext.request.contextPath}/admin/workload/export" class="btn btn-primary"><%= I18nUtil.get("admin.workload.exportCsv", lang) %></a>
@@ -79,7 +79,7 @@
                     </tbody>
                 </table>
             <% } else { %>
-                <p style="color: #718096;"><%= I18nUtil.get("admin.workload.noData", lang) %></p>
+                <p style="color: var(--color-muted);"><%= I18nUtil.get("admin.workload.noData", lang) %></p>
             <% } %>
         </div>
     </div>
