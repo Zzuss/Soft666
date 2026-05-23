@@ -84,16 +84,20 @@ public class JobServlet extends HttpServlet {
         String type = request.getParameter("type");
         String[] skillParams = request.getParameterValues("skills");
         List<String> selectedSkills = normalizeSelectedSkills(skillParams);
+        boolean hasActiveFilter = hasText(keyword)
+                || (hasText(type) && !"ALL".equalsIgnoreCase(type.trim()))
+                || !selectedSkills.isEmpty();
 
         List<Job> jobs = jobService.searchJobs(keyword, type, selectedSkills);
-        if (user != null && user.isTA()) {
+        if (!hasActiveFilter && user != null && user.isTA()) {
             List<JobService.JobRecommendation> recommendations = jobService.getRecommendedJobsForUser(user, 5);
             request.setAttribute("recommendedJobs", recommendations);
         }
         request.setAttribute("jobs", jobs);
-        request.setAttribute("keyword", keyword);
-        request.setAttribute("type", type);
+        request.setAttribute("keyword", keyword != null ? keyword.trim() : "");
+        request.setAttribute("type", type != null ? type.trim() : "");
         request.setAttribute("selectedSkills", selectedSkills);
+        request.setAttribute("hasActiveFilter", hasActiveFilter);
         request.setAttribute("availableSkills", jobService.getSupportedSkills());
         request.getRequestDispatcher("/jsp/jobs/list.jsp").forward(request, response);
     }
@@ -314,6 +318,10 @@ public class JobServlet extends HttpServlet {
             }
         }
         return selected;
+    }
+
+    private boolean hasText(String value) {
+        return value != null && !value.trim().isEmpty();
     }
 
     private boolean canManageJob(User user, Job job) {

@@ -13,16 +13,19 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public class JobService {
     private static final List<String> SUPPORTED_SKILLS = Arrays.asList(
             "Java", "Python", "SQL", "JavaScript", "React", "Grading",
             "Teaching", "Communication", "Teamwork", "Invigilation"
     );
+    private static final Pattern TOKEN_SPLIT_PATTERN = Pattern.compile("[^\\p{L}\\p{N}]+");
 
     private final JobDAO jobDAO;
     private final ApplicationDAO applicationDAO;
@@ -206,22 +209,24 @@ public class JobService {
 
     public List<Job> searchJobs(String keyword, String type, List<String> skills) {
         List<Job> jobs;
+        String normalizedType = type != null ? type.trim() : "";
         
-        if (type != null && !type.isEmpty() && !type.equalsIgnoreCase("ALL")) {
-            jobs = jobDAO.getJobsByType(type);
+        if (!normalizedType.isEmpty() && !normalizedType.equalsIgnoreCase("ALL")) {
+            jobs = jobDAO.getJobsByType(normalizedType);
         } else {
             jobs = jobDAO.getOpenJobs();
         }
 
-        if (skills != null && !skills.isEmpty()) {
+        List<String> normalizedSkills = normalizeSkills(skills);
+        if (!normalizedSkills.isEmpty()) {
             jobs = new ArrayList<>(jobs);
-            jobs.removeIf(job -> !matchesAnySkill(job, skills));
+            jobs.removeIf(job -> !matchesAllSkills(job, normalizedSkills));
         }
 
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            String trimmed = keyword.trim().toLowerCase(Locale.ROOT);
+        String normalizedKeyword = normalizeSearchText(keyword);
+        if (!normalizedKeyword.isEmpty()) {
             jobs = new ArrayList<>(jobs);
-            jobs.removeIf(job -> !matchesKeyword(job, trimmed));
+            jobs.removeIf(job -> !matchesKeyword(job, normalizedKeyword));
         }
 
         jobs.sort(Comparator.comparing(this::toSortableDeadline));
@@ -308,17 +313,44 @@ public class JobService {
         job.setDailyEndHour(validated.endHour);
     }
 
-    private boolean matchesAnySkill(Job job, List<String> skills) {
-        String text = combinedJobText(job);
+    private List<String> normalizeSkills(List<String> skills) {
+        List<String> normalized = new ArrayList<>();
+        if (skills == null || skills.isEmpty()) {
+            return normalized;
+        }
         for (String skill : skills) {
-            if (skill == null || skill.trim().isEmpty()) {
+            String value = normalizeSearchText(skill);
+            if (value.isEmpty() || normalized.contains(value)) {
                 continue;
             }
-            if (text.contains(skill.trim().toLowerCase(Locale.ROOT))) {
-                return true;
+            normalized.add(value);
+        }
+        return normalized;
+    }
+
+    private String normalizeSearchText(String value) {
+        return value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private boolean matchesAllSkills(Job job, List<String> skills) {
+        Set<String> tokens = tokenizeJobText(job);
+        for (String skill : skills) {
+            if (!tokens.contains(skill)) {
+                return false;
             }
         }
-        return false;
+        return true;
+    }
+
+    private Set<String> tokenizeJobText(Job job) {
+        Set<String> tokens = new HashSet<>();
+        String text = combinedJobText(job);
+        for (String token : TOKEN_SPLIT_PATTERN.split(text)) {
+            if (!token.isEmpty()) {
+                tokens.add(token);
+            }
+        }
+        return tokens;
     }
 
     private boolean matchesKeyword(Job job, String keyword) {
@@ -326,7 +358,7 @@ public class JobService {
         if (text.contains(keyword)) {
             return true;
         }
-        String[] words = text.split("[^a-z0-9]+");
+        String[] words = TOKEN_SPLIT_PATTERN.split(text);
         String[] queryTokens = keyword.split("\\s+");
         for (String token : queryTokens) {
             String q = token.trim();

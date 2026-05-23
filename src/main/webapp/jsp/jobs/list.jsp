@@ -5,6 +5,19 @@
 <%@ page import="com.tarecruitment.util.I18nUtil" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
+<%!
+    private String escapeHtml(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
+    }
+%>
 <%
     User user = (User) session.getAttribute("user");
     if (user == null) {
@@ -24,9 +37,8 @@
     if (availableSkills == null) {
         availableSkills = new ArrayList<>();
     }
-    boolean hasActiveFilter = (keyword != null && !keyword.trim().isEmpty())
-            || (type != null && !type.trim().isEmpty() && !"ALL".equalsIgnoreCase(type))
-            || !selectedSkills.isEmpty();
+    Boolean hasActiveFilterObj = (Boolean) request.getAttribute("hasActiveFilter");
+    boolean hasActiveFilter = Boolean.TRUE.equals(hasActiveFilterObj);
     String lang = I18nUtil.getLanguage(request);
 %>
 <!DOCTYPE html>
@@ -66,7 +78,7 @@
 
         <div class="card">
             <form action="${pageContext.request.contextPath}/jobs/list" method="get" class="filter-bar">
-                <input type="text" name="keyword" placeholder="<%= I18nUtil.get("jobs.search", lang) %>" value="<%= keyword != null ? keyword : "" %>">
+                <input type="text" name="keyword" placeholder="<%= I18nUtil.get("jobs.search", lang) %>" value="<%= escapeHtml(keyword) %>">
                 <select name="type">
                     <option value="ALL" <%= type == null || type.isEmpty() || "ALL".equalsIgnoreCase(type) ? "selected" : "" %>><%= I18nUtil.get("jobs.allTypes", lang) %></option>
                     <option value="MODULE" <%= "MODULE".equals(type) ? "selected" : "" %>><%= I18nUtil.get("jobs.moduleTutor", lang) %></option>
@@ -77,8 +89,8 @@
                     <span style="font-weight: 600;"><%= I18nUtil.get("jobs.skillsFilter", lang) %>:</span>
                     <% for (String skill : availableSkills) { %>
                         <label>
-                            <input type="checkbox" name="skills" value="<%= skill %>" <%= selectedSkills.contains(skill) ? "checked" : "" %>>
-                            <%= skill %>
+                            <input type="checkbox" name="skills" value="<%= escapeHtml(skill) %>" <%= selectedSkills.contains(skill) ? "checked" : "" %>>
+                            <%= escapeHtml(skill) %>
                         </label>
                     <% } %>
                 </div>
@@ -88,9 +100,9 @@
             <% if (hasActiveFilter) { %>
                 <div class="info" style="margin-top: 8px;">
                     <%= I18nUtil.get("jobs.activeFilters", lang) %>
-                    <%= (keyword != null && !keyword.trim().isEmpty()) ? (" | " + I18nUtil.get("jobs.search", lang) + ": " + keyword) : "" %>
-                    <%= (type != null && !type.trim().isEmpty() && !"ALL".equalsIgnoreCase(type)) ? (" | " + I18nUtil.get("job.detail.type", lang) + ": " + type) : "" %>
-                    <%= !selectedSkills.isEmpty() ? (" | " + I18nUtil.get("jobs.skillsFilter", lang) + ": " + String.join(", ", selectedSkills)) : "" %>
+                    <%= (keyword != null && !keyword.trim().isEmpty()) ? (" | " + I18nUtil.get("jobs.search", lang) + ": " + escapeHtml(keyword)) : "" %>
+                    <%= (type != null && !type.trim().isEmpty() && !"ALL".equalsIgnoreCase(type)) ? (" | " + I18nUtil.get("job.detail.type", lang) + ": " + escapeHtml(type)) : "" %>
+                    <%= !selectedSkills.isEmpty() ? (" | " + I18nUtil.get("jobs.skillsFilter", lang) + ": " + escapeHtml(String.join(", ", selectedSkills))) : "" %>
                 </div>
             <% } %>
         </div>
@@ -113,11 +125,11 @@
                         <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px;">
                             <div>
                                 <h3 style="margin-bottom: 8px;">
-                                    <%= recJob.getTitle() %>
+                                    <%= escapeHtml(recJob.getTitle()) %>
                                 </h3>
                                 <div class="job-meta" style="margin-bottom: 8px;">
-                                    <span><%= I18nUtil.get("job.detail.courseCode", lang) %>: <%= recJob.getCourseCode() != null && !recJob.getCourseCode().isEmpty() ? recJob.getCourseCode() : "-" %></span>
-                                    <span><%= I18nUtil.get("jobs.deadline", lang) %>: <%= recJob.getDeadline() %></span>
+                                    <span><%= I18nUtil.get("job.detail.courseCode", lang) %>: <%= recJob.getCourseCode() != null && !recJob.getCourseCode().isEmpty() ? escapeHtml(recJob.getCourseCode()) : "-" %></span>
+                                    <span><%= I18nUtil.get("jobs.deadline", lang) %>: <%= escapeHtml(recJob.getDeadline()) %></span>
                                 </div>
                                 <p style="color: var(--color-muted); margin: 0;">
                                     <%= I18nUtil.get("jobs.aiDetailHint", lang) %>
@@ -139,12 +151,12 @@
                 <div class="job-card">
                     <div style="display: flex; justify-content: space-between; align-items: start;">
                         <div>
-                            <h3><%= job.getTitle() %></h3>
+                            <h3><%= escapeHtml(job.getTitle()) %></h3>
                             <div class="job-meta">
-                                <span><%= I18nUtil.get("job.detail.courseCode", lang) %>: <%= job.getCourseCode() != null && !job.getCourseCode().isEmpty() ? job.getCourseCode() : "-" %></span>
+                                <span><%= I18nUtil.get("job.detail.courseCode", lang) %>: <%= job.getCourseCode() != null && !job.getCourseCode().isEmpty() ? escapeHtml(job.getCourseCode()) : "-" %></span>
                                 <span><%= job.getTypeDisplayName(lang) %></span>
                                 <span><%= I18nUtil.get("jobs.positions", lang) %>: <%= job.getPositions() %></span>
-                                <span><%= I18nUtil.get("jobs.deadline", lang) %>: <%= job.getDeadline() %></span>
+                                <span><%= I18nUtil.get("jobs.deadline", lang) %>: <%= escapeHtml(job.getDeadline()) %></span>
                                 <%
                                     String postedAtText = "-";
                                     if (job.getCreatedAt() != null) {
